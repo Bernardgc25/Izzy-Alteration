@@ -1,0 +1,194 @@
+
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 15px;
+}
+
+/* Main container with 3 columns */
+.alteration-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+    border: 1px solid #ddd;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 12px;
+}
+
+/* Column styles - each with border and background color */
+.alteration-container > div:nth-child(2) {
+    /* First column (after the title) */
+    border: 1px solid #ccc;
+    padding: 12px;
+    background-color: rgb(227, 234, 234);
+    border-radius: 4px;
+}
+
+.alteration-container > div:nth-child(3) {
+    /* Second column */
+    border: 1px solid #ccc;
+    padding: 12px;
+    background-color: rgb(227, 234, 234);
+    border-radius: 4px;
+}
+
+.alteration-container > div:nth-child(4) {
+    /* Third column */
+    border: 1px solid #ccc;
+    padding: 12px;
+    background-color: rgb(227, 234, 234);
+    border-radius: 4px;
+}
+
+/* Price list title */
+#price-list {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #333;
+    color: #333;
+    background-color: transparent; /* Keep title transparent */
+}
+
+/* Form elements styling */
+.alteration-list,
+.alteration-level,
+.amount-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+label {
+    font-weight: bold;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 2px;
+}
+
+select {
+    padding: 6px 8px;
+    border: 1px solid #bbb;
+    border-radius: 3px;
+    font-size: 14px;
+     background-color: #f9f9f9;
+    width: 100%;
+}
+
+/* Amount section */
+#amount {
+    font-weight: bold;
+    color: #333;
+}
+
+#priceCalculation {
+    color: #e44d26;
+    font-weight: bold;
+}
+
+/* Amount row with inline layout */
+.amount-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+#amount {
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap;
+}
+
+#priceCalculation {
+    color: #e44d26;
+    font-weight: bold;
+    min-width: 60px;
+    white-space: nowrap;
+}
+
+.button-group {
+    display: flex;
+    gap: 5px;
+    margin-left: auto;
+}
+
+/* Keep existing button styles but adjust for new layout */
+button {
+    padding: 6px 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 80px;
+    transition: background-color 0.2s;
+}
+
+button:last-of-type {
+    background-color: #f44336;
+}
+
+button:last-of-type:hover {
+    background-color: #da190b;
+}
+
+/* Compact buttons */
+button {
+    padding: 6px 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 80px; /* Shortened length */
+    margin-right: 5px;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+button:last-of-type {
+    background-color: #f44336;
+}
+
+button:last-of-type:hover {
+    background-color: #da190b;
+}
+
+/* Details sections */
+details {
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 8px;
+    background-color: #f9f9f9;
+}
+
+summary {
+    font-weight: bold;
+    cursor: pointer;
+    color: #333;
+    font-size: 14px;
+}
+
+details p {
+    margin-top: 5px;
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .alteration-container {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+}

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Izzy Alteration</title>
+    <!--relative path-->
+    <link rel="stylesheet" href="/src/css/index.css">
+    <!-- <link rel="stylesheet" href="/css/alteration-female.css"> -->
+    <link rel="stylesheet" href="/src/css/alteration.css">
+
+</head>
+<body>
+    <!--Header Section-->
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <a href="/src/pages/index.html">Izzy Alteration</a>
+                </div>
+                
+                <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+                
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Book an Appointment</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle">
+                            Account ⌄ 
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/src/pages/signup.html" class="dropdown-link">Create</a></li>
+                            <li><a href="/src/pages/login.html" class="dropdown-link">Log In</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/src/pages/services.html" class="nav-link">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Pricing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">About</a>
+                    </li>
+                    
+                
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!--Alteration Section-->
+    <div class="container">
+        <form id="myForm" action="/submit" method="POST">
+            <div class="alteration-container">
+                <!--alterations bottom female list of services-->
+                <!--first column-->
+                <h2 id="price-list">Price list</h2>      
+                <div class="alteration-list">
+                    <label for="alteration">Bottom (female):</label>
+                    <select id="alteration-top-Select">
+                        <option id="alteration-type-default" value="" data-link="" hidden></option>
+                        <option value="female-bottom-hem-skirt-straight-slim" data-link="">hem skirt straight slim"</option>
+                        <option value="female-bottom-hem-full/circle-unlined-skirt" data-link="">hem full/circle unlined skirt</option>`
+                        <option value="female-bottom-hem-full/circle-lined-skirt" data-link="">hem full/circle lined skirt</option>
+                        <option value="female-bottom-hem-unlined-pants" data-link="">hem unlined pants</option>
+                        <option value="female-bottom-hem-lined-pants" data-link="">hem lined pants</option>
+                        <option value="female-bottom-take-in-side-seams-unlined-pants" data-link="">take-in side seams unlined pants</option>
+                        <option value="female-bottom-take-in-side-seams-lined-pants" data-link="">take-in side seams lined pants</option>
+                        <option value="female-bottom-taper-legs-unlined-pants" data-link="">taper legs unlined pants</option>
+                        <option value="female-bottom-taper-legs-lined-pants" data-link="">taper legs lined pants</option>
+                        
+                        <!-- for unit test only comment when done testing -->
+                        <!-- <option value="male-bottom-taper-legs-lined-pants" data-link="">taper legs lined pants</option> -->
+                    </select>
+                </div>
+
+                <!--alteration level-->
+                <!--second column-->
+                <div class="alteration-level">
+                    <!--alteration level-->
+                    <label for="alterationLevel">Level of difficulty:</label>
+                    <select id="alterationLevel-diff" class="alteration-select">
+                        <option value="" data-link="" hidden></option>
+                        <option value="simple" data-link="">simple</option>
+                        <option value="intermediate" data-link="">intermediate</option>
+                        <option value="difficult" data-link="">difficult</option>
+                    </select>
+                                        
+                </div>
+                
+                <!--third column-->
+                <!--fee amount calculator-->
+                <div class="amount-container">
+                    <div class="amount-row">
+                        <span id="amount">Amount = </span>
+                        <span id="priceCalculation"></span>
+                        <div class="button-group">
+                            <button type="button" onclick="handleAdd()">Add</button> 
+                            <button type="button" onclick="handleClear()">Clear</button>
+                        </div>
+                    </div>
+                    <!-- depending on the level of difficulty, the price will be calculated accordingly. -->
+                    <details open>
+                        <summary>note</summary>
+                       <p id="alteration-note"></p>
+                    </details>
+                    <!--description of alteration-->
+                    <details open>
+                        <summary>description</summary>
+                        <p id="alteration-description"></p>
+                        <p id="alteration-customer-request"></p>
+                    </details>
+                    
+                    <!--summary detail-->
+                    <details open>
+                        <summary>order summary</summary>
+                        <p id="alteration-type"></p>
+                        <p id="alteration-level"></p>
+                    </details>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="/src/js/index.js"></script>
+    <script type="module" src="/src/pages/alteration-pages/alteration-modules/main.js"></script>
+
+
+
+</body>
+</html>

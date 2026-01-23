@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Izzy Alteration</title>
+    <link rel="stylesheet" href="/src/css/index.css">
+    <link rel="stylesheet" href="/src/css/add-service.css">
+</head>
+<body>
+    <!--Header Section-->
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <a href="/pages/index.html">Izzy Alteration</a>
+                </div>
+                
+                <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+                
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Book an Appointment</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle">
+                            Account ⌄ 
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/pages/signup.html" class="dropdown-link">Create</a></li>
+                            <li><a href="/pages/login.html" class="dropdown-link">Log In</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/pages/services.html" class="nav-link">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Pricing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">About</a>
+                    </li>
+                    
+                
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Add Service Container -->
+    <div class="add-service-container">
+        <h2 id="help-heading">Select Your Tailoring Service</h2>
+        
+        <!-- Service Selection -->
+        <div class="service-group">
+            <label for="service">Select a service:</label>
+            <select id="serviceSelect" name="service">
+                <option id="service-type-default" value="" data-link="" hidden>Select Service</option>
+                <option value="alteration" data-link="">Alteration</option>
+                <option value="repair" data-link="">Repair</option>
+                <option value="custom-tailoring" data-link="custom-tailoring">Custom Tailoring</option>
+            </select>
+        </div>
+
+        <!-- Gender Selection -->
+        <div id="gender-group" class="gender-group">
+            <label for="gender">Select a gender:</label>
+            <select id="genderSelect" name="gender">
+                <option id="gender-type-default" value="" data-link="" hidden>Select Gender</option>
+                <option value="male" data-link="">Male</option>
+                <option value="female" data-link="">Female</option>
+            </select>
+        </div>
+
+        <!-- Male Suboptions (Hidden by default) -->
+        <div id="male-subgroup" class="subgroup" style="display: none;">
+            <label for="maleClothing">Clothing type:</label>
+            <select id="maleClothing" name="maleClothing">
+                <option value="" hidden data-link="">Select Clothing Type</option>
+                <option value="top" data-link="alteration-male-top">Tops</option>
+                <option value="bottom" data-link="alteration-male-bottom">Bottom</option>
+                <option value="suits" data-link="alteration-male-suits">Suits</option>
+            </select>
+        </div>
+
+        <!-- Female Suboptions (Hidden by default) -->
+        <div id="female-subgroup" class="subgroup" style="display: none;">
+            <label for="femaleClothing">Clothing type:</label>
+            <select id="femaleClothing" name="femaleClothing">
+                <option value="" hidden data-link="">Select Clothing Type</option>
+                <option value="dress" data-link="alteration-female-dress">Dress</option>
+                <option value="top" data-link="alteration-female-top">Tops</option>
+                <option value="bottom" data-link="alteration-female-bottom">Bottom</option>
+                <option value="jacket" data-link="alteration-female-jacket">Jacket</option>
+            </select>
+        </div>
+
+        <!-- Summary Section -->
+        <div id="summary-section" class="summary-section" style="display: none;">
+            <h3>Service Summary</h3>
+            <div id="summary-content">
+                <p>No selections made yet.</p>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="button-group">
+            <button type="button" id="continueButton" disabled>Continue</button>
+            <button type="button" id="exitButton">Exit</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+
+
+
+
+    <script src="/src/js/add-service.js"></script>
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Body Measurements</title>
+    <link rel="stylesheet" href="/src/css/index.css">
+    <link rel="stylesheet" href="/src/css/measurements.css">
+    <link rel="stylesheet" 
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!--Header Section-->
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <a href="/src/pages/index.html">Izzy Alteration</a>
+                </div>
+                
+                <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+                
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Book an Appointment</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle">
+                            Account ⌄ 
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/src/pages/index.html" class="dropdown-link">Log Out</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/src/pages/services.html" class="nav-link">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Pricing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">About</a>
+                    </li>                
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!--Main Content Section-->
+    <div class="container">
+        <h1 id="measurement-info"><i class="fas fa-ruler-combined"></i> Measurement Information (male)</h1>
+        <p class="measure-note"><i class="fas fa-exclamation-circle"></i> All measurements should be in inches</p>
+        
+        <main class="main-content">
+            <form id="form-content-male" data-gender="male" action="#" method="post">
+                <div class="measurement-container">
+                    <div class="top">
+                        <div class="top-left">
+                            <h2 id="front-face">Front Measurements</h2>
+                            <div class="form-group">
+                                <label for="neck" class="measurement-label">
+                                    <span class="label-letter">A.</span>
+                                    <span class="label-text">Neck circumference:</span>
+                                    <span class="error-message" id="neck-error"></span>
+                                </label>
+                                <input type="number" id="neck" name="neck" min="20" max="80" step="0.5" placeholder="Enter inches (20-80)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="shoulder-length" class="measurement-label">
+                                    <span class="label-letter">B.</span>
+                                    <span class="label-text">Shoulder length:</span>
+                                    <span class="error-message" id="shoulder-length-error"></span>
+                                </label>
+                                <input type="number" id="shoulder-length" name="shoulder-length" min="10" max="30" step="0.5" placeholder="Enter inches (10-30)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="arm-length" class="measurement-label">
+                                    <span class="label-letter">C.</span>
+                                    <span class="label-text">Arm length:</span>
+                                    <span class="error-message" id="arm-length-error"></span>
+                                </label>
+                                <input type="number" id="arm-length" name="arm-length" min="15" max="50" step="0.5" placeholder="Enter inches (15-50)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="across-front" class="measurement-label">
+                                    <span class="label-letter">D.</span>
+                                    <span class="label-text">Across front:</span>
+                                    <span class="error-message" id="across-front-error"></span>
+                                </label>
+                                <input type="number" id="across-front" name="across-front" min="10" max="30" step="0.5" placeholder="Enter inches (10-30)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="chest-circumference" class="measurement-label">
+                                    <span class="label-letter">E.</span>
+                                    <span class="label-text">Chest circumference:</span>
+                                    <span class="error-message" id="chest-circumference-error"></span>
+                                </label>
+                                <input type="number" id="chest-circumference" name="chest-circumference" min="60" max="150" step="0.5" placeholder="Enter inches (60-150)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="waist" class="measurement-label">
+                                    <span class="label-letter">F.</span>
+                                    <span class="label-text">Waist circumference:</span>
+                                    <span class="error-message" id="waist-error"></span>
+                                </label>
+                                <input type="number" id="waist" name="waist" min="50" max="130" step="0.5" placeholder="Enter inches (50-130)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="hip-circumference" class="measurement-label">
+                                    <span class="label-letter">G.</span>
+                                    <span class="label-text">Hip circumference:</span>
+                                    <span class="error-message" id="hip-circumference-error"></span>
+                                </label>
+                                <input type="number" id="hip-circumference" name="hip-circumference" min="60" max="150" step="0.5" placeholder="Enter inches (60-150)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="total-rise" class="measurement-label">
+                                    <span class="label-letter">H.</span>
+                                    <span class="label-text">Total rise:</span>
+                                    <span class="error-message" id="total-rise-error"></span>
+                                </label>
+                                <input type="number" id="total-rise" name="total-rise" min="20" max="50" step="0.5" placeholder="Enter inches (20-50)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="thigh" class="measurement-label">
+                                    <span class="label-letter">I.</span>
+                                    <span class="label-text">Thigh:</span>
+                                    <span class="error-message" id="thigh-error"></span>
+                                </label>
+                                <input type="number" id="thigh" name="thigh" min="15" max="50" step="0.5" placeholder="Enter inches (15-50)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="knee" class="measurement-label">
+                                    <span class="label-letter">J.</span>
+                                    <span class="label-text">Knee:</span>
+                                    <span class="error-message" id="knee-error"></span>
+                                </label>
+                                <input type="number" id="knee" name="knee" min="10" max="30" step="0.5" placeholder="Enter inches (10-30)">
+                            </div>
+                        </div>
+
+                        <div class="top-middle">
+                            <h2 id="back-face">Back Measurements</h2>
+                            <div class="form-group">
+                                <label for="calf" class="measurement-label">
+                                    <span class="label-letter">K.</span>
+                                    <span class="label-text">Calf:</span>
+                                    <span class="error-message" id="calf-error"></span>
+                                </label>
+                                <input type="number" id="calf" name="calf" min="8" max="25" step="0.5" placeholder="Enter inches (8-25)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="ankle" class="measurement-label">
+                                    <span class="label-letter">L.</span>
+                                    <span class="label-text">Ankle:</span>
+                                    <span class="error-message" id="ankle-error"></span>
+                                </label>
+                                <input type="number" id="ankle" name="ankle" min="5" max="15" step="0.5" placeholder="Enter inches (5-15)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="bicep" class="measurement-label">
+                                    <span class="label-letter">M.</span>
+                                    <span class="label-text">Bicep:</span>
+                                    <span class="error-message" id="bicep-error"></span>
+                                </label>
+                                <input type="number" id="bicep" name="bicep" min="8" max="25" step="0.5" placeholder="Enter inches (8-25)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="elbow" class="measurement-label">
+                                    <span class="label-letter">N.</span>
+                                    <span class="label-text">Elbow:</span>
+                                    <span class="error-message" id="elbow-error"></span>
+                                </label>
+                                <input type="number" id="elbow" name="elbow" min="6" max="15" step="0.5" placeholder="Enter inches (6-15)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="wrist" class="measurement-label">
+                                    <span class="label-letter">O.</span>
+                                    <span class="label-text">Wrist:</span>
+                                    <span class="error-message" id="wrist-error"></span>
+                                </label>
+                                <input type="number" id="wrist" name="wrist" min="4" max="12" step="0.5" placeholder="Enter inches (4-12)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="inseam-ankle" class="measurement-label">
+                                    <span class="label-letter">P.</span>
+                                    <span class="label-text">Inseam to ankle:</span>
+                                    <span class="error-message" id="inseam-ankle-error"></span>
+                                </label>
+                                <input type="number" id="inseam-ankle" name="inseam-ankle" min="20" max="50" step="0.5" placeholder="Enter inches (20-50)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="inseam-floor" class="measurement-label">
+                                    <span class="label-letter">Q.</span>
+                                    <span class="label-text">Inseam to floor:</span>
+                                    <span class="error-message" id="inseam-floor-error"></span>
+                                </label>
+                                <input type="number" id="inseam-floor" name="inseam-floor" min="25" max="60" step="0.5" placeholder="Enter inches (25-60)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="neck-waist" class="measurement-label">
+                                    <span class="label-letter">R.</span>
+                                    <span class="label-text">Neck to waist:</span>
+                                    <span class="error-message" id="neck-waist-error"></span>
+                                </label>
+                                <input type="number" id="neck-waist" name="neck-waist" min="10" max="40" step="0.5" placeholder="Enter inches (10-40)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="neck-floor" class="measurement-label">
+                                    <span class="label-letter">S.</span>
+                                    <span class="label-text">Neck to floor:</span>
+                                    <span class="error-message" id="neck-floor-error"></span>
+                                </label>
+                                <input type="number" id="neck-floor" name="neck-floor" min="40" max="100" step="0.5" placeholder="Enter inches (40-100)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="waist-floor" class="measurement-label">
+                                    <span class="label-letter">T.</span>
+                                    <span class="label-text">Waist to floor:</span>
+                                    <span class="error-message" id="waist-floor-error"></span>
+                                </label>
+                                <input type="number" id="waist-floor" name="waist-floor" min="30" max="70" step="0.5" placeholder="Enter inches (30-70)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="height" class="measurement-label">
+                                    <span class="label-letter">U.</span>
+                                    <span class="label-text">Height:</span>
+                                    <span class="error-message" id="height-error"></span>
+                                </label>
+                                <input type="number" id="height" name="height" min="48" max="96" step="0.5" placeholder="Enter inches (48-96)">
+                            </div>
+                        </div>
+
+                        <div class="top-right" id="measurement-guide">
+                            <h3><i class="fas fa-info-circle"></i> Measurement Guide</h3>
+                            <div class="guide-image-container">
+                                <div class="guide-placeholder" id="default-guide">
+                                    <i class="fas fa-mouse-pointer"></i>
+                                    <p>Select a measurement field to see guidance</p>
+                                </div>
+                                <img id="guide-image" src="" alt="Measurement Guide" style="display: none;">
+                            </div>
+                            <div class="guide-text" id="guide-text">
+                                <p id="current-guide"><strong>How to use:</strong> Click on any measurement field to see detailed instructions and visual guidance.</p>
+                                <span id="measure-object"><strong></strong>object</span>
+                                <span id="measure-definition"><strong></strong>definition</span>
+                                <span id="measure-description"><strong></strong>description</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="center">
+                        <div class="validation-summary-left">
+                            <h3><i class="fas fa-clipboard-check"></i> Validation Summary</h3>
+                            <div class="summary-status" id="validation-status">
+                                <i class="fas fa-check-circle status-valid"></i>
+                                <span>No validation errors</span>
+                            </div>
+                            <ul id="error-list"></ul>
+                        </div>
+
+                        <div class="summary-section-right">
+                            <div class="summary-header">
+                                <h3><i class="fas fa-clipboard-list"></i> Measurement Summary</h3>
+                                <button type="button" id="print-summary" class="btn-icon" title="Print Summary">
+                                    <i class="fas fa-print"></i>
+                                </button>
+                            </div>
+                            <div id="summary-content">
+                                <div class="empty-summary">
+                                    <i class="fas fa-ruler"></i>
+                                    <p>No measurements saved yet.</p>
+                                    <p class="small">Fill out the form and click "Save Measurements"</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bottom">
+                        <div class="name-date-section-left">
+                            <div class="form-group">
+                                <label for="client-name">Name: <span class="error-message" id="client-name-error"></span></label>
+                                <input type="text" id="client-name" name="client-name" placeholder="Enter full name" maxlength="50">
+                            </div>
+                            <div class="form-group">
+                                <label for="size">Size Number: <span class="error-message" id="size-error"></span></label>
+                                <input type="number" id="size" name="size" placeholder="Enter size" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="save-date">Date: <span class="error-message" id="date-error"></span></label>
+                                <input type="date" id="save-date" name="save-date">
+                            </div>
+                        </div>
+                        
+                        <div class="button-section-right">
+                            <button type="button" id="submit-button" class="btn-primary" onclick="handleSaveMeasurements()">
+                                <i class="fas fa-save"></i> Save Measurements
+                            </button>
+                            <button type="button" id="reset-button" class="btn-secondary" onclick="handleResetForm()">
+                                <i class="fas fa-redo"></i> Reset Form
+                            </button>
+                            <button type="button" id="view-summary" class="btn-tertiary" onclick="handleViewSummary()">
+                                <i class="fas fa-eye"></i> View Summary
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </main>
+
+        <footer>
+            <p class="footer-note">Measurement System v1.0 | All measurements in inches</p>
+        </footer>       
+    </div>
+    
+   
+    <script src="/src/js/index.js"></script>
+    <script type="module" src="/src/pages/measurement-pages/measurement-modules/measurement-Main.js"></script>
+
+</body>
+</html>

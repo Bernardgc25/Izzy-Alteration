@@ -1,0 +1,62 @@
+
+
+/*Service-section*/
+.service-container-grid {
+  display: grid;
+  grid-template-rows: auto auto;
+  grid-template-columns: 1fr 1fr;
+  height: 100vh;
+  gap: .5rem;
+  padding: .5rem;
+
+}
+
+.service-container-subgrid-top{
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: span 2;
+}
+
+.top-left{
+  background-color: rgb(247, 220, 224);
+  /* padding: .25rem; */
+}
+
+.top-right{
+  background-color: rgb(239, 181, 190);
+  /* padding: .25rem; */
+}
+
+.service-container-subgrid-bottom {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: span 2;
+}
+
+.bottom-left{   
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: .25rem;
+}
+
+.bottom-left-0{
+  background-color: rgb(185, 211, 185);
+}
+
+.bottom-left-1{
+  background-color: rgb(184, 240, 184);
+}
+
+.bottom-right{
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: .25rem;
+}
+
+.bottom-right-0{
+  background-color: rgb(174, 217, 231);
+}
+
+.bottom-right-1{
+  background-color: rgb(153, 211, 231);
+}

@@ -1,0 +1,191 @@
+<!--  DEPRECATED FILE AND NOT NEEDED -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Izzy Alteration</title>
+    <!--relative path-->
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/alteration-female.css">
+</head>
+<body>
+    <!--Header Section-->
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <a href="/pages/index.html">Izzy Alteration</a>
+                </div>
+                
+                <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+                
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Book an Appointment</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle">
+                            Account ⌄ 
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/pages/signup.html" class="dropdown-link">Create</a></li>
+                            <li><a href="/pages/login.html" class="dropdown-link">Log In</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/pages/services.html" class="nav-link">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Pricing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">About</a>
+                    </li>
+                    
+                
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!--Alteration Section-->
+    <div class="container">
+        <form id="myForm" action="/submit" method="POST">
+            <div class="alteration-container">
+                    <!--alterations list of services-->
+                <h2 id="price-list">Price list</h2>      
+                <div class="alteration-list">
+                    <label for="alteration">Bodice:</label>
+                    <select id="alteration-bodice-Select">
+                        <option id="alteration-type-default" value="" data-link="" hidden></option>
+                        <option value="halter-neckline" data-link="">take up halter @ neckline</option>
+                        <option value="take-in-neckline" data-link="">take in neckline</option>
+                        <option value="line-bind-neckline" data-link="">line/bind neckline, or armhole</option>
+                        <option value="take-up-shoulders" data-link="">take up shoulders</option>
+                        <option value="shorten-straps" data-link="">shorten straps per set (2)</option>
+                        <option value="coordinating-straps" data-link="">coordinating add on straps</option>
+                        <option value="adjust-slide-bust" data-link="">take in or let out slide/bust seams, front or back</option>
+                        <option value="take-in-zipper" data-link="">take in zipper</option>
+                        <option value="reshape-armhole" data-link="">cut down/reshape armhole</option>
+                        <option value="shorten-bodice" data-link="">shorten bodice</option>
+                        <option value="add-gusset" data-link="">add gusset, cust, provides fabric</option>
+                        <option value="temple-fill-bodice" data-link="">temple fill bodice front/back **customer provides fabric**</option>
+                        <option value="additional-coverage" data-link="">additional bra or back coverage **customer provides fabric**</option>
+                        <option value="corset-back" data-link="">add pre made corset back</option>
+                        <option value="corset-ties" data-link="">corset ties (36 inches)</option>
+                        <option value="modesty-panel" data-link="">add pre made modesty</option>
+                    </select>
+
+                    <label for="alteration">Sleeve:</label>
+                    <select id="alteration-sleeve-Select">
+                        <option id="alteration-type-default" value="" data-link="" hidden></option>
+                        <option value="shorten-sleeve" data-link="">shorten sleeve</option>
+                        <option value="take-in-let-out-sleeve" data-link="">take in/let out sleeve</option>
+                        <option value="take-in-elastic" data-link="">take in elastic</option>
+                        <option value="add-lingerie" data-link="">add lingerie straps</option>
+                        <option value="reset-sleeve" data-link="">reset sleeve (may need to cut down armhole)</option>
+                        <option value="reshape-armholes" data-link="">reshape/reset armholes/sleeves</option>
+                        <option value="temple-fill-sleeves" data-link="">temple fill sleeves **customer provides fabric**</option>
+                        <option value="cap-sleeve-1" data-link="">cap sleeve 1</option>
+                        <option value="cap-sleeve-2" data-link="">cap sleeve 2</option>
+                        <option value="flutter-sleeve" data-link="">flutter sleeve</option>
+                        <option value="short-sleeve-ss1" data-link="">short sleeve SS1</option>
+                        <option value="long-sleeve-ls1" data-link="">long sleeve LS1</option>
+                    </select>
+
+                    <label for="alteration">Skirt:</label>
+                    <select id="alteration-skirt-Select">
+                        <option id="alteration-type-default" value="" data-link="" hidden></option>
+                        <option value="hem" data-link="">hem</option>
+                        <option value="waistband" data-link="">take in/let out waistband</option>
+                        <option value="side-seams" data-link="">take in/taper side seams</option>
+                        <option value="slit" data-link="">open/close slit</option>
+                    </select>
+
+                    <label for="alteration">Bustle:</label>
+                    <select id="alteration-bustle-Select">
+                        <option id="alteration-type-default" value="" data-link="" hidden></option>
+                        <option value="over-bustle" data-link="">over bustle, first three</option>
+                        <option value="add-over-bustle" data-link="">each additional over bustle button/loop</option>
+                        <option value="under-bustle" data-link="">under bustle, first three</option>
+                        <option value="add-under-bustle" data-link="">each additional under bustle button/loop</option>
+                        <option value="royal-bustle" data-link="">royal bustle, first pull</option>
+                        <option value="each-additional-royal" data-link="">each additional royal bustle pull</option>
+                        <option value="ballroom-bustle" data-link="">ballroom bustle first three</option>
+                        <option value="add-ballroom-bustle" data-link="">each additional ballroom bustle button/loop</option>
+                        <option value="bustle-point-each" data-link="">bustle point/each</option>
+                        <option value="ribbon-bustle-point" data-link="">ribbon rose bustle point **customer provides ribbon**</option>
+                        <option value="add-wristloop" data-link="">add wristloop</option>
+                    </select>
+
+                    <label for="alteration">Veil:</label>
+                    <select id="alteration-veil-Select">
+                        <option id="alteration-type-default" value="" data-link="" hidden></option>
+                        <option value="loop_comb" data-link="/services/alterations">add loop/comb</option>
+                        <option value="velcro_veil" data-link="/services/alterations">add velcro to veil</option>
+                        <option value="veil_bustle" data-link="/services/alterations">veil bustle (per hook/eye)</option>
+                    </select>
+
+                    <label for="alteration">Others:</label>
+                    <select id="alteration-others-Select">
+                        <option id="alteration-type-default" value="" data-link="" hidden></option>
+                        <option value="move-add-hooks-eyes" data-link="">move/add snaps, hooks and eyes</option>
+                        <option value="add-bra-cups" data-link="">add bra cups</option>
+                        <option value="rush-fee" data-link="">rush fee **2 weeks from pick up date**</option>
+                        <option value="additional-press-bridal" data-link="">additional steam/press for bridal gown</option>
+                        <option value="additional-press-veil" data-link="">additional steam/press for (veil or shawl)</option>
+                        <option value="hem-single-layer-" data-link="">hem single layer accessory</option>
+                        <option value="hem-slip" data-link="">hem slip</option>
+                    </select>
+                </div>
+
+                    
+                <div class="alteration-level">
+                    <!--alteration level-->
+                    <label for="alterationLevel">Level of difficulty:</label>
+                    <select id="alterationLevel-diff" class="alteration-select">
+                        <option value="" data-link="" hidden></option>
+                        <option value="simple" data-link="">simple</option>
+                        <option value="intermediate" data-link="">intermediate</option>
+                        <option value="difficult" data-link="">difficult</option>
+                        <option value="couture" data-link="">couture</option>
+                    </select>
+
+                    <!--description of alteration-->
+                    <details open>
+                        <summary>description</summary>
+                        <p id="alteration-description">description about alteration on this portion</p>
+                    </details>
+                    
+                </div>
+
+                    <!--fee amount calculator-->
+                <div class="amount-container">
+                    <span id="amount">Amount = </span><span id="priceCalculation"></span>
+                
+                     <!--cart form buttons-->
+                    <button type="button" onclick="handleAdd()">Add</button> 
+                    <button type="button" onclick="handleClear()">Clear</button>
+
+                    <!--summary detail-->
+                    <details open>
+                        <summary>order summary</summary>
+                        <p id="alteration-type-order">alteration type on this portion</p>
+                        <p id="alteration-level-order">alteration level on this portion</p>
+                    </details>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="/js/index.js"></script>
+    <!-- <script src="/js/alteration-female.js"></script> -->
+    <script type="module" src="/js/modules/main.js"></script>
+ 
+
+
+
+</body>
+</html>

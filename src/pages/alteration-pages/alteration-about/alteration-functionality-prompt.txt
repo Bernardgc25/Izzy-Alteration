@@ -1,0 +1,1025 @@
+"1. create a common functionality that can be shared across multiple HTML files: 
+"2. here are the files"
+"3. this is alteration-female-bottom.html: 
+   <!--Alteration Section-->
+    <div class="container">
+        <form id="myForm" action="/submit" method="POST">
+            <div class="alteration-container">
+                <!--alterations bottom female list of services-->
+                <!--first column-->
+                <h2 id="price-list">Price list</h2>      
+                <div class="alteration-list">
+                    <label for="alteration">Bottom (female):</label>
+                    <select id="alteration-top-Select">
+                        <option id="alteration-type-default" value="" data-link="" hidden></option>
+                        <option value="female-bottom-hem-skirt-straight-slim" data-link="">hem skirt straight slim"</option>
+                        <option value="female-bottom-hem-full/circle-unlined-skirt" data-link="">hem full/circle unlined skirt</option>`
+                        <option value="female-bottom-hem-full/circle-lined-skirt" data-link="">hem full/circle lined skirt</option>
+                        <option value="female-bottom-hem-unlined-pants" data-link="">hem unlined pants</option>
+                        <option value="female-bottom-hem-lined-pants" data-link="">hem lined pants</option>
+                        <option value="female-bottom-take-in-side-seams-unlined-pants" data-link="">take-in side seams unlined pants</option>
+                        <option value="female-bottom-take-in-side-seams-lined-pants" data-link="">take-in side seams lined pants</option>
+                        <option value="female-bottom-taper-legs-unlined-pants" data-link="">taper legs unlined pants</option>
+                        <option value="female-bottom-taper-legs-lined-pants" data-link="">taper legs lined pants</option>
+                    </select>
+                </div>
+
+                <!--alteration level-->
+                <!--second column-->
+                <div class="alteration-level">
+                    <label for="alterationLevel">Level of difficulty:</label>
+                    <select id="alterationLevel-diff" class="alteration-select">
+                        <option value="" data-link="" hidden></option>
+                        <option value="simple" data-link="">simple</option>
+                        <option value="intermediate" data-link="">intermediate</option>
+                        <option value="difficult" data-link="">difficult</option>
+                    </select>
+                                        
+                </div>
+                
+                <!--third column-->
+                <!--fee amount calculator-->
+                <div class="amount-container">
+                    <div class="amount-row">
+                        <span id="amount">Amount = </span>
+                        <span id="priceCalculation"></span>
+                        <div class="button-group">
+                            <button type="button" onclick="handleAdd()">Add</button> 
+                            <button type="button" onclick="handleClear()">Clear</button>
+                        </div>
+                    </div>
+                    <!-- depending on the level of difficulty, the price will be calculated accordingly. -->
+                    <details open>
+                        <summary>note</summary>
+                       <p id="alteration-note"></p>
+                    </details>
+                    <!--description of alteration-->
+                    <details open>
+                        <summary>description</summary>
+                        <p id="alteration-description"></p>
+                        <p id="alteration-customer-request"></p>
+                    </details>
+                    
+                    <!--summary detail-->
+                    <details open>
+                        <summary>order summary</summary>
+                        <p id="alteration-type"></p>
+                        <p id="alteration-level"></p>
+                    </details>
+                </div>
+            </div>
+        </form>
+    </div>
+	"
+"4. this is alteration-female-dress.html: 
+      <!--Alteration Section-->
+    <div class="container">
+        <form id="myForm" action="/submit" method="POST">
+            <div class="alteration-container">
+                    <!--alterations Dress female list of services-->
+                <h2 id="price-list">Price list</h2>      
+                <div class="alteration-list">
+                    <!--Bodice-->
+                    <label for="alteration">Bodice: (female)</label>
+                    <select id="alteration-bodice-Select">
+                        <option id="alteration-type-default" value="" data-link="" hidden></option>
+                        <option value="female-dress-halter-neckline" data-link="">halter neckline</option>
+                        <option value="female-dress-take-in-neckline" data-link="">take in neckline</option>
+                        <option value="female-dress-line-bind-neckline" data-link="">line/bind neckline</option>
+                        <option value="female-dress-take-in-shoulders" data-link="">take in shoulders</option>
+                        <option value="female-dress-shorten-straps" data-link="">shorten straps per set (2)</option>
+                        <option value="female-dress-coordinating-straps" data-link="">coordinating add on straps</option>
+                        <option value="female-dress-adjust-slide-bust" data-link="">adjust-slide-bust</option>
+                        <option value="female-dress-take-in-zipper" data-link="">take in zipper</option>
+                        <option value="female-dress-reshape-armhole" data-link="">reshape armhole</option>
+                        <option value="female-dress-shorten-bodice" data-link="">shorten bodice</option>
+                        <option value="female-dress-add-gusset" data-link="">add gusset, cust, provides fabric</option>
+                        <option value="female-dress-temple-fill-bodice" data-link="">temple fill bodice front/back **customer provides fabric**</option>
+                        <option value="female-dress-additional-coverage" data-link="">additional bra or back coverage **customer provides fabric**</option>
+                        <option value="female-dress-corset-back" data-link="">add pre made corset back</option>
+                        <option value="female-dress-corset-ties" data-link="">corset ties (36 inches)</option>
+                        <option value="female-dress-modesty-panel" data-link="">add pre made modesty</option>
+                    </select>
+
+                    <!--Sleeve-->
+                    <label for="alteration">Sleeve:</label>
+                    <select id="alteration-sleeve-Select">
+                        <option id="alteration-type-default" value="" data-link="" hidden></option>
+                        <option value="female-dress-shorten-sleeve" data-link="">shorten sleeve</option>
+                        <option value="female-dress-take-in-let-out-sleeve" data-link="">take in/let out sleeve</option>
+                        <option value="female-dress-take-in-elastic" data-link="">take in elastic</option>
+                        <option value="female-dress-add-lingerie" data-link="">add lingerie straps</option>
+                        <option value="female-dress-reset-sleeve" data-link="">reset sleeve (may need to cut down armhole)</option>
+                        <option value="female-dress-reshape-armholes" data-link="">reshape/reset armholes/sleeves</option>
+                        <option value="female-dress-temple-fill-sleeves" data-link="">temple fill sleeves **customer provides fabric**</option>
+                        <option value="female-dress-cap-sleeve-1" data-link="">cap sleeve 1</option>
+                        <option value="female-dress-cap-sleeve-2" data-link="">cap sleeve 2</option>
+                        <option value="female-dress-flutter-sleeve" data-link="">flutter sleeve</option>
+                        <option value="female-dress-short-sleeve-ss1" data-link="">short sleeve SS1</option>
+                        <option value="female-dress-long-sleeve-ls1" data-link="">long sleeve LS1</option>
+                    </select>
+
+                    <!--Skirt-->
+                    <label for="alteration">Skirt:</label>
+                    <select id="alteration-skirt-Select">
+                        <option id="alteration-type-default" value="" data-link="" hidden></option>
+                        <option value="female-dress-hem" data-link="">hem</option>
+                        <option value="female-dress-waistband" data-link="">waistband</option>
+                        <option value="female-dress-side-seams" data-link="">side seams</option>
+                        <option value="female-dress-slit" data-link="">slit</option>
+                    </select>
+
+                    <!--Bustle-->
+                    <label for="alteration">Bustle:</label>
+                    <select id="alteration-bustle-Select">
+                        <option id="alteration-type-default" value="" data-link="" hidden></option>
+                        <option value="female-dress-over-bustle" data-link="">over bustle, first three</option>
+                        <option value="female-dress-add-over-bustle" data-link="">each additional over bustle button/loop</option>
+                        <option value="female-dress-under-bustle" data-link="">under bustle, first three</option>
+                        <option value="female-dress-add-under-bustle" data-link="">each additional under bustle button/loop</option>
+                        <option value="female-dress-royal-bustle" data-link="">royal bustle, first pull</option>
+                        <option value="female-dress-each-additional-royal" data-link="">each additional royal bustle pull</option>
+                        <option value="female-dress-ballroom-bustle" data-link="">ballroom bustle first three</option>
+                        <option value="female-dress-add-ballroom-bustle" data-link="">each additional ballroom bustle button/loop</option>
+                        <option value="female-dress-bustle-point-each" data-link="">bustle point/each</option>
+                        <option value="female-dress-ribbon-bustle-point" data-link="">ribbon rose bustle point **customer provides ribbon**</option>
+                        <option value="female-dress-add-wristloop" data-link="">add wristloop</option>
+                    </select>
+
+                    <!--Veil-->
+                    <label for="alteration">Veil:</label>
+                    <select id="alteration-veil-Select">
+                        <option id="alteration-type-default" value="" data-link="" hidden></option>
+                        <option value="female-dress-loop_comb" data-link="">loop/comb</option>
+                        <option value="female-dress-velcro_veil" data-link="">velcro</option>
+                        <option value="female-dress-veil_bustle" data-link="">veil bustle (per hook/eye)</option>
+                    </select>
+
+                    <!--Others-->
+                    <label for="alteration">Others:</label>
+                    <select id="alteration-others-Select">
+                        <option id="alteration-type-default" value="" data-link="" hidden></option>
+                        <option value="female-dress-move-add-hooks-eyes" data-link="">move/add snaps, hooks and eyes</option>
+                        <option value="female-dress-add-bra-cups" data-link="">add bra cups</option>
+                        <option value="female-dress-hem-single-layer" data-link="">hem single layer accessory</option>
+                        <option value="female-dress-hem-slip" data-link="">hem slip</option>
+                    </select>
+                </div>
+
+                <!--alteration level-->
+                <!--second column-->
+                <div class="alteration-level">
+                    <!--alteration level-->
+                    <label for="alterationLevel">Level of difficulty:</label>
+                    <select id="alterationLevel-diff" class="alteration-select">
+                        <option value="" data-link="" hidden></option>
+                        <option value="simple" data-link="">simple</option>
+                        <option value="intermediate" data-link="">intermediate</option>
+                        <option value="difficult" data-link="">difficult</option>
+                    </select>
+                    
+                </div>
+
+                <!--third column-->
+                <!--fee amount calculator-->
+                <div class="amount-container">
+                    <div class="amount-row">
+                        <span id="amount">Amount = </span>
+                        <span id="priceCalculation"></span>
+                        <div class="button-group">
+                            <button type="button" onclick="handleAdd()">Add</button> 
+                            <button type="button" onclick="handleClear()">Clear</button>
+                        </div>
+                    </div>
+                    <!-- depending on the level of difficulty, the price will be calculated accordingly. -->
+                    <details open>
+                        <summary>note</summary>
+                       <p id="alteration-note"></p>
+                    </details>
+                    
+                    <!--description of alteration-->
+                    <details open>
+                        <summary>description</summary>
+                        <p id="alteration-description"></p>
+                        <p id="alteration-customer-request"></p>
+                    </details>
+                    
+                    <!--summary detail-->
+                    <details open>
+                        <summary>order summary</summary>
+                        <p id="alteration-type"></p>
+                        <p id="alteration-level"></p>
+                    </details>
+                </div>
+            </div>
+        </form>
+    </div>	"
+"5. this is alteration-female-jacket.html: 
+
+    <!--Alteration Section-->
+    <div class="container">
+        <form id="myForm" action="/submit" method="POST">
+            <div class="alteration-container">
+                <!--alterations jacket female list of services-->
+                <!--first column-->
+                <h2 id="price-list">Price list</h2>      
+                <div class="alteration-list">
+                    <label for="alteration">Jacket (female):</label>
+                    <select id="alteration-top-Select">
+                        <option id="alteration-type-default" value="" data-link="" hidden></option>
+                        <option value="female-jacket-hem-sleeves-unlined" data-link="">hem sleeves unlined"</option>
+                        <option value="female-jacket-hem-sleeves-lined" data-link="">hem sleeves lined</option>`
+                        <option value="female-jacket-take-in-waist" data-link="">take-in waist</option>
+                        <option value="female-jacket-taper-sides-unlined" data-link="">taper sides unlined</option>
+                        <option value="female-jacket-taper-sides-lined" data-link="">taper sides lined</option>
+                        <option value="female-jacket-shorten-length" data-link="">shorten length</option>                    </select>
+                </div>
+
+                <!--alteration level-->
+                <!--second column-->
+                <div class="alteration-level">
+                    <label for="alterationLevel">Level of difficulty:</label>
+                    <select id="alterationLevel-diff" class="alteration-select">
+                        <option value="" data-link="" hidden></option>
+                        <option value="simple" data-link="">simple</option>
+                        <option value="intermediate" data-link="">intermediate</option>
+                        <option value="difficult" data-link="">difficult</option>
+                    </select>
+                                        
+                </div>
+                
+                <!--third column-->
+                <!--fee amount calculator-->
+                <div class="amount-container">
+                    <div class="amount-row">
+                        <span id="amount">Amount = </span>
+                        <span id="priceCalculation"></span>
+                        <div class="button-group">
+                            <button type="button" onclick="handleAdd()">Add</button> 
+                            <button type="button" onclick="handleClear()">Clear</button>
+                        </div>
+                    </div>
+                    <!-- depending on the level of difficulty, the price will be calculated accordingly. -->
+                    <details open>
+                        <summary>note</summary>
+                       <p id="alteration-note"></p>
+                    </details>
+                    
+                    <!--description of alteration-->
+                    <details open>
+                        <summary>description</summary>
+                        <p id="alteration-description"></p>
+                        <p id="alteration-customer-request"></p>
+                    </details>
+                    
+                    <!--summary detail-->
+                    <details open>
+                        <summary>order summary</summary>
+                        <p id="alteration-type"></p>
+                        <p id="alteration-level"></p>
+                    </details>
+                </div>
+            </div>
+        </form>
+    </div>
+	"
+"6. this is alteration-female-top.html: 
+
+    <!--Alteration Section-->
+    <div class="container">
+        <form id="myForm" action="/submit" method="POST">
+            <div class="alteration-container">
+                <!--alterations Top female list of services-->
+                <!--first column-->
+                <h2 id="price-list">Price list</h2>      
+                <div class="alteration-list">
+                    <label for="alteration">Top (female):</label>
+                    <select id="alteration-top-Select">
+                        <option id="alteration-type-default" value="" data-link="" hidden></option>
+                        <option value="female-top-shorten-straps" data-link="">shorten straps</option>
+                        <option value="female-top-take-in-unlined" data-link="">take-in unlined</option>`
+                        <option value="female-top-take-in-lined" data-link="">take-in lined</option>
+                        <option value="female-top-hem-unlined" data-link="">hem unlined</option>
+                        <option value="female-top-hem-lined" data-link="">hem lined</option>
+                        <option value="female-top-hem-sleeves-unlined" data-link="">hem sleeves unlined</option>
+                        <option value="female-top-hem-sleeves-lined" data-link="">hem sleeves lined</option>
+
+                    </select>
+                </div>
+
+                <!--alteration level-->
+                <!--second column-->
+                <div class="alteration-level">
+                    <label for="alterationLevel">Level of difficulty:</label>
+                    <select id="alterationLevel-diff" class="alteration-select">
+                        <option value="" data-link="" hidden></option>
+                        <option value="simple" data-link="">simple</option>
+                        <option value="intermediate" data-link="">intermediate</option>
+                        <option value="difficult" data-link="">difficult</option>
+                    </select>
+                                        
+                </div>
+                
+                <!--third column-->
+                <!--fee amount calculator-->
+                <div class="amount-container">
+                    <div class="amount-row">
+                        <span id="amount">Amount = </span>
+                        <span id="priceCalculation"></span>
+                        <div class="button-group">
+                            <button type="button" onclick="handleAdd()">Add</button> 
+                            <button type="button" onclick="handleClear()">Clear</button>
+                        </div>
+                    </div>
+                    <!-- depending on the level of difficulty, the price will be calculated accordingly. -->
+                    <details open>
+                        <summary>note</summary>
+                       <p id="alteration-note"></p>
+                    </details>
+                    
+                    <!--description of alteration-->
+                    <details open>
+                        <summary>description</summary>
+                        <p id="alteration-description"></p>
+                        <p id="alteration-customer-request"></p>                        
+                    </details>
+                    
+                    <!--summary detail-->
+                    <details open>
+                        <summary>order summary</summary>
+                        <p id="alteration-type"></p>
+                        <p id="alteration-level"></p>
+                    </details>
+                </div>
+            </div>
+        </form>
+    </div>
+    "
+"7. this is alteration-male-bottom.html: 
+    
+    <!--Alteration Section-->
+    <div class="container">
+        <form id="myForm" action="/submit" method="POST">
+            <div class="alteration-container">
+                <!--alterations Bottom male list of services-->
+                <!--first column-->
+                <h2 id="price-list">Price list</h2>      
+                <div class="alteration-list">
+                    <label for="alteration">Bottom (male):</label>
+                    <select id="alteration-top-Select">
+                        <option id="alteration-type-default" value="" data-link="" hidden></option>
+                        <option value="male-bottom-hem-unlined-pants" data-link="">hem unlined pants</option>
+                        <option value="male-bottom-hem-lined-pants" data-link="">hem lined pants</option>
+                        <option value="male-bottom-take-in-unlined-pants" data-link="">take-in unlined pants</option>
+                        <option value="male-bottom-take-in-lined-pants" data-link="">take-in lined pants</option>
+                        <option value="male-bottom-taper-unlined-pants" data-link="">taper unlined pants</option>
+                        <option value="male-bottom-taper-lined-pants" data-link="">bottom taper lined-pants</option>
+                    </select>
+                </div>
+
+                <!--alteration level-->
+                <!--second column-->
+                <div class="alteration-level">
+                    <label for="alterationLevel">Level of difficulty:</label>
+                    <select id="alterationLevel-diff" class="alteration-select">
+                        <option value="" data-link="" hidden></option>
+                        <option value="simple" data-link="">simple</option>
+                        <option value="intermediate" data-link="">intermediate</option>
+                        <option value="difficult" data-link="">difficult</option>
+                    </select>
+                                        
+                </div>
+                
+                <!--third column-->
+                <!--fee amount calculator-->
+                <div class="amount-container">
+                    <div class="amount-row">
+                        <span id="amount">Amount = </span>
+                        <span id="priceCalculation"></span>
+                        <div class="button-group">
+                            <button type="button" onclick="handleAdd()">Add</button> 
+                            <button type="button" onclick="handleClear()">Clear</button>
+                        </div>
+                    </div>
+                    <!-- depending on the level of difficulty, the price will be calculated accordingly. -->
+                    <details open>
+                        <summary>note</summary>
+                       <p id="alteration-note"></p>
+                    </details>
+                    
+                    <!--description of alteration-->
+                    <details open>
+                        <summary>description</summary>
+                        <p id="note-description"></p>
+                        <p id="alteration-customer-request"></p>    
+                    </details>
+                    
+                    <!--summary detail-->
+                    <details open>
+                        <summary>order summary</summary>
+                        <p id="alteration-type"></p>
+                        <p id="alteration-level"></p>
+                    </details>
+                </div>
+            </div>
+        </form>
+    </div>	
+	"
+"8. this is alteration-male-suits.html: 
+   
+    <!--Alteration Section-->
+    <div class="container">
+        <form id="myForm" action="/submit" method="POST">
+            <div class="alteration-container">
+                <!--alterations Suits male list of services-->
+                <!--first column-->
+                <h2 id="price-list">Price list</h2>      
+                <div class="alteration-list">
+                    <label for="alteration">Vest: (male-suits)</label>
+                    <select id="alteration-vest-Select">
+                        <option id="alteration-type-default" value="" data-link="" hidden></option>
+                        <option value="male-suits-vest-take-in-side-seam" data-link="">take-in side seam</option>
+                        <option value="male-suits-vest-take-in-shoulder" data-link="">take-in shoulder</option>
+                        <option value="male-suits-vest-reshape-armhole" data-link="">reshape armholes</option>
+                    </select>
+
+                    <label for="alteration">Jacket:</label>
+                    <select id="alteration-jacket-Select">
+                        <option id="alteration-type-default" value="" data-link="" hidden></option>
+                        <option value="male-suits-jacket-hem-sleeves-unlined" data-link="">hem sleeves unlined</option>
+                        <option value="male-suits-jacket-hem-sleeves-lined" data-link="">hem sleeves lined</option>
+                        <option value="male-suits-jacket-take-in-waist" data-link="">take-in waist</option>
+                        <option value="male-suits-jacket-taper-sides" data-link="">taper sides</option>
+                        <option value="male-suits-jacket-shoulder-take-in" data-link="">shoulder take-in</option>
+                        <option value="male-suits-jacket-reshape-armhole" data-link="">reshape armhole</option>
+                        <option value="male-suits-jacket-back-seam" data-link="">back-seam</option>
+        
+                    </select>
+
+                    <label for="alteration">Pants:</label>
+                    <select id="alteration-pants-Select">
+                        <option id="alteration-type-default" value="" data-link="" hidden></option>
+                        <option value="male-suits-pants-take-in-waist" data-link="">take-in waist</option>
+                        <option value="male-suits-pants-adjust-length" data-link="">adjust length</option>
+                        <option value="male-suits-pants-side-taper" data-link="">side taper</option>
+                    </select>
+                </div>
+
+                <!--alteration level-->
+                <!--second column-->
+                <div class="alteration-level">
+                    <label for="alterationLevel">Level of difficulty:</label>
+                    <select id="alterationLevel-diff" class="alteration-select">
+                        <option value="" data-link="" hidden></option>
+                        <option value="simple" data-link="">simple</option>
+                        <option value="intermediate" data-link="">intermediate</option>
+                        <option value="difficult" data-link="">difficult</option>
+                    </select>
+                    
+                </div>
+
+                <!--third column-->
+                <!--fee amount calculator-->
+                <div class="amount-container">
+                    <div class="amount-row">
+                        <span id="amount">Amount = </span>
+                        <span id="priceCalculation"></span>
+                        <div class="button-group">
+                            <button type="button" onclick="handleAdd()">Add</button> 
+                            <button type="button" onclick="handleClear()">Clear</button>
+                        </div>
+                    </div>
+                    <!-- depending on the level of difficulty, the price will be calculated accordingly. -->
+                    <details open>
+                        <summary>note</summary>
+                       <p id="alteration-note"></p>
+                    </details>
+                    
+                    <!--description of alteration-->
+                    <details open>
+                        <summary>description</summary>
+                        <p id="alteration-description"></p>
+                        <p id="alteration-customer-request"></p>
+                    </details>
+                    
+                    <!--summary detail-->
+                    <details open>
+                        <summary>order summary</summary>
+                        <p id="alteration-type"></p>
+                        <p id="alteration-level"></p>
+                    </details>
+                </div>
+            </div>
+        </form>
+    </div>
+	"
+"9. this is alteration-male-top.html: 
+  
+    <!--Alteration Section-->
+    <div class="container">
+        <form id="myForm" action="/submit" method="POST">
+            <div class="alteration-container">
+                <!--alterations Top male list of services-->
+                <!--first column-->
+                <h2 id="price-list">Price list</h2>      
+                <div class="alteration-list">
+                    <label for="alteration">Top (male):</label>
+                    <select id="alteration-top-Select">
+                        <option id="alteration-type-default" value="" data-link="" hidden></option>
+                        <option value="male-top-shorten-straps" data-link="">shorten straps</option>
+                        <option value="male-top-hem-sleeves" data-link="">hem sleeves</option>
+                        <option value="male-top-take-in-taper" data-link="">take-in taper</option>
+                          
+                    </select>
+                </div>
+
+                <!--alteration level-->
+                <!--second column-->
+                <div class="alteration-level">
+                    <label for="alterationLevel">Level of difficulty:</label>
+                    <select id="alterationLevel-diff" class="alteration-select">
+                        <option value="" data-link="" hidden></option>
+                        <option value="simple" data-link="">simple</option>
+                        <option value="intermediate" data-link="">intermediate</option>
+                        <option value="difficult" data-link="">difficult</option>
+                    </select>
+                                        
+                </div>
+
+                <!--third column-->
+                <!--fee amount calculator-->
+                <div class="amount-container">
+                    <div class="amount-row">
+                        <span id="amount">Amount = </span>
+                        <span id="priceCalculation"></span>
+                        <div class="button-group">
+                            <button type="button" onclick="handleAdd()">Add</button> 
+                            <button type="button" onclick="handleClear()">Clear</button>
+                        </div>
+                    </div>
+                    <!-- depending on the level of difficulty, the price will be calculated accordingly. -->
+                    <details open>
+                        <summary>note</summary>
+                       <p id="alteration-note"></p>
+                    </details>
+                    
+                    <!--description of alteration-->
+                    <details open>
+                        <summary>description</summary>
+                        <p id="alteration-description"></p>
+                        <p id="alteration-customer-request"></p>
+                    </details>
+                    
+                    <!--summary detail-->
+                    <details open>
+                        <summary>order summary</summary>
+                        <p id="alteration-type"></p>
+                        <p id="alteration-level"></p>
+                    </details>
+                </div>
+            </div>
+        </form>
+    </div>
+    "
+"10. this is alteration-repair.html:
+     <!--Alteration Section-->
+    <div class="container">
+        <form id="myForm" action="/submit" method="POST">
+            <div class="alteration-container">
+                <!--Repair list of services-->
+                <!--first column-->
+                <h2 id="price-list">Price list</h2>      
+                <div class="alteration-list">
+                    <label for="alteration">repair (unisex):</label>
+                    <select id="alteration-top-Select">
+                        <!--Zippers-->
+                        <option id="alteration-type-default" value="" data-link="" hidden></option>
+                        <option value="repair-zippers-on-dress" data-link="">zippers on dress</option>
+                        <option value="repair-zippers-on-pants" data-link="">zippers on pants</option>
+                        <option value="repair-zippers-on-coats-jackets" data-link="">zippers on coats/jackets</option>
+                       
+                        <!--Tears/Holes-->
+                        <option value="repair-apply-patches" data-link="">apply patches</option>
+                        <option value="repair-sew-in-rips-tears" data-link="">sew-in rips tears</option>
+                       
+                        <!-- Buttons -->
+                        <option value="repair-button-replacement" data-link="">button replacement</option>                    
+                    </select>
+                </div>
+
+                <!--alteration level-->
+                <!--second column-->
+                <div class="alteration-level">
+                    <label for="alterationLevel">Level of difficulty:</label>
+                    <select id="alterationLevel-diff" class="alteration-select">
+                        <option value="" data-link="" hidden></option>
+                        <option value="simple" data-link="">simple</option>
+                        <option value="intermediate" data-link="">intermediate</option>
+                        <option value="difficult" data-link="">difficult</option>
+                    </select>
+                                        
+                </div>
+                
+                <!--third column-->
+                <!--fee amount calculator-->
+                <div class="amount-container">
+                    <div class="amount-row">
+                        <span id="amount">Amount = </span>
+                        <span id="priceCalculation"></span>
+                        <div class="button-group">
+                            <button type="button" onclick="handleAdd()">Add</button> 
+                            <button type="button" onclick="handleClear()">Clear</button>
+                        </div>
+                    </div>
+                    <!-- depending on the level of difficulty, the price will be calculated accordingly. -->
+                    <details open>
+                        <summary>note</summary>
+                        <p id="alteration-note"></p>
+                    </details>
+                    
+                    <!--description of alteration-->
+                    <details open>
+                        <summary>description</summary>
+                        <p id="alteration-description"></p>
+                        <p id="alteration-customer-request"></p>
+                    </details>
+                    
+                    <!--summary detail-->
+                    <details open>
+                        <summary>order summary</summary>
+                        <p id="alteration-type"></p>
+                        <p id="alteration-level"></p>
+                    </details>
+                </div>
+            </div>
+        </form>
+    </div>
+	"
+"11. this is the CSS. make adjustment if necessary but do not change the layout and structure : 
+
+	.container {
+	    max-width: 1200px;
+	    margin: 20px auto;
+	    padding: 0 15px;
+	}
+
+	/* Main container with 3 columns */
+	.alteration-container {
+	    display: grid;
+	    grid-template-columns: 1fr 1fr 1fr;
+	    gap: 15px;
+	    border: 1px solid #ddd;
+	    padding: 15px;
+	    background-color: #fff;
+	    border-radius: 12px;
+	}
+
+	/* Column styles - each with border and background color */
+	.alteration-container > div:nth-child(2) {
+	    /* First column (after the title) */
+	    border: 1px solid #ccc;
+	    padding: 12px;
+	    background-color: rgb(227, 234, 234);
+	    border-radius: 4px;
+	}
+
+	.alteration-container > div:nth-child(3) {
+	    /* Second column */
+	    border: 1px solid #ccc;
+	    padding: 12px;
+	    background-color: rgb(227, 234, 234);
+	    border-radius: 4px;
+	}
+
+	.alteration-container > div:nth-child(4) {
+	    /* Third column */
+	    border: 1px solid #ccc;
+	    padding: 12px;
+	    background-color: rgb(227, 234, 234);
+	    border-radius: 4px;
+	}
+
+	/* Price list title */
+	#price-list {
+	    grid-column: 1 / -1;
+	    text-align: center;
+	    margin-bottom: 10px;
+	    padding-bottom: 8px;
+	    border-bottom: 2px solid #333;
+	    color: #333;
+	    background-color: transparent; /* Keep title transparent */
+	}
+
+	/* Form elements styling */
+	.alteration-list,
+	.alteration-level,
+	.amount-container {
+	    display: flex;
+	    flex-direction: column;
+	    gap: 8px;
+	}
+
+	label {
+	    font-weight: bold;
+	    font-size: 14px;
+	    color: #555;
+	    margin-bottom: 2px;
+	}
+
+	select {
+	    padding: 6px 8px;
+	    border: 1px solid #bbb;
+	    border-radius: 3px;
+	    font-size: 14px;
+	     background-color: #f9f9f9;
+	    width: 100%;
+	}
+
+	/* Amount section */
+	#amount {
+	    font-weight: bold;
+	    color: #333;
+	}
+
+	#priceCalculation {
+	    color: #e44d26;
+	    font-weight: bold;
+	}
+
+	/* Amount row with inline layout */
+	.amount-row {
+	    display: flex;
+	    align-items: center;
+	    gap: 10px;
+	    margin-bottom: 8px;
+	}
+
+	#amount {
+	    font-weight: bold;
+	    color: #333;
+	    white-space: nowrap;
+	}
+
+	#priceCalculation {
+	    color: #e44d26;
+	    font-weight: bold;
+	    min-width: 60px;
+	    white-space: nowrap;
+	}
+
+	.button-group {
+	    display: flex;
+	    gap: 5px;
+	    margin-left: auto;
+	}
+
+	/* Keep existing button styles but adjust for new layout */
+	button {
+	    padding: 6px 12px;
+	    background-color: #4CAF50;
+	    color: white;
+	    border: none;
+	    border-radius: 3px;
+	    cursor: pointer;
+	    font-size: 14px;
+	    width: 80px;
+	    transition: background-color 0.2s;
+	}
+
+	button:last-of-type {
+	    background-color: #f44336;
+	}
+
+	button:last-of-type:hover {
+	    background-color: #da190b;
+	}
+
+	/* Compact buttons */
+	button {
+	    padding: 6px 12px;
+	    background-color: #4CAF50;
+	    color: white;
+	    border: none;
+	    border-radius: 3px;
+	    cursor: pointer;
+	    font-size: 14px;
+	    width: 80px; /* Shortened length */
+	    margin-right: 5px;
+	    transition: background-color 0.2s;
+	}
+
+	button:hover {
+	    background-color: #45a049;
+	}
+
+	button:last-of-type {
+	    background-color: #f44336;
+	}
+
+	button:last-of-type:hover {
+	    background-color: #da190b;
+	}
+
+	/* Details sections */
+	details {
+	    margin-top: 10px;
+	    border: 1px solid #ddd;
+	    border-radius: 3px;
+	    padding: 8px;
+	    background-color: #f9f9f9;
+	}
+
+	summary {
+	    font-weight: bold;
+	    cursor: pointer;
+	    color: #333;
+	    font-size: 14px;
+	}
+
+	details p {
+	    margin-top: 5px;
+	    font-size: 13px;
+	    color: #666;
+	    line-height: 1.4;
+	}
+
+	/* Responsive adjustments */
+	@media (max-width: 768px) {
+	    .alteration-container {
+		grid-template-columns: 1fr;
+		gap: 10px;
+	    }
+	}
+	"
+"12. this is the data-maps.js: 
+export const alterationMaps = {
+    // Female Bottom
+    "female-bottom": {
+        "female-bottom-hem-skirt-straight-slim": { simple: 33, intermediate: 44, difficult: 55, detail: "Shorten hem on straight or slim skirt, maintaining original line and finish" },
+        "female-bottom-hem-full/circle-unlined-skirt": { simple: 44, intermediate: 66, difficult: 88, detail: "Shorten hem on unlined full or circle skirt, managing flare distribution" },
+        "female-bottom-hem-full/circle-lined-skirt": { simple: 66, intermediate: 77, difficult: 93.5, detail: "Shorten hem on lined full/circle skirt, adjusting both outer fabric and lining layers evenly" },
+        "female-bottom-hem-unlined-pants": { simple: 44, intermediate: 66, difficult: 88, detail: "Shorten pant legs on unlined trousers, preserving original break and taper" },
+        "female-bottom-hem-lined-pants": { simple: 66, intermediate: 88, difficult: 110, detail: "Shorten pant legs on lined trousers, adjusting both outer fabric and lining layers" },
+        "female-bottom-take-in-side-seams-unlined-pants": { simple: 44, intermediate: 66, difficult: 88, detail: "Take in side seams on unlined pants to reduce waist/hip circumference" },
+        "female-bottom-take-in-side-seams-lined-pants": { simple: 66, intermediate: 88, difficult: 110, detail: "Take in side seams on lined pants, adjusting both outer fabric and lining layers" },
+        "female-bottom-taper-legs-unlined-pants": { simple: 44, intermediate: 66, difficult: 88, detail: "Narrow pant legs from knee to hem on unlined trousers" },
+        "female-bottom-taper-legs-lined-pants": { simple: 66, intermediate: 88, difficult: 110, detail: "Narrow pant legs from knee to hem on lined trousers, adjusting both outer fabric and lining layers" }
+    },
+    
+    // Female Dress
+    "female-dress": {
+        //Bodice
+        "female-dress-halter-neckline": { simple: 20, intermediate: 30, difficult: 40, detail: "Adjust halter neckline for proper fit and support" },
+        "female-dress-take-in-neckline": { simple: 15, intermediate: 25, difficult: 35, detail: "Take in neckline to reduce gaping or improve fit" },
+        "female-dress-line-bind-neckline": { simple: 15, intermediate: 20, difficult: 25, detail: "Line and bind neckline edges for finished look" },
+        "female-dress-take-in-shoulders": { simple: 20, intermediate: 35, difficult: 50, detail: "Adjust shoulder seams to lift bodice" },
+        "female-dress-shorten-straps": { simple: 10, intermediate: 0, difficult: 20, detail: "Shorten dress straps for proper length" },
+        "female-dress-coordinating-straps": { simple: 20, intermediate: 0, difficult: 30, detail: "Coordinate multiple straps for even alignment" },
+        "female-dress-adjust-slide-bust": { simple: 35, intermediate: 50, difficult: 65, detail: "Adjust bust area for proper fit and support" },
+        "female-dress-take-in-zipper": { simple: 30, intermediate: 50, difficult: 65, detail: "Take in side seams including zipper adjustment" },
+        "female-dress-reshape-armhole": { simple: 15, intermediate: 20, difficult: 25, detail: "Reshape armhole for comfort and appearance" },
+        "female-dress-shorten-bodice": { simple: 40, intermediate: 50, difficult: 60, detail: "Shorten bodice length from shoulder or waist" },
+        "female-dress-add-gusset": { simple: 40, intermediate: 50, difficult: 65, detail: "Add fabric gusset for additional room" },
+        "female-dress-temple-fill-bodice": { simple: 30, intermediate: 40, difficult: 50, detail: "Add temple fill for bodice structure" },
+        "female-dress-additional-coverage": { simple: 15, intermediate: 0, difficult: 0, detail: "Add fabric for additional coverage" },
+        "female-dress-corset-back": { simple: 15, intermediate: 0, difficult: 115, detail: "Install corset back closure system" },
+        "female-dress-corset-ties": { simple: 20, intermediate: 0, difficult: 0, detail: "Add or replace corset ties" },
+        "female-dress-modesty-panel": { simple: 30, intermediate: 0, difficult: 0, detail: "Add modesty panel for back coverage" },
+        //Sleeve
+        "female-dress-shorten-sleeve": { simple: 35, intermediate: 45, difficult: 55, detail: "Shorten sleeve length" },
+        "female-dress-take-in-let-out-sleeve": { simple: 15, intermediate: 25, difficult: 35, detail: "Adjust sleeve width through seams" },
+        "female-dress-take-in-elastic": { simple: 10, intermediate: 20, difficult: 0, detail: "Take in sleeve using elastic" },
+        "female-dress-add-lingerie": { simple: 10, intermediate: 0, difficult: 0, detail: "Add lingerie straps or supports" },
+        "female-dress-reset-sleeve": { simple: 25, intermediate: 35, difficult: 45, detail: "Remove and reset sleeve for better fit" },
+        "female-dress-reshape-armholes": { simple: 10, intermediate: 20, difficult: 30, detail: "Reshape armholes for sleeve attachment" },
+        "female-dress-temple-fill-sleeves": { simple: 40, intermediate: 50, difficult: 60, detail: "Add temple fill to sleeves" },
+        "female-dress-cap-sleeve-1": { simple: 40, intermediate: 0, difficult: 0, detail: "Add basic cap sleeves" },
+        "female-dress-cap-sleeve-2": { simple: 40, intermediate: 0, difficult: 0, detail: "Add detailed cap sleeves" },
+        "female-dress-flutter-sleeve": { simple: 40, intermediate: 0, difficult: 0, detail: "Add flutter sleeves" },
+        "female-dress-short-sleeve-ss1": { simple: 50, intermediate: 0, difficult: 0, detail: "Add short sleeves style 1" },
+        "female-dress-long-sleeve-ls1": { simple: 60, intermediate: 0, difficult: 0, detail: "Add long sleeves style 1" },
+        //Skirt
+        "female-dress-hem": { simple: 75, intermediate: 95, difficult: 120, detail: "Hem skirt to desired length" },
+        "female-dress-waistband": { simple: 15, intermediate: 20, difficult: 25, detail: "Adjust or replace waistband" },
+        "female-dress-side-seams": { simple: 30, intermediate: 40, difficult: 50, detail: "Take in or let out side seams" },
+        "female-dress-slit": { simple: 10, intermediate: 15, difficult: 20, detail: "Add or adjust skirt slit" },
+        //Bustle
+        "female-dress-over-bustle": { simple: 35, intermediate: 0, difficult: 0, detail: "Create over bustle for train" },
+        "female-dress-add-over-bustle": { simple: 5, intermediate: 0, difficult: 0, detail: "Add additional over bustle point" },
+        "female-dress-under-bustle": { simple: 50, intermediate: 0, difficult: 0, detail: "Create under bustle for train" },
+        "female-dress-add-under-bustle": { simple: 7, intermediate: 0, difficult: 0, detail: "Add additional under bustle point" },
+        "female-dress-royal-bustle": { simple: 50, intermediate: 0, difficult: 0, detail: "Create royal bustle style" },
+        "female-dress-each-additional-royal": { simple: 15, intermediate: 0, difficult: 0, detail: "Each additional royal bustle point" },
+        "female-dress-ballroom-bustle": { simple: 35, intermediate: 0, difficult: 0, detail: "Create ballroom bustle style" },
+        "female-dress-add-ballroom-bustle": { simple: 5, intermediate: 0, difficult: 0, detail: "Add additional ballroom bustle point" },
+        "female-dress-bustle-point-each": { simple: 5, intermediate: 0, difficult: 0, detail: "Each standard bustle point" },
+        "female-dress-ribbon-bustle-point": { simple: 3, intermediate: 0, difficult: 0, detail: "Ribbon bustle point attachment" },
+        "female-dress-add-wristloop": { simple: 25, intermediate: 0, difficult: 0, detail: "Add wrist loop for train carrying" },
+        //Veil
+        "female-dress-loop_comb": { simple: 5, intermediate: 0, difficult: 0, detail: "Add loop to comb attachment" },
+        "female-dress-velcro_veil": { simple: 10, intermediate: 0, difficult: 0, detail: "Add velcro veil attachment" },
+        "female-dress-veil_bustle": { simple: 5, intermediate: 0, difficult: 0, detail: "Bustle veil for reception" },
+        //Others    
+        "female-dress-move-add-hooks-eyes": { simple: 5, intermediate: 0, difficult: 0, detail: "Move or add hooks and eyes" },
+        "female-dress-add-bra-cups": { simple: 20, intermediate: 0, difficult: 0, detail: "Add bra cups for support" },
+        "female-dress-hem-single-layer": { simple: 15, intermediate: 0, difficult: 0, detail: "Hem single layer garment" },
+        "female-dress-hem-slip": { simple: 30, intermediate: 25, difficult: 35, detail: "Hem slip or undergarment" }
+    },
+    
+    // Female Jacket
+    "female-jacket": {
+        "female-jacket-hem-sleeves-unlined": { simple: 35, intermediate: 46, difficult: 58, detail: "Shorten sleeves on unlined jacket, adjusting length as needed" },
+        "female-jacket-hem-sleeves-lined": { simple: 46, intermediate: 69, difficult: 92, detail: "Shorten sleeves on lined jacket, adjusting both outer fabric and lining" },
+        "female-jacket-take-in-waist": { simple: 69, intermediate: 81, difficult: 98, detail: "Take in waist area for better fit through midsection" },
+        "female-jacket-taper-sides-unlined": { simple: 35, intermediate: 46, difficult: 58, detail: "Taper side seams on unlined jacket to reduce width" },
+        "female-jacket-taper-sides-lined": { simple: 46, intermediate: 69, difficult: 92, detail: "Taper side seams on lined jacket, adjusting both outer fabric and lining" },
+        "female-jacket-shorten-length": { simple: 69, intermediate: 81, difficult: 98, detail: "Shorten overall jacket length, adjusting hem and proportions" }
+    },
+    
+    // Female Top
+    "female-top": {
+        "female-top-shorten-straps": { simple: 40, intermediate: 50, difficult: 65, detail: "Shorten shoulder straps for proper fit and support" },
+        "female-top-take-in-unlined": { simple: 50, intermediate: 75, difficult: 95, detail: "Take in side seams to reduce width for better fit" },
+        "female-top-take-in-lined": { simple: 75, intermediate: 85, difficult: 105, detail: "Take in side seams of lined top, adjusting both layers" },
+        "female-top-hem-unlined": { simple: 50, intermediate: 75, difficult: 95, detail: "Shorten hem length of unlined top" },
+        "female-top-hem-lined": { simple: 75, intermediate: 95, difficult: 120, detail: "Shorten hem length of lined top, adjusting both layers" },
+        "female-top-hem-sleeves-unlined": { simple: 50, intermediate: 75, difficult: 95, detail: "Shorten sleeves on unlined top" },
+        "female-top-hem-sleeves-lined": { simple: 60, intermediate: 95, difficult: 130, detail: "Shorten sleeves on lined top, adjusting both layers" }
+    },
+    
+    // Male Bottom
+    "male-bottom": {
+        "male-bottom-hem-unlined-pants": { simple: 29, intermediate: 41, difficult: 52, detail: "Shorten or lengthen unlined pants by adjusting the hem" },
+        "male-bottom-hem-lined-pants": { simple: 35, intermediate: 46, difficult: 58, detail: "Shorten or lengthen lined pants, requiring extra work to preserve lining" },
+        "male-bottom-take-in-unlined-pants": { simple: 52, intermediate: 69, difficult: 87, detail: "Take in waist or seat of unlined pants for better fit" },
+        "male-bottom-take-in-lined-pants": { simple: 58, intermediate: 75, difficult: 92, detail: "Take in waist or seat of lined pants, requiring lining adjustments" },
+        "male-bottom-taper-unlined-pants": { simple: 41, intermediate: 52, difficult: 64, detail: "Narrow pants legs from thigh to ankle for slimmer fit on unlined pants" },
+        "male-bottom-taper-lined-pants": { simple: 46, intermediate: 58, difficult: 75, detail: "Narrow pants legs from thigh to ankle on lined pants with lining adjustments" }
+    },
+    
+    // Male Suits
+    "male-suits": {
+        "male-suits-vest-take-in-side-seam": { simple: 30, intermediate: 45, difficult: 60, detail: "Take in or let out vest side seams for proper torso fit" },
+        "male-suits-vest-take-in-shoulder": { simple: 25, intermediate: 40, difficult: 55, detail: "Adjust vest shoulder width by taking in shoulder seams" },
+        "male-suits-vest-reshape-armhole": { simple: 30, intermediate: 45, difficult: 65, detail: "Reshape vest armholes for better fit and movement" },
+        "male-suits-jacket-hem-sleeves-unlined": { simple: 45, intermediate: 65, difficult: 85, detail: "Shorten unlined jacket sleeves from the shoulder seam" },
+        "male-suits-jacket-hem-sleeves-lined": { simple: 45, intermediate: 65, difficult: 85, detail: "Shorten lined jacket sleeves from the shoulder seam" },
+        "male-suits-jacket-take-in-waist": { simple: 50, intermediate: 70, difficult: 90, detail: "Take in jacket waist for a more fitted silhouette" },
+        "male-suits-jacket-taper-sides": { simple: 50, intermediate: 70, difficult: 90, detail: "Taper jacket side seams from armpit to waist" },
+        "male-suits-jacket-shoulder-take-in": { simple: 55, intermediate: 75, difficult: 95, detail: "Take in jacket shoulders for improved shoulder line and fit" },
+        "male-suits-jacket-reshape-armhole": { simple: 45, intermediate: 65, difficult: 85, detail: "Reshape jacket armholes for better sleeve attachment and comfort" },
+        "male-suits-jacket-back-seam": { simple: 40, intermediate: 60, difficult: 80, detail: "Take in jacket center back seam for improved back fit" },
+        "male-suits-pants-take-in-waist": { simple: 30, intermediate: 45, difficult: 60, detail: "Take in pants waistband for proper waist fit" },
+        "male-suits-pants-adjust-length": { simple: 25, intermediate: 35, difficult: 50, detail: "Adjust pants length by hemming or letting down" },
+        "male-suits-pants-side-taper": { simple: 35, intermediate: 55, difficult: 75, detail: "Taper pants from thigh to ankle for slimmer fit" }
+    },
+    
+    // Male Top
+    "male-top": {
+        "male-top-shorten-straps": { simple: 35, intermediate: 49, difficult: 63, detail: "Shorten or lengthen shoulder straps on tops, tank tops, or overalls" },
+        "male-top-hem-sleeves": { simple: 42, intermediate: 56, difficult: 70, detail: "Shorten or lengthen sleeves on shirts, tops, or jackets" },
+        "male-top-take-in-taper": { simple: 63, intermediate: 83, difficult: 105, detail: "Take in or taper the sides of shirts or tops for a better fit" }
+    },
+    
+    // Repair
+    "repair": {
+        "repair-zippers-on-dress": { "simple": 30, "intermediate": 0, "difficult": 0, "detail": "Repair or replace zippers on dresses, jumpsuits, or one-piece garments" },
+        "repair-zippers-on-pants": { "simple": 36, "intermediate": 0, "difficult": 0, "detail": "Repair or replace zippers on pants, trousers, or shorts" },
+        "repair-zippers-on-coats-jackets": { "simple": 60, "intermediate": 0, "difficult": 0, "detail": "Repair or replace zippers on coats, jackets, or blazers" },
+        "repair-apply-patches": { "simple": 45, "intermediate": 0, "difficult": 0, "detail": "Apply patches to cover holes, tears, or worn areas on garments" },
+        "repair-sew-in-rips-tears": { "simple": 35, "intermediate": 0, "difficult": 0, "detail": "Repair rips, tears, or splits in fabric using stitching techniques" },
+        "repair-button-replacement": { "simple": 10, "intermediate": 0, "difficult": 0, "detail": "Replace missing or damaged buttons on shirts, jackets, or coats" }
+    }
+};	"
+
+"13. calculate the price and display when alteration and alterationLevel are both selected"
+"14. only one alteration can be selected"
+"15. when price is greater than 0, <p id="alteration-note"> will display: 
+					• Prices are determined by the complexity and the specific requirements of the customer request. "
+"16. add a condition when price is greater than 0 and level is simple: <p id="alteration-description"> will display {Alteration detail} key from alterationMaps"
+"17. add a condition when price is greater than 0 and level is intermediate: 
+					<p id="alteration-description"> will display: • {Alteration detail} from alterationMaps 
+					<p id="alteration-customer-request"> will display: • plus one customer-requested modification "
+										     
+"18. add a condition when price is greater than 0 and level is difficult: 
+					<p id="alteration-description"> will display • "{Alteration detail} from alterationMaps
+					<p id="alteration-customer-request"> will display: • plus two customer-requested modification "																
+
+"18. add a condition when price is greater than 0, <p id="alteration-type"> will display: Alteration type key from const alterationMaps"
+"19. add a condition when price is greater than 0, <p id="alteration-level"> will display: Alteration level key: from const alterationMaps"
+"20. add a condition that will display n.a if the price is $0 ."
+"21. add a condition that if price is n.a then <p id="alteration-note"> will display blank"
+"22. add a condition that if price is n.a then <p id="alteration-description"> will display blank"
+"23. add a condition that if price is n.a then <p id="alteration-customer-request"> will display blank"
+"24. add a condition that if price is n.a then <p id="alteration-type"> will display blank"
+"25. add a condition that if price is n.a then <p id="alteration-level"> will display blank"
+"26. handleAdd() will add to shopping cart. Just put alert for now and this is not needed yet"		
+"27. handleClear() that will reset all drop down options, clear all summary and clear <span id="priceCalculation"> when click "  
+"28. implement separation of concern but only use 3 modules: data-maps.js. main.js, alteration-manager.js"
+"29. main.js is the only link to html files"
+"30. make it simple"
+"31. make it scalable"
+"32. make it reusable for future update"
+"33. do not change the html"
+"34. add comments" 
+"35. explain the flow of the program and how it works"

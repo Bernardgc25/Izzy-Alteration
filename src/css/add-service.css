@@ -1,0 +1,164 @@
+/* Main container styling */
+.add-service-container {
+    max-width: 380px;
+    margin: 15px auto;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading styling */
+#help-heading {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 1.4em;
+    font-weight: 600;
+}
+
+/* Form groups styling */
+.service-group,
+.gender-group,
+.subgroup,
+.button-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+}
+
+/* Label styling */
+.service-group label,
+.gender-group label,
+.subgroup label {
+    min-width: 110px;
+    font-weight: 500;
+    color: #333;
+    margin: 0;
+    font-size: 14px;
+}
+
+/* Select dropdown styling */
+.service-group select,
+.gender-group select,
+.subgroup select {
+    flex: 1;
+    padding: 7px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 13px;
+    min-width: 180px;
+}
+
+/* Summary section styling */
+.summary-section {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 4px;
+    border: 1px solid #e9ecef;
+}
+
+.summary-section h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.summary-section p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Button group styling */
+.button-group {
+    justify-content: center;
+    margin-top: 8px;
+    gap: 12px;
+}
+
+/* Button styling */
+#continueButton,
+#exitButton {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    min-width: 90px;
+}
+
+/* Continue button specific styles */
+#continueButton {
+    background-color: #007bff;
+    color: white;
+}
+
+#continueButton:hover {
+    background-color: #0056b3;
+}
+
+#continueButton:disabled {
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+}
+
+/* Exit button specific styles */
+#exitButton {
+    background-color: #6c757d;
+    color: white;
+}
+
+#exitButton:hover {
+    background-color: #545b62;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 480px) {
+    .add-service-container {
+        margin: 8px;
+        padding: 12px;
+    }
+    
+    .service-group,
+    .gender-group,
+    .subgroup {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+    
+    .service-group select,
+    .gender-group select,
+    .subgroup select {
+        width: 100%;
+        min-width: auto;
+        padding: 6px 8px;
+    }
+    
+    .button-group {
+        flex-direction: column;
+        width: 100%;
+        gap: 8px;
+    }
+    
+    #continueButton,
+    #exitButton {
+        width: 100%;
+        padding: 8px 12px;
+    }
+    
+    #help-heading {
+        margin-bottom: 12px;
+        font-size: 1.3em;
+    }
+}
