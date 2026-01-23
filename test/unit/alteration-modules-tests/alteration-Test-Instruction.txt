@@ -1,0 +1,35 @@
+Complete Installation & Usage Instructions
+Installation Steps:
+bash
+# 1. Navigate to your project root
+cd Alteration
+
+# 2. Initialize npm if not already done
+npm init -y
+
+# 3. Install all required dependencies
+npm install --save-dev mocha chai jsdom chai-dom @babel/core @babel/preset-env @babel/register nyc
+
+# 4. Create the test directory structure (if not already created)
+mkdir -p test/unit/alteration-modules-tests
+mkdir -p test/integration
+mkdir -p test/fixtures
+
+# 5. Copy all the test files to their respective locations
+# (Copy the test files created above to their directories)
+Running Tests:
+bash
+# Run all unit tests
+npm test
+
+# Run only alteration module tests
+npm run test:alteration
+
+# Run tests in watch mode (auto-rerun on changes)
+npm run test:watch
+
+# Run tests with coverage report
+npm run test:coverage
+
+# Run specific test file
+npx mocha test/unit/alteration-modules-tests/alteration-DataMaps.test.js --require @babel/register --require test/unit/setup.js
