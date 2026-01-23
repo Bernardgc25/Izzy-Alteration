@@ -869,5 +869,6 @@ code 9 - alteration.css
 "
 
 
-"2. remove the colors on .add-button and button .clear-button" 
-"3. do not change the structure, layout and behavior"
+"2. add #4CAF50; on .add-button 
+"3. add #f44336; .clear-button" 
+"4. do not change the structure, layout and behavior"

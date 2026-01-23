@@ -114,9 +114,11 @@ select {
     margin-left: auto;
 }
 
-/* Removed specific color styles for buttons */
-button {
+/* Add button with specific color #4CAF50 */
+#add-button,
+button[onclick*="handleAdd"] {
     padding: 6px 12px;
+    background-color: #4CAF50; /* Added as requested */
     color: white;
     border: none;
     border-radius: 3px;
@@ -126,39 +128,46 @@ button {
     transition: background-color 0.2s;
 }
 
-/* Removed last-of-type specific colors */
-button:last-of-type {
-    /* No specific color override - removed */
-}
-
-button:last-of-type:hover {
-    /* No specific color override - removed */
-}
-
-/* Compact buttons */
-button {
+/* Clear button with specific color #f44336 */
+#clear-button,
+button[onclick*="handleClear"] {
     padding: 6px 12px;
+    background-color: #f44336; /* Added as requested */
     color: white;
     border: none;
     border-radius: 3px;
     cursor: pointer;
     font-size: 14px;
-    width: 80px; /* Shortened length */
-    margin-right: 5px;
+    width: 80px;
     transition: background-color 0.2s;
 }
 
-button:hover {
-    /* No specific color override - removed */
+/* Hover effects */
+#add-button:hover,
+button[onclick*="handleAdd"]:hover {
+    background-color: #45a049;
 }
 
-/* Removed the specific button color overrides */
-button:last-of-type {
-    /* No specific color override - removed */
+#clear-button:hover,
+button[onclick*="handleClear"]:hover {
+    background-color: #da190b;
 }
 
-button:last-of-type:hover {
-    /* No specific color override - removed */
+/* Fallback for buttons without IDs or onclick attributes */
+.button-group button:first-child {
+    background-color: #4CAF50;
+}
+
+.button-group button:last-child {
+    background-color: #f44336;
+}
+
+.button-group button:first-child:hover {
+    background-color: #45a049;
+}
+
+.button-group button:last-child:hover {
+    background-color: #da190b;
 }
 
 /* Details sections */
