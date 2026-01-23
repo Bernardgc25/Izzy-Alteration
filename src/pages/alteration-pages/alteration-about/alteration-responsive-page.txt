@@ -869,5 +869,5 @@ code 9 - alteration.css
 "
 
 
-"2. remove redundants on CSS design "
+"2. remove the colors on .add-button and button .clear-button" 
 "3. do not change the structure, layout and behavior"
