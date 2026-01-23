@@ -2,7 +2,7 @@
 "2. here are the files"
 "3. this is alteration-female-bottom.html: 
    <!--Alteration Section-->
-    <div class="container">
+   <div class="container">
         <form id="myForm" action="/submit" method="POST">
             <div class="alteration-container">
                 <!--alterations bottom female list of services-->
@@ -21,12 +21,16 @@
                         <option value="female-bottom-take-in-side-seams-lined-pants" data-link="">take-in side seams lined pants</option>
                         <option value="female-bottom-taper-legs-unlined-pants" data-link="">taper legs unlined pants</option>
                         <option value="female-bottom-taper-legs-lined-pants" data-link="">taper legs lined pants</option>
+                        
+                        <!-- for unit test only comment when done testing -->
+                        <!-- <option value="male-bottom-taper-legs-lined-pants" data-link="">taper legs lined pants</option> -->
                     </select>
                 </div>
 
                 <!--alteration level-->
                 <!--second column-->
                 <div class="alteration-level">
+                    <!--alteration level-->
                     <label for="alterationLevel">Level of difficulty:</label>
                     <select id="alterationLevel-diff" class="alteration-select">
                         <option value="" data-link="" hidden></option>
@@ -44,8 +48,8 @@
                         <span id="amount">Amount = </span>
                         <span id="priceCalculation"></span>
                         <div class="button-group">
-                            <button type="button" onclick="handleAdd()">Add</button> 
-                            <button type="button" onclick="handleClear()">Clear</button>
+                            <button id="add-button" type="button" onclick="handleAdd()">Add</button> 
+                            <button id="clear-button" type="button" onclick="handleClear()">Clear</button>
                         </div>
                     </div>
                     <!-- depending on the level of difficulty, the price will be calculated accordingly. -->
@@ -72,7 +76,7 @@
     </div>
 	"
 "4. this is alteration-female-dress.html: 
-      <!--Alteration Section-->
+    <!--Alteration Section-->
     <div class="container">
         <form id="myForm" action="/submit" method="POST">
             <div class="alteration-container">
@@ -214,8 +218,8 @@
             </div>
         </form>
     </div>	"
-"5. this is alteration-female-jacket.html: 
 
+"5. this is alteration-female-jacket.html: 
     <!--Alteration Section-->
     <div class="container">
         <form id="myForm" action="/submit" method="POST">
@@ -238,6 +242,7 @@
                 <!--alteration level-->
                 <!--second column-->
                 <div class="alteration-level">
+                    <!--alteration level-->
                     <label for="alterationLevel">Level of difficulty:</label>
                     <select id="alterationLevel-diff" class="alteration-select">
                         <option value="" data-link="" hidden></option>
@@ -255,8 +260,8 @@
                         <span id="amount">Amount = </span>
                         <span id="priceCalculation"></span>
                         <div class="button-group">
-                            <button type="button" onclick="handleAdd()">Add</button> 
-                            <button type="button" onclick="handleClear()">Clear</button>
+                            <button id="add-button" type="button" onclick="handleAdd()">Add</button> 
+                            <button id="clear-button" type="button" onclick="handleClear()">Clear</button>
                         </div>
                     </div>
                     <!-- depending on the level of difficulty, the price will be calculated accordingly. -->
@@ -264,7 +269,6 @@
                         <summary>note</summary>
                        <p id="alteration-note"></p>
                     </details>
-                    
                     <!--description of alteration-->
                     <details open>
                         <summary>description</summary>
@@ -284,9 +288,8 @@
     </div>
 	"
 "6. this is alteration-female-top.html: 
-
     <!--Alteration Section-->
-    <div class="container">
+     <div class="container">
         <form id="myForm" action="/submit" method="POST">
             <div class="alteration-container">
                 <!--alterations Top female list of services-->
@@ -310,6 +313,7 @@
                 <!--alteration level-->
                 <!--second column-->
                 <div class="alteration-level">
+                    <!--alteration level-->
                     <label for="alterationLevel">Level of difficulty:</label>
                     <select id="alterationLevel-diff" class="alteration-select">
                         <option value="" data-link="" hidden></option>
@@ -327,8 +331,8 @@
                         <span id="amount">Amount = </span>
                         <span id="priceCalculation"></span>
                         <div class="button-group">
-                            <button type="button" onclick="handleAdd()">Add</button> 
-                            <button type="button" onclick="handleClear()">Clear</button>
+                            <button id="add-button" type="button" onclick="handleAdd()">Add</button> 
+                            <button id="clear-button" type="button" onclick="handleClear()">Clear</button>
                         </div>
                     </div>
                     <!-- depending on the level of difficulty, the price will be calculated accordingly. -->
@@ -336,7 +340,6 @@
                         <summary>note</summary>
                        <p id="alteration-note"></p>
                     </details>
-                    
                     <!--description of alteration-->
                     <details open>
                         <summary>description</summary>
@@ -356,7 +359,6 @@
     </div>
     "
 "7. this is alteration-male-bottom.html: 
-    
     <!--Alteration Section-->
     <div class="container">
         <form id="myForm" action="/submit" method="POST">
@@ -380,6 +382,7 @@
                 <!--alteration level-->
                 <!--second column-->
                 <div class="alteration-level">
+                    <!--alteration level-->
                     <label for="alterationLevel">Level of difficulty:</label>
                     <select id="alterationLevel-diff" class="alteration-select">
                         <option value="" data-link="" hidden></option>
@@ -397,8 +400,8 @@
                         <span id="amount">Amount = </span>
                         <span id="priceCalculation"></span>
                         <div class="button-group">
-                            <button type="button" onclick="handleAdd()">Add</button> 
-                            <button type="button" onclick="handleClear()">Clear</button>
+                            <button id="add-button" type="button" onclick="handleAdd()">Add</button> 
+                            <button id="clear-button" type="button" onclick="handleClear()">Clear</button>
                         </div>
                     </div>
                     <!-- depending on the level of difficulty, the price will be calculated accordingly. -->
@@ -406,11 +409,10 @@
                         <summary>note</summary>
                        <p id="alteration-note"></p>
                     </details>
-                    
                     <!--description of alteration-->
                     <details open>
                         <summary>description</summary>
-                        <p id="note-description"></p>
+                        <p id="alteration-description"></p>
                         <p id="alteration-customer-request"></p>    
                     </details>
                     
@@ -423,12 +425,11 @@
                 </div>
             </div>
         </form>
-    </div>	
+    </div>
 	"
-"8. this is alteration-male-suits.html: 
-   
+"8. this is alteration-male-suits.html:  
     <!--Alteration Section-->
-    <div class="container">
+   <div class="container">
         <form id="myForm" action="/submit" method="POST">
             <div class="alteration-container">
                 <!--alterations Suits male list of services-->
@@ -468,6 +469,7 @@
                 <!--alteration level-->
                 <!--second column-->
                 <div class="alteration-level">
+                    <!--alteration level-->
                     <label for="alterationLevel">Level of difficulty:</label>
                     <select id="alterationLevel-diff" class="alteration-select">
                         <option value="" data-link="" hidden></option>
@@ -485,8 +487,8 @@
                         <span id="amount">Amount = </span>
                         <span id="priceCalculation"></span>
                         <div class="button-group">
-                            <button type="button" onclick="handleAdd()">Add</button> 
-                            <button type="button" onclick="handleClear()">Clear</button>
+                            <button id="add-button" type="button" onclick="handleAdd()">Add</button> 
+                            <button id="clear-button" type="button" onclick="handleClear()">Clear</button>
                         </div>
                     </div>
                     <!-- depending on the level of difficulty, the price will be calculated accordingly. -->
@@ -494,7 +496,6 @@
                         <summary>note</summary>
                        <p id="alteration-note"></p>
                     </details>
-                    
                     <!--description of alteration-->
                     <details open>
                         <summary>description</summary>
@@ -514,9 +515,8 @@
     </div>
 	"
 "9. this is alteration-male-top.html: 
-  
     <!--Alteration Section-->
-    <div class="container">
+     <div class="container">
         <form id="myForm" action="/submit" method="POST">
             <div class="alteration-container">
                 <!--alterations Top male list of services-->
@@ -536,6 +536,7 @@
                 <!--alteration level-->
                 <!--second column-->
                 <div class="alteration-level">
+                    <!--alteration level-->
                     <label for="alterationLevel">Level of difficulty:</label>
                     <select id="alterationLevel-diff" class="alteration-select">
                         <option value="" data-link="" hidden></option>
@@ -553,8 +554,8 @@
                         <span id="amount">Amount = </span>
                         <span id="priceCalculation"></span>
                         <div class="button-group">
-                            <button type="button" onclick="handleAdd()">Add</button> 
-                            <button type="button" onclick="handleClear()">Clear</button>
+                            <button id="add-button" type="button" onclick="handleAdd()">Add</button> 
+                            <button id="clear-button" type="button" onclick="handleClear()">Clear</button>
                         </div>
                     </div>
                     <!-- depending on the level of difficulty, the price will be calculated accordingly. -->
@@ -562,7 +563,6 @@
                         <summary>note</summary>
                        <p id="alteration-note"></p>
                     </details>
-                    
                     <!--description of alteration-->
                     <details open>
                         <summary>description</summary>
@@ -580,10 +580,10 @@
             </div>
         </form>
     </div>
-    "
-"10. this is alteration-repair.html:
-     <!--Alteration Section-->
-    <div class="container">
+	"
+"9. this is alteration-repair.html: 
+    <!--Alteration Section-->
+     <div class="container">
         <form id="myForm" action="/submit" method="POST">
             <div class="alteration-container">
                 <!--Repair list of services-->
@@ -610,6 +610,7 @@
                 <!--alteration level-->
                 <!--second column-->
                 <div class="alteration-level">
+                    <!--alteration level-->
                     <label for="alterationLevel">Level of difficulty:</label>
                     <select id="alterationLevel-diff" class="alteration-select">
                         <option value="" data-link="" hidden></option>
@@ -627,8 +628,8 @@
                         <span id="amount">Amount = </span>
                         <span id="priceCalculation"></span>
                         <div class="button-group">
-                            <button type="button" onclick="handleAdd()">Add</button> 
-                            <button type="button" onclick="handleClear()">Clear</button>
+                            <button id="add-button" type="button" onclick="handleAdd()">Add</button> 
+                            <button id="clear-button" type="button" onclick="handleClear()">Clear</button>
                         </div>
                     </div>
                     <!-- depending on the level of difficulty, the price will be calculated accordingly. -->
@@ -636,7 +637,6 @@
                         <summary>note</summary>
                         <p id="alteration-note"></p>
                     </details>
-                    
                     <!--description of alteration-->
                     <details open>
                         <summary>description</summary>
@@ -654,8 +654,8 @@
             </div>
         </form>
     </div>
-	"
-"11. this is the CSS. make adjustment if necessary but do not change the layout and structure : 
+    "
+"10. this is the CSS. make adjustment if necessary but do not change the layout and structure : 
 
 	.container {
 	    max-width: 1200px;
@@ -851,7 +851,7 @@
 	    }
 	}
 	"
-"12. this is the data-maps.js: 
+"11. this is the data-maps.js: 
 export const alterationMaps = {
     // Female Bottom
     "female-bottom": {
@@ -992,16 +992,16 @@ export const alterationMaps = {
     }
 };	"
 
-"13. calculate the price and display when alteration and alterationLevel are both selected"
-"14. only one alteration can be selected"
-"15. when price is greater than 0, <p id="alteration-note"> will display: 
+"12. calculate the price and display when alteration and alterationLevel are both selected"
+"13. only one alteration can be selected"
+"14. when price is greater than 0, <p id="alteration-note"> will display: 
 					• Prices are determined by the complexity and the specific requirements of the customer request. "
-"16. add a condition when price is greater than 0 and level is simple: <p id="alteration-description"> will display {Alteration detail} key from alterationMaps"
-"17. add a condition when price is greater than 0 and level is intermediate: 
+"15. add a condition when price is greater than 0 and level is simple: <p id="alteration-description"> will display {Alteration detail} key from alterationMaps"
+"16. add a condition when price is greater than 0 and level is intermediate: 
 					<p id="alteration-description"> will display: • {Alteration detail} from alterationMaps 
 					<p id="alteration-customer-request"> will display: • plus one customer-requested modification "
 										     
-"18. add a condition when price is greater than 0 and level is difficult: 
+"17. add a condition when price is greater than 0 and level is difficult: 
 					<p id="alteration-description"> will display • "{Alteration detail} from alterationMaps
 					<p id="alteration-customer-request"> will display: • plus two customer-requested modification "																
 
