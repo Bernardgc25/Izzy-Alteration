@@ -3,7 +3,7 @@
 
 CODE 1 - measurements-male.html:
 [ 
-     <div class="container">
+    <div class="container">
         <h1 id="measurement-info"><i class="fas fa-ruler-combined"></i> Measurement Information (male)</h1>
         
         <form id="measurement-form" class="measurement-form" data-gender="male" action="#" method="post">
@@ -354,7 +354,7 @@ CODE 1 - measurements-male.html:
         <footer>
             <p class="footer-note">Measurement System v1.0 | All measurements in inches</p>
         </footer>       
-    </div>       
+    </div>    
 ]
 
 CODE 2 - measurements-female.html:
@@ -1036,15 +1036,18 @@ CODE 3 - measurements.css
         color: #6c757d;
     }
 
-    @media (max-width: 1200px) {
+    /* =========================================== */
+    /* RESPONSIVE DESIGN FOR DIFFERENT SCREEN SIZES */
+    /* =========================================== */
+
+    /* Large Laptops (1200px - 1440px) */
+    @media (max-width: 1440px) {
         .container {
-            max-width: 95%;
-            padding: 10px;
+            max-width: 1100px;
         }
         
         .top {
-            grid-template-columns: 1fr 1fr 2.4fr;
-            gap: 8px;
+            grid-template-columns: 0.9fr 0.9fr 2.2fr;
         }
         
         .guide-image-container {
@@ -1052,47 +1055,244 @@ CODE 3 - measurements.css
         }
     }
 
-    @media (max-width: 992px) {
-        .top {
-            grid-template-columns: 1fr 1fr;
+    /* Standard Laptops (992px - 1200px) */
+    @media (max-width: 1200px) {
+        .container {
+            max-width: 95%;
+            padding: 12px;
         }
         
-        #measurement-guide {
-            grid-column: span 2;
+        .top {
+            grid-template-columns: 1fr 1fr 2fr;
+            gap: 8px;
+        }
+        
+        .bottom {
+            grid-template-columns: 2fr 1fr 0.9fr;
+            gap: 10px;
         }
         
         .guide-image-container {
             height: 65vh;
         }
+        
+        .measurement-container-left,
+        .measurement-container-middle {
+            padding: 8px;
+        }
     }
 
+    /* Tablets (768px - 992px) */
+    @media (max-width: 992px) {
+        .container {
+            padding: 10px;
+            margin: 15px auto;
+        }
+        
+        h1 {
+            font-size: 1.4rem;
+            padding: 6px 0;
+        }
+        
+        .top {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 15px;
+        }
+        
+        #measurement-guide {
+            grid-column: span 2;
+            grid-row: 2;
+            margin-top: 10px;
+        }
+        
+        .guide-image-container {
+            height: 50vh;
+        }
+        
+        .bottom {
+            grid-template-columns: 1.5fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 15px;
+        }
+        
+        .button-section-right {
+            grid-column: span 2;
+            grid-row: 2;
+            flex-direction: row;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .btn-primary, .btn-secondary {
+            width: 50%;
+        }
+        
+        .measurement-label {
+            flex-wrap: wrap;
+        }
+        
+        .label-text {
+            font-size: 0.8rem;
+        }
+    }
+
+    /* Large Mobile (576px - 768px) */
     @media (max-width: 768px) {
         .container {
             padding: 8px;
             margin: 10px auto;
-        }
-        
-        .top, .bottom {
-            grid-template-columns: 1fr;
-        }
-        
-        .button-section-right {
-            flex-direction: column;
-            align-items: stretch;
-        }
-        
-        .guide-image-container {
-            height: 60vh;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .container {
-            padding: 6px;
+            border-radius: 8px;
         }
         
         h1 {
             font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+        
+        .top {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        #measurement-guide {
+            grid-column: 1;
+            grid-row: 3;
+        }
+        
+        .guide-image-container {
+            height: 40vh;
+        }
+        
+        .bottom {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .button-section-right {
+            grid-column: 1;
+            grid-row: 3;
+            flex-direction: column;
+            margin-top: 0;
+        }
+        
+        .btn-primary, .btn-secondary {
+            width: 100%;
+        }
+        
+        .summary-section-container-left,
+        .name-date-section-container-middle {
+            padding: 12px;
+        }
+        
+        .form-group label {
+            font-size: 0.85rem;
+        }
+        
+        .label-letter {
+            font-size: 0.9rem;
+            min-width: 22px;
+        }
+        
+        input[type="number"],
+        input[type="text"],
+        input[type="date"],
+        select,
+        .measurement-input {
+            font-size: 0.85rem;
+            height: 34px;
+            padding: 6px 8px;
+        }
+        
+        .btn-primary, .btn-secondary {
+            height: 38px;
+            font-size: 0.85rem;
+        }
+    }
+
+    /* Small Mobile (480px - 576px) */
+    @media (max-width: 576px) {
+        .container {
+            padding: 6px;
+            margin: 8px auto;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+        
+        h1 {
+            font-size: 1.2rem;
+            padding: 5px 0;
+        }
+        
+        h3 {
+            font-size: 1rem;
+        }
+        
+        .top, .bottom {
+            gap: 12px;
+        }
+        
+        .measurement-container-left,
+        .measurement-container-middle {
+            padding: 10px;
+        }
+        
+        .guide-image-container {
+            height: 35vh;
+        }
+        
+        .guide-text {
+            font-size: 0.85rem;
+        }
+        
+        .form-group {
+            margin-bottom: 6px;
+        }
+        
+        .form-group label {
+            font-size: 0.88rem;
+        }
+        
+        .label-text {
+            font-size: 0.88rem;
+        }
+        
+        .label-letter {
+            font-size: 0.95rem;
+        }
+        
+        input[type="number"],
+        input[type="text"],
+        input[type="date"],
+        select,
+        .measurement-input {
+            font-size: 0.88rem;
+            height: 36px;
+        }
+        
+        .btn-primary, .btn-secondary {
+            height: 40px;
+            font-size: 0.88rem;
+        }
+        
+        .summary-header h3 {
+            font-size: 0.95rem;
+        }
+        
+        .summary-item {
+            font-size: 0.85rem;
+        }
+    }
+
+    /* Extra Small Mobile (below 480px) */
+    @media (max-width: 480px) {
+        .container {
+            padding: 5px;
+            margin: 5px auto;
+        }
+        
+        h1 {
+            font-size: 1.1rem;
+            padding: 4px 0;
         }
         
         .measurement-container-left,
@@ -1102,9 +1302,20 @@ CODE 3 - measurements.css
             padding: 8px;
         }
         
-        .form-group label,
+        .guide-image-container {
+            height: 30vh;
+        }
+        
+        .form-group label {
+            flex-wrap: wrap;
+        }
+        
+        .measurement-label {
+            gap: 3px;
+        }
+        
         .label-text {
-            font-size: 0.8rem;
+            font-size: 0.86rem;
         }
         
         input[type="number"],
@@ -1112,12 +1323,113 @@ CODE 3 - measurements.css
         input[type="date"],
         select,
         .measurement-input {
-            font-size: 0.8rem;
-            height: 30px;
+            font-size: 0.86rem;
+            height: 34px;
+            padding: 5px 7px;
         }
         
+        .btn-primary, .btn-secondary {
+            padding: 8px 12px;
+            height: 38px;
+            font-size: 0.86rem;
+        }
+        
+        .button-section-right {
+            gap: 8px;
+        }
+        
+        /* Adjust measurement form layout for very small screens */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .measurement-label {
+            margin-bottom: 2px;
+        }
+        
+        /* Ensure proper spacing in name/date section */
+        .name-date-section-container-middle .form-group {
+            margin-bottom: 8px;
+        }
+        
+        /* Improve touch targets */
+        .measurement-input, select, input[type="date"], input[type="text"] {
+            min-height: 36px;
+        }
+    }
+
+    /* Portrait Orientation Specific Adjustments */
+    @media (max-width: 768px) and (orientation: portrait) {
         .guide-image-container {
-            height: 50vh;
+            height: 35vh;
+        }
+        
+        .top {
+            gap: 12px;
+        }
+    }
+
+    /* Landscape Orientation Specific Adjustments */
+    @media (max-width: 992px) and (orientation: landscape) {
+        .guide-image-container {
+            height: 55vh;
+        }
+        
+        .top {
+            grid-template-columns: 1fr 1fr;
+        }
+        
+        #measurement-guide {
+            grid-column: span 2;
+        }
+    }
+
+    /* High DPI Screens */
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+        .container {
+            box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+        }
+        
+        input[type="number"],
+        input[type="text"],
+        input[type="date"],
+        select,
+        .measurement-input {
+            border-width: 0.5px;
+        }
+    }
+
+    /* Print Styles */
+    @media print {
+        .container {
+            box-shadow: none;
+            padding: 0;
+            margin: 0;
+            max-width: 100%;
+        }
+        
+        .button-section-right,
+        .btn-icon,
+        .guide-image-container {
+            display: none !important;
+        }
+        
+        .top {
+            grid-template-columns: 1fr 1fr;
+        }
+        
+        #measurement-guide {
+            display: none;
+        }
+        
+        .bottom {
+            grid-template-columns: 1fr;
+        }
+        
+        input, select {
+            border: 1px solid #ccc;
+            background: transparent;
         }
     }
 ]
@@ -1321,7 +1633,7 @@ CODE 4 - measurement-Main.js
 
 CODE 5 - measurement-Manager.js
 [
-    /**
+        /**
     * measurement-Manager.js
     * Manages measurement data, state, and operations
     * Handles image interactions, summary updates, and data management
@@ -1805,7 +2117,8 @@ CODE 5 - measurement-Validation.js
 
             // Check range
             if (value < min || value > max) {
-                this.addError(measurement, `Must be between ${min} and ${max} inches`);
+                // this.addError(measurement, `Must be between ${min} and ${max} inches`);
+                this.addError(measurement, `${min}-${max}`);
                 return false;
             }
 
@@ -1985,8 +2298,8 @@ CODE 5 - measurement-DataMaps.js
     export const MeasurementData = {
         // Measurement guide images by gender
         guideImages: {
-            male: '/src/images/male-chart.png',
-            female: '/src/images/female-chart.png'
+            male: '/src/images/male-chart.jpg',
+            female: '/src/images/female-chart.jpg'
         },
         
         // Comprehensive measurement definitions and guidance text
