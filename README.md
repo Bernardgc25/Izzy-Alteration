@@ -5,7 +5,6 @@ Izzy-Alteration
 │  ├─ deepseek
 │  │  └─ alteration-female.txt
 │  └─ measurements-about.txt
-├─ debugging(unit-Test-alteration).txt
 ├─ package-lock.json
 ├─ package.json
 ├─ src
@@ -32,7 +31,6 @@ Izzy-Alteration
 │  │  ├─ alteration-price-calculator.js
 │  │  ├─ index.js
 │  │  ├─ login.js
-│  │  ├─ measurements.js
 │  │  ├─ order-history.js
 │  │  ├─ services.js
 │  │  └─ signup.js
@@ -42,7 +40,8 @@ Izzy-Alteration
 │     ├─ alteration-pages
 │     │  ├─ alteration-about
 │     │  │  ├─ alteration(how-the-program-works).txt
-│     │  │  └─ alteration-functionality-prompt.txt
+│     │  │  ├─ alteration-functionality-prompt.txt
+│     │  │  └─ alteration-responsive-page.txt
 │     │  ├─ alteration-female-bottom.html
 │     │  ├─ alteration-female-dress.html
 │     │  ├─ alteration-female-jacket.html
@@ -53,20 +52,8 @@ Izzy-Alteration
 │     │  ├─ alteration-modules
 │     │  │  ├─ alteration-DataMaps.js
 │     │  │  ├─ alteration-Main.js
-│     │  │  ├─ alteration-Manager.js
-│     │  │  ├─ alteration-manager.js
-│     │  │  ├─ data-map-female-bottom.js
-│     │  │  ├─ data-map-female-dress.js
-│     │  │  ├─ data-map-female-jacket.js
-│     │  │  ├─ data-map-female-top.js
-│     │  │  ├─ data-map-male-bottom.js
-│     │  │  ├─ data-map-male-suits.js
-│     │  │  ├─ data-map-male-top.js
-│     │  │  ├─ data-map-repair.js
-│     │  │  ├─ data-maps.js
-│     │  │  └─ main.js
+│     │  │  └─ alteration-Manager.js
 │     │  └─ alteration-repair.html
-│     ├─ female-dress(alteration).html
 │     ├─ index.html
 │     ├─ login.html
 │     ├─ measurement-pages
@@ -82,20 +69,17 @@ Izzy-Alteration
 │     │  ├─ measurements-female.html
 │     │  ├─ measurements-male.html
 │     │  └─ sample.html
-│     ├─ measurements.html
 │     ├─ order-history.html
 │     ├─ services.html
 │     └─ signup.html
 └─ test
-   ├─ fixtures
-   ├─ integration
    └─ unit
       ├─ .babelrc
       ├─ alteration-modules-tests
       │  ├─ alteration-DataMaps.test.js
       │  ├─ alteration-Main.test.js
       │  ├─ alteration-Manager.test.js
-      │  ├─ alteration-Test-Debuggin.txt
+      │  ├─ alteration-Test-Debugging.txt
       │  └─ alteration-Test-Instruction.txt
       ├─ measurement-modules-tests
       ├─ mocha-setup.js
