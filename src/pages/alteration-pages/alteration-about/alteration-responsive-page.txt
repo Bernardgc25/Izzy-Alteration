@@ -866,9 +866,29 @@ code 9 - alteration.css
         }
     }
 ]
+
+code 10 - sample.css:
+[
+    1440px
+
+    1200px
+
+    992px
+
+    768px
+
+    576px
+
+    480px
+
+    768px (appears again in portrait orientation query)
+
+    992px (appears again in landscape orientation query)
+
+
+]
 "
 
+"3. create a responsive that is based on the sample.css and implement on code 9 - alteration.css" 
+"4. do not change the original structure, layout and behavior"
 
-"2. add #4CAF50; on .add-button 
-"3. add #f44336; .clear-button" 
-"4. do not change the structure, layout and behavior"
