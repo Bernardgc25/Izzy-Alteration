@@ -116,10 +116,22 @@ select {
     margin-left: auto;
 }
 
-/* Keep existing button styles but adjust for new layout */
-button {
+#add-button,
+button[onclick*="handleAdd"] {
     padding: 6px 12px;
-    /* background-color: #4CAF50; */
+    background-color: #4CAF50; 
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 80px;
+    transition: background-color 0.2s;
+}
+
+#clear-button,
+button[onclick*="handleClear"] {
+    padding: 6px 12px;
+    background-color: #f44336; 
     color: white;
     border: none;
     border-radius: 3px;
@@ -129,18 +141,11 @@ button {
     transition: background-color 0.2s;
 }
 
-/* button:last-of-type {
-    background-color: #f44336;
-} */
 
-/* button:last-of-type:hover {
-    background-color: #da190b;
-} */
 
 /* Compact buttons */
 button {
     padding: 6px 12px;
-    /* background-color: #4CAF50; */
     color: white;
     border: none;
     border-radius: 3px;
@@ -150,18 +155,6 @@ button {
     margin-right: 5px;
     transition: background-color 0.2s;
 } 
-
-/* button:hover {
-    background-color: #45a049;
-} */
-
-/* button:last-of-type {
-    background-color: #f44336;
-} */
-
-/* button:last-of-type:hover {
-    background-color: #da190b;
-} */
 
 /* Details sections */
 details {
