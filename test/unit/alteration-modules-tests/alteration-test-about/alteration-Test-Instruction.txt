@@ -32,4 +32,9 @@ npm run test:watch
 npm run test:coverage
 
 # Run specific test file
-npx mocha test/unit/alteration-modules-tests/alteration-DataMaps.test.js --require @babel/register --require test/unit/setup.js
+npx mocha test/unit/alteration-modules-tests/alteration-Main.test.js
+npx mocha test/unit/alteration-modules-tests/alteration-DataMaps.test.js
+npx mocha test/unit/alteration-modules-tests/alteration-Manager.test.js
+
+
+--require @babel/register --require test/unit/setup.js

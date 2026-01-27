@@ -22,7 +22,6 @@ export class MeasurementValidator {
         // Validate name field (required)
         const nameField = document.getElementById('client-name');
         if (!nameField.value.trim()) {
-            // this.addError('client-name', 'Name is required');
             this.addError('client-name', ' ');
             isValid = false;
         }
@@ -31,7 +30,6 @@ export class MeasurementValidator {
         if (this.gender === 'male') {
             const sizeField = document.getElementById('size-number');
             if (!sizeField.value) {
-                // this.addError('size-number', 'Size number is required');
                 this.addError('size-number', ' ');
                 isValid = false;
             }
@@ -74,14 +72,12 @@ export class MeasurementValidator {
 
         // Check if empty
         if (input.value === '' || isNaN(value)) {
-            // this.addError(measurement, 'This field is required');
             this.addError(measurement, ' ');
             return false;
         }
 
         // Check range
         if (value < min || value > max) {
-            // this.addError(measurement, `Must be between ${min} and ${max} inches`);
             this.addError(measurement, `${min}-${max}`);
             return false;
         }
@@ -167,7 +163,6 @@ export class MeasurementValidator {
             input.classList.remove('error', 'valid');
             
             if (!input.value.trim()) {
-                // this.addError(fieldId, 'Name is required');
                 this.addError(fieldId, ' ');
                 return false;
             } else {
@@ -244,7 +239,6 @@ export class MeasurementValidator {
             
             // Also handle select elements if they have a wrapper or need special styling
             if (inputElement.tagName === 'SELECT') {
-                // Add specific styling for select elements if needed
                 inputElement.parentElement.classList.add('error');
             }
         }

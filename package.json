@@ -4,7 +4,10 @@
   "description": "Alteration price calculation system",
   "type": "module",
   "scripts": {
-    "test": "mocha 'test/**/*.test.js'"
+    "test": "mocha 'test/**/*.test.js' --require test/unit/setup.js",
+    "test:measurement": "mocha 'test/unit/measurement-modules-tests/*.test.js' --require test/unit/setup.js",
+    "test:coverage": "nyc mocha 'test/**/*.test.js' --require test/unit/setup.js",
+    "test:watch": "mocha 'test/**/*.test.js' --require test/unit/setup.js --watch"
   },
   "devDependencies": {
     "@babel/core": "^7.22.0",
