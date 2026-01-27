@@ -172,14 +172,14 @@ export class MeasurementManager {
                     e.target.value = e.target.dataset.min;
                     e.target.classList.add('valid');
                     
-                    // Auto-save to summary
+                    // Auto-save to summary (keeps internal tracking)
                     const label = e.target.parentElement.querySelector('.label-text').textContent;
                     this.saveMeasurement(e.target.id, e.target.value, label);
                 }
             });
         });
 
-        // Print summary button
+        // Print summary button - updated to trigger print window
         const printBtn = document.getElementById('print-summary');
         if (printBtn) {
             printBtn.addEventListener('click', () => this.printSummary());
@@ -187,7 +187,7 @@ export class MeasurementManager {
     }
 
     /**
-     * Saves a measurement to the collection
+     * Saves a measurement to the collection (internal tracking only)
      * @param {string} id - Measurement field ID
      * @param {string} value - Measurement value
      * @param {string} label - Measurement label
@@ -199,60 +199,12 @@ export class MeasurementManager {
                 label: label.replace(':', '').trim(),
                 timestamp: new Date().toISOString() 
             });
-            this.updateSummary();
+            // Note: We no longer update the visible summary here
         }
     }
 
     /**
-     * Updates the measurement summary display
-     */
-    updateSummary() {
-        const summaryContent = document.getElementById('summary-content');
-        if (!summaryContent) return;
-
-        // Clear existing content if this is the first measurement
-        const emptySummary = summaryContent.querySelector('.empty-summary');
-        if (emptySummary && this.measurements.size > 0) {
-            emptySummary.remove();
-        }
-
-        // If no measurements, show empty state
-        if (this.measurements.size === 0) {
-            summaryContent.innerHTML = `
-                <div class="empty-summary">
-                    <i class="fas fa-ruler"></i>
-                    <p>No measurements saved yet.</p>
-                    <p class="small">Fill out the form and click "Save Measurements"</p>
-                </div>
-            `;
-            summaryContent.style.overflowY = 'hidden';
-            return;
-        }
-
-        // Create summary items from measurements
-        summaryContent.innerHTML = '';
-        this.measurements.forEach((data, id) => {
-            const item = document.createElement('div');
-            item.className = 'summary-item';
-            item.innerHTML = `
-                <span class="summary-label">${data.label}:</span>
-                <span class="summary-value">${data.value} inches</span>
-            `;
-            summaryContent.appendChild(item);
-        });
-
-        // Make scrollable if too many items (more than 10)
-        if (this.measurements.size > 10) {
-            summaryContent.style.overflowY = 'auto';
-            summaryContent.style.maxHeight = '300px';
-        } else {
-            summaryContent.style.overflowY = 'hidden';
-            summaryContent.style.maxHeight = 'none';
-        }
-    }
-
-    /**
-     * Prints the measurement summary
+     * Prints the measurement summary in a new window
      */
     printSummary() {
         const printWindow = window.open('', '_blank', 'width=800,height=600');
@@ -373,17 +325,6 @@ export class MeasurementManager {
         
         // Clear measurements
         this.measurements.clear();
-        
-        // Reset summary
-        const summaryContent = document.getElementById('summary-content');
-        summaryContent.innerHTML = `
-            <div class="empty-summary">
-                <i class="fas fa-ruler"></i>
-                <p>No measurements saved yet.</p>
-                <p class="small">Fill out the form and click "Save Measurements"</p>
-            </div>
-        `;
-        summaryContent.style.overflowY = 'hidden';
         
         // Reset date to today
         this.setupDateField();
