@@ -1,8 +1,8 @@
 /**
- * measurement-Validation.js
- * Handles all form validation logic with comprehensive error checking
- * Uses data attributes from HTML for dynamic validation rules
- */
+* measurement-Validation.js
+* Handles all form validation logic with comprehensive error checking
+* Uses data attributes from HTML for dynamic validation rules
+*/
 
 export class MeasurementValidator {
     constructor(formElement) {
@@ -12,9 +12,9 @@ export class MeasurementValidator {
     }
 
     /**
-     * Validates all form fields
-     * @returns {boolean} True if all validations pass
-     */
+    * Validates all form fields
+    * @returns {boolean} True if all validations pass
+    */
     validateAll() {
         this.errors.clear();
         let isValid = true;
@@ -53,10 +53,10 @@ export class MeasurementValidator {
     }
 
     /**
-     * Validates a single measurement input field
-     * @param {HTMLInputElement} input - The input element to validate
-     * @returns {boolean} True if valid
-     */
+    * Validates a single measurement input field
+    * @param {HTMLInputElement} input - The input element to validate
+    * @returns {boolean} True if valid
+    */
     validateMeasurementInput(input) {
         const value = parseFloat(input.value);
         const min = parseFloat(input.dataset.min);
@@ -105,9 +105,9 @@ export class MeasurementValidator {
     }
 
     /**
-     * Clears error for a single field
-     * @param {string} fieldId - Field ID to clear error for
-     */
+    * Clears error for a single field
+    * @param {string} fieldId - Field ID to clear error for
+    */
     clearSingleError(fieldId) {
         const errorElement = document.getElementById(`${fieldId}-error`);
         if (errorElement) {
@@ -123,8 +123,8 @@ export class MeasurementValidator {
     }
 
     /**
-     * Clears all error states and messages
-     */
+    * Clears all error states and messages
+    */
     clearErrors() {
         this.errors.clear();
         
@@ -143,10 +143,10 @@ export class MeasurementValidator {
     }
     
     /**
-     * Validates a single field on the fly (for real-time validation)
-     * @param {string} fieldId - Field ID to validate
-     * @returns {boolean} True if valid
-     */
+    * Validates a single field on the fly (for real-time validation)
+    * @param {string} fieldId - Field ID to validate
+    * @returns {boolean} True if valid
+    */
     validateField(fieldId) {
         const input = document.getElementById(fieldId);
         if (!input) return true;
@@ -220,10 +220,10 @@ export class MeasurementValidator {
     }
 
     /**
-     * Adds error to field and displays error message
-     * @param {string} fieldId - The ID of the field with error
-     * @param {string} message - Error message to display
-     */
+    * Adds error to field and displays error message
+    * @param {string} fieldId - The ID of the field with error
+    * @param {string} message - Error message to display
+    */
     addError(fieldId, message) {
         this.errors.add(fieldId);
         

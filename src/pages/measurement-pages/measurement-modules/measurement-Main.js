@@ -1,8 +1,8 @@
 /**
- * measurement-Main.js
- * Entry point - coordinates all modules and handles user interactions
- * Only this file should be linked in HTML files
- */
+* measurement-Main.js
+* Entry point - coordinates all modules and handles user interactions
+* Only this file should be linked in HTML files
+*/
 
 import { MeasurementData } from './measurement-DataMaps.js';
 import { MeasurementValidator } from './measurement-Validation.js';
@@ -15,12 +15,13 @@ class MeasurementApp {
     constructor() {
         this.manager = null;
         this.validator = null;
+        this.isMobileView = MeasurementData.isMobileView();
         this.initializeApp();
     }
 
     /**
-     * Initializes the application when DOM is loaded
-     */
+    * Initializes the application when DOM is loaded
+    */
     initializeApp() {
         // Get gender from form data attribute
         const form = document.getElementById('measurement-form');
@@ -32,20 +33,26 @@ class MeasurementApp {
         const gender = form.dataset.gender;
         
         // Initialize modules
-        this.manager = new MeasurementManager().initialize(gender);
+        this.manager = new MeasurementManager().initialize(gender, this.isMobileView);
         this.validator = new MeasurementValidator(form);
         
         // Setup all event listeners
         this.setupGlobalEventListeners();
         this.setupMeasurementInputListeners();
-        this.setupClientNameValidation(); // Setup real-time validation for client name
+        this.setupClientNameValidation();
+        this.setupFloatingGuideClose();
         
-        console.log(`Measurement App initialized for ${gender}`);
+        // Setup window resize listener to update mobile view state
+        window.addEventListener('resize', () => {
+            this.isMobileView = MeasurementData.isMobileView();
+        });
+        
+        console.log(`Measurement App initialized for ${gender} (${this.isMobileView ? 'Mobile/Tablet' : 'Desktop'} view)`);
     }
 
     /**
-     * Sets up global event listeners for form interactions
-     */
+    * Sets up global event listeners for form interactions
+    */
     setupGlobalEventListeners() {
         // Gender-specific field validation on change
         if (this.manager.gender === 'male') {
@@ -66,8 +73,8 @@ class MeasurementApp {
     }
 
     /**
-     * Sets up listeners for measurement input fields
-     */
+    * Sets up listeners for measurement input fields
+    */
     setupMeasurementInputListeners() {
         const inputs = document.querySelectorAll('.measurement-input');
         
@@ -97,12 +104,46 @@ class MeasurementApp {
                 // Validate immediately without delay
                 this.validator.validateField(e.target.id);
             });
+            
+            // Show floating guide on mobile/tablet
+            input.addEventListener('click', (e) => {
+                if (this.isMobileView) {
+                    this.showFloatingGuide(e.target.dataset.measurement);
+                }
+            });
         });
     }
 
     /**
-     * Sets up real-time validation for client name field
-     */
+    * Sets up close functionality for floating guide
+    */
+    setupFloatingGuideClose() {
+        const closeBtn = document.getElementById('close-floating-guide');
+        const overlay = document.getElementById('floating-guide-overlay');
+        
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                this.hideFloatingGuide();
+            });
+        }
+        
+        if (overlay) {
+            overlay.addEventListener('click', () => {
+                this.hideFloatingGuide();
+            });
+        }
+        
+        // Also close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.hideFloatingGuide();
+            }
+        });
+    }
+
+    /**
+    * Sets up real-time validation for client name field
+    */
     setupClientNameValidation() {
         const nameField = document.getElementById('client-name');
         if (nameField) {
@@ -123,9 +164,9 @@ class MeasurementApp {
     }
 
     /**
-     * Displays measurement guide for selected measurement
-     * @param {string} measurementKey - Key of the measurement to show guide for
-     */
+    * Displays measurement guide for selected measurement
+    * @param {string} measurementKey - Key of the measurement to show guide for
+    */
     showMeasurementGuide(measurementKey) {
         const definition = MeasurementData.measurementDefinitions[measurementKey];
         if (!definition) return;
@@ -137,12 +178,76 @@ class MeasurementApp {
             `<strong>Definition:</strong> ${definition.definition}`;
         document.getElementById('measure-description').innerHTML = 
             `<strong>How to measure:</strong> ${definition.description}`;
+            
+        // If in desktop view, also update the desktop guide image
+        if (!this.isMobileView && this.manager) {
+            this.manager.updateDesktopGuideImage(measurementKey);
+        }
+    }
+    
+    /**
+    * Shows floating guide for mobile/tablet
+    * @param {string} measurementKey - Key of the measurement to show guide for
+    */
+    showFloatingGuide(measurementKey) {
+        const definition = MeasurementData.measurementDefinitions[measurementKey];
+        if (!definition) return;
+        
+        // Update guide text
+        this.showMeasurementGuide(measurementKey);
+        
+        // Show overlay and floating guide
+        const overlay = document.getElementById('floating-guide-overlay');
+        const floatingGuide = document.getElementById('floating-measurement-guide');
+        
+        if (overlay) overlay.style.display = 'block';
+        if (floatingGuide) floatingGuide.style.display = 'flex';
+        
+        // Update mobile guide image
+        this.updateMobileGuideImage(measurementKey);
+    }
+    
+    /**
+    * Hides floating guide
+    */
+    hideFloatingGuide() {
+        const overlay = document.getElementById('floating-guide-overlay');
+        const floatingGuide = document.getElementById('floating-measurement-guide');
+        
+        if (overlay) overlay.style.display = 'none';
+        if (floatingGuide) floatingGuide.style.display = 'none';
+    }
+    
+    /**
+    * Updates mobile guide image based on measurement
+    * @param {string} measurementKey - Measurement key
+    */
+    updateMobileGuideImage(measurementKey) {
+        const mobileImages = MeasurementData.guideImagesMobile[this.manager.gender];
+        if (!mobileImages || !mobileImages[measurementKey]) return;
+        
+        // Hide all images first
+        const guideImages = document.querySelectorAll('.measurement-guide-floating .guide-images img');
+        guideImages.forEach(img => {
+            img.style.display = 'none';
+            img.classList.remove('active');
+        });
+        
+        // Show the relevant image
+        const imageId = `floating-guide-${measurementKey}`;
+        const targetImage = document.getElementById(imageId);
+        
+        if (targetImage) {
+            targetImage.src = mobileImages[measurementKey];
+            targetImage.style.display = 'block';
+            targetImage.classList.add('active');
+        }
     }
 
     /**
-     * Handles save measurements button click
-     * Validates form and shows success message
-     */
+    * Handles save measurements button click
+    * Validates form and shows success message
+    */
     handleSaveMeasurements() {
         if (!this.validator.validateAll()) {
             // Highlight first error field
@@ -167,13 +272,14 @@ class MeasurementApp {
     }
 
     /**
-     * Handles reset form button click
-     * Confirms with user before resetting
-     */
+    * Handles reset form button click
+    * Confirms with user before resetting
+    */
     handleResetForm() {
         if (confirm('Are you sure you want to reset all measurements? This action cannot be undone.')) {
             this.manager.resetAll();
             this.validator.clearErrors();
+            this.hideFloatingGuide();
         }
     }
 }

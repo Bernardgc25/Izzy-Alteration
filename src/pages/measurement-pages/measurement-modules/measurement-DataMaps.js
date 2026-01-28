@@ -1,14 +1,66 @@
 /**
- * measurement-DataMaps.js
- * Contains all static data, images, and configuration for the measurement system
- * Centralized data store for easy updates and maintenance
- */
+* measurement-DataMaps.js
+* Contains all static data, images, and configuration for the measurement system
+* Centralized data store for easy updates and maintenance
+*/
 
 export const MeasurementData = {
-    // Measurement guide images by gender
+    // Desktop guide images by gender (for large screens)
     guideImages: {
         male: '/src/images/male-chart.jpg',
         female: '/src/images/female-chart.jpg'
+    },
+    
+    // Mobile/Tablet guide images by measurement (individual images)
+    guideImagesMobile: {
+        // Male-specific mobile images
+        male: {
+            neck: '/src/images/male-front.jpg',
+            'shoulder-length': '/src/images/mobile/male-shoulder-mobile.png',
+            'arm-length': '/src/images/mobile/male-arm-length-mobile.png',
+            'across-front': '/src/images/mobile/male-across-front-mobile.png',
+            'chest-circumference': '/src/images/mobile/male-chest-mobile.png',
+            waist: '/src/images/mobile/male-waist-mobile.png',
+            'hip-circumference': '/src/images/mobile/male-hips-mobile.png',
+            'total-rise': '/src/images/mobile/male-total-rise-mobile.png',
+            thigh: '/src/images/mobile/male-thigh-mobile.png',
+            knee: '/src/images/mobile/male-knee-mobile.png',
+            calf: '/src/images/mobile/male-calf-mobile.png',
+            ankle: '/src/images/mobile/male-ankle-mobile.png',
+            bicep: '/src/images/mobile/male-bicep-mobile.png',
+            elbow: '/src/images/mobile/male-elbow-mobile.png',
+            wrist: '/src/images/mobile/male-wrist-mobile.png',
+            'inseam-ankle': '/src/images/mobile/male-inseam-ankle-mobile.png',
+            'inseam-floor': '/src/images/mobile/male-inseam-floor-mobile.png',
+            'neck-waist': '/src/images/mobile/male-neck-waist-mobile.png',
+            'neck-floor': '/src/images/mobile/male-neck-floor-mobile.png',
+            'waist-floor': '/src/images/mobile/male-waist-floor-mobile.png',
+            height: '/src/images/mobile/male-height-mobile.png'
+        },
+        // Female-specific mobile images
+        female: {
+            neck: '/src/images/mobile/female-neck-mobile.png',
+            'shoulder-length': '/src/images/mobile/female-shoulder-mobile.png',
+            'arm-length': '/src/images/mobile/female-arm-length-mobile.png',
+            'chest-circumference': '/src/images/mobile/female-bust-mobile.png',
+            'under-bust': '/src/images/mobile/female-under-bust-mobile.png',
+            waist: '/src/images/mobile/female-waist-mobile.png',
+            'hip-circumference': '/src/images/mobile/female-hips-mobile.png',
+            'hip-bone-circumference': '/src/images/mobile/female-hip-bone-mobile.png',
+            thigh: '/src/images/mobile/female-thigh-mobile.png',
+            knee: '/src/images/mobile/female-knee-mobile.png',
+            calf: '/src/images/mobile/female-calf-mobile.png',
+            ankle: '/src/images/mobile/female-ankle-mobile.png',
+            bicep: '/src/images/mobile/female-bicep-mobile.png',
+            elbow: '/src/images/mobile/female-elbow-mobile.png',
+            wrist: '/src/images/mobile/female-wrist-mobile.png',
+            'inseam-ankle': '/src/images/mobile/female-inseam-ankle-mobile.png',
+            'inseam-floor': '/src/images/mobile/female-inseam-floor-mobile.png',
+            'neck-waist': '/src/images/mobile/female-neck-waist-mobile.png',
+            'neck-floor': '/src/images/mobile/female-neck-floor-mobile.png',
+            'waist-floor': '/src/images/mobile/female-waist-floor-mobile.png',
+            height: '/src/images/mobile/female-height-mobile.png'
+        }
     },
     
     // Comprehensive measurement definitions and guidance text
@@ -153,6 +205,12 @@ export const MeasurementData = {
         zoomResetTime: 500, // ms
         minZoom: 0.5,
         maxZoom: 3,
-        defaultZoom: 1
+        defaultZoom: 1,
+        mobileBreakpoint: 992 // px
+    },
+    
+    // Device detection helper
+    isMobileView: function() {
+        return window.innerWidth <= this.config.mobileBreakpoint;
     }
 };

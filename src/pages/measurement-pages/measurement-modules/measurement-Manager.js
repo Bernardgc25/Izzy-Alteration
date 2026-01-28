@@ -1,8 +1,8 @@
 /**
- * measurement-Manager.js
- * Manages measurement data, state, and operations
- * Handles image interactions, summary updates, and data management
- */
+* measurement-Manager.js
+* Manages measurement data, state, and operations
+* Handles image interactions, summary updates, and data management
+*/
 
 import { MeasurementData } from './measurement-DataMaps.js';
 
@@ -10,6 +10,7 @@ export class MeasurementManager {
     constructor() {
         this.measurements = new Map(); // Stores current measurements
         this.gender = null;
+        this.isMobileView = false;
         this.zoomState = {
             scale: MeasurementData.config.defaultZoom,
             x: 0,
@@ -21,21 +22,28 @@ export class MeasurementManager {
     }
 
     /**
-     * Initializes the manager with gender-specific settings
-     * @param {string} gender - 'male' or 'female'
-     */
-    initialize(gender) {
+    * Initializes the manager with gender-specific settings
+    * @param {string} gender - 'male' or 'female'
+    * @param {boolean} isMobileView - Whether current view is mobile/tablet
+    */
+    initialize(gender, isMobileView) {
         this.gender = gender;
-        this.setupGuideImage();
+        this.isMobileView = isMobileView;
+        
+        // Setup appropriate guide based on view
+        if (!this.isMobileView) {
+            this.setupDesktopGuideImage();
+        }
+        
         this.setupDateField();
         this.setupEventListeners();
         return this;
     }
 
     /**
-     * Sets up the measurement guide image with zoom/pan functionality
-     */
-    setupGuideImage() {
+    * Sets up the desktop measurement guide image with zoom/pan functionality
+    */
+    setupDesktopGuideImage() {
         const guideContainer = document.getElementById('measurement-guide');
         const guideImage = document.getElementById('guide-image');
         const defaultGuide = document.getElementById('default-guide');
@@ -48,11 +56,21 @@ export class MeasurementManager {
             this.setupImageInteraction(guideImage);
         }
     }
+    
+    /**
+    * Updates desktop guide image based on selected measurement
+    * @param {string} measurementKey - Selected measurement key
+    */
+    updateDesktopGuideImage(measurementKey) {
+        // For desktop, we keep the main chart but can highlight areas
+        // This could be extended to show specific parts of the chart
+        console.log(`Showing guide for: ${measurementKey}`);
+    }
 
     /**
-     * Sets up zoom and pan interactions for the guide image
-     * @param {HTMLImageElement} image - The guide image element
-     */
+    * Sets up zoom and pan interactions for the guide image
+    * @param {HTMLImageElement} image - The guide image element
+    */
     setupImageInteraction(image) {
         const container = image.parentElement;
         
@@ -103,12 +121,12 @@ export class MeasurementManager {
     }
 
     /**
-     * Zooms the image towards cursor position
-     * @param {HTMLImageElement} image - Image element
-     * @param {number} delta - Zoom amount
-     * @param {number} originX - X coordinate relative to image
-     * @param {number} originY - Y coordinate relative to image
-     */
+    * Zooms the image towards cursor position
+    * @param {HTMLImageElement} image - Image element
+    * @param {number} delta - Zoom amount
+    * @param {number} originX - X coordinate relative to image
+    * @param {number} originY - Y coordinate relative to image
+    */
     zoomImage(image, delta, originX, originY) {
         const newScale = Math.max(
             MeasurementData.config.minZoom,
@@ -125,9 +143,9 @@ export class MeasurementManager {
     }
 
     /**
-     * Resets zoom and pan to default state
-     * @param {HTMLImageElement} image - Image element
-     */
+    * Resets zoom and pan to default state
+    * @param {HTMLImageElement} image - Image element
+    */
     resetZoom(image) {
         this.zoomState.scale = MeasurementData.config.defaultZoom;
         this.zoomState.x = 0;
@@ -136,9 +154,9 @@ export class MeasurementManager {
     }
 
     /**
-     * Updates CSS transform for image based on current zoom state
-     * @param {HTMLImageElement} image - Image element
-     */
+    * Updates CSS transform for image based on current zoom state
+    * @param {HTMLImageElement} image - Image element
+    */
     updateImageTransform(image) {
         image.style.transform = `
             translate(${this.zoomState.x}px, ${this.zoomState.y}px) 
@@ -148,8 +166,8 @@ export class MeasurementManager {
     }
 
     /**
-     * Sets up date field with current date
-     */
+    * Sets up date field with current date
+    */
     setupDateField() {
         const dateField = document.getElementById('save-date');
         if (dateField) {
@@ -161,8 +179,8 @@ export class MeasurementManager {
     }
 
     /**
-     * Sets up global event listeners
-     */
+    * Sets up global event listeners
+    */
     setupEventListeners() {
         // Auto-fill with minimum value when empty input is clicked
         const measurementInputs = document.querySelectorAll('.measurement-input');
@@ -187,11 +205,11 @@ export class MeasurementManager {
     }
 
     /**
-     * Saves a measurement to the collection (internal tracking only)
-     * @param {string} id - Measurement field ID
-     * @param {string} value - Measurement value
-     * @param {string} label - Measurement label
-     */
+    * Saves a measurement to the collection (internal tracking only)
+    * @param {string} id - Measurement field ID
+    * @param {string} value - Measurement value
+    * @param {string} label - Measurement label
+    */
     saveMeasurement(id, value, label) {
         if (value && value.trim() !== '') {
             this.measurements.set(id, { 
@@ -199,13 +217,12 @@ export class MeasurementManager {
                 label: label.replace(':', '').trim(),
                 timestamp: new Date().toISOString() 
             });
-            // Note: We no longer update the visible summary here
         }
     }
 
     /**
-     * Prints the measurement summary in a new window
-     */
+    * Prints the measurement summary in a new window
+    */
     printSummary() {
         const printWindow = window.open('', '_blank', 'width=800,height=600');
         const formData = this.getFormData();
@@ -294,9 +311,9 @@ export class MeasurementManager {
     }
 
     /**
-     * Collects all form data into a structured object
-     * @returns {Object} Form data object
-     */
+    * Collects all form data into a structured object
+    * @returns {Object} Form data object
+    */
     getFormData() {
         const formData = {
             name: document.getElementById('client-name').value,
@@ -316,8 +333,8 @@ export class MeasurementManager {
     }
 
     /**
-     * Resets all form fields and clears data
-     */
+    * Resets all form fields and clears data
+    */
     resetAll() {
         // Clear form
         const form = document.getElementById('measurement-form');
@@ -329,10 +346,12 @@ export class MeasurementManager {
         // Reset date to today
         this.setupDateField();
         
-        // Reset zoom on guide image
-        const guideImage = document.getElementById('guide-image');
-        if (guideImage) {
-            this.resetZoom(guideImage);
+        // Reset zoom on guide image if desktop
+        if (!this.isMobileView) {
+            const guideImage = document.getElementById('guide-image');
+            if (guideImage) {
+                this.resetZoom(guideImage);
+            }
         }
     }
 }
