@@ -353,7 +353,10 @@ footer {
     color: #6c757d;
 }
 
-/* Floating guide overlay */
+/* =========================================== */
+/* FLOATING GUIDE STYLES (Mobile/Tablet) */
+/* =========================================== */
+
 .measurement-guide-overlay {
     position: fixed;
     top: 0;
@@ -380,7 +383,6 @@ footer {
     z-index: 1000;
     flex-direction: column;
     overflow: hidden;
-    padding: 15px;
 }
 
 .measurement-guide-floating .close-btn {
@@ -414,6 +416,7 @@ footer {
     padding-right: 40px;
     font-size: 1.3rem;
     color: #2c3e50;
+    padding: 15px 15px 0 15px;
 }
 
 .measurement-guide-floating .guide-images {
@@ -424,7 +427,8 @@ footer {
     overflow: hidden;
     background-color: #f9f9f9;
     border-radius: 5px;
-    padding: 10px;
+    margin: 0 15px 15px 15px;
+    min-height: 200px;
 }
 
 .measurement-guide-floating .guide-images img {
@@ -436,6 +440,39 @@ footer {
 
 .measurement-guide-floating .guide-images img.active {
     display: block;
+}
+
+.measurement-guide-floating .guide-text {
+    padding: 0 15px 15px 15px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    overflow-y: auto;
+    max-height: 40%;
+    border-top: 1px solid #e9ecef;
+    margin-top: 10px;
+    padding-top: 15px;
+}
+
+.measurement-guide-floating #current-guide {
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    color: #2c3e50;
+}
+
+.measurement-guide-floating #floating-measure-object,
+.measurement-guide-floating #floating-measure-definition,
+.measurement-guide-floating #floating-measure-description {
+    display: block;
+    margin-bottom: 8px;
+    color: #495057;
+}
+
+.measurement-guide-floating #floating-measure-object strong,
+.measurement-guide-floating #floating-measure-definition strong,
+.measurement-guide-floating #floating-measure-description strong {
+    color: #2c3e50;
+    margin-right: 5px;
+    font-size: 0.9rem;
 }
 
 /* =========================================== */
@@ -684,7 +721,21 @@ footer {
     .measurement-guide-floating {
         width: 95%;
         height: 80vh;
-        padding: 10px;
+        padding: 0;
+    }
+    
+    .measurement-guide-floating h2 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        padding: 10px 10px 0 10px;
+    }
+    
+    .measurement-guide-floating .guide-images {
+        margin: 0 10px 10px 10px;
+    }
+    
+    .measurement-guide-floating .guide-text {
+        padding: 0 10px 10px 10px;
     }
 }
 
@@ -746,12 +797,21 @@ footer {
     .measurement-guide-floating {
         width: 98%;
         height: 85vh;
-        padding: 8px;
     }
     
     .measurement-guide-floating h2 {
-        font-size: 1.2rem;
-        margin-bottom: 10px;
+        font-size: 1.1rem;
+        padding: 8px 8px 0 8px;
+    }
+    
+    .measurement-guide-floating .guide-images {
+        margin: 0 8px 8px 8px;
+        min-height: 180px;
+    }
+    
+    .measurement-guide-floating .guide-text {
+        padding: 0 8px 8px 8px;
+        font-size: 0.82rem;
     }
     
     /* Adjust measurement form layout for very small screens */

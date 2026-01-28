@@ -219,9 +219,9 @@ class MeasurementApp {
     }
     
     /**
-    * Updates mobile guide image based on measurement
-    * @param {string} measurementKey - Measurement key
-    */
+     * Updates mobile guide image based on measurement
+     * @param {string} measurementKey - Measurement key
+     */
     updateMobileGuideImage(measurementKey) {
         const mobileImages = MeasurementData.guideImagesMobile[this.manager.gender];
         if (!mobileImages || !mobileImages[measurementKey]) return;
@@ -242,6 +242,18 @@ class MeasurementApp {
             targetImage.style.display = 'block';
             targetImage.classList.add('active');
         }
+        
+        // Update floating guide text elements
+        const definition = MeasurementData.measurementDefinitions[measurementKey];
+        if (!definition) return;
+        
+        // Update floating guide text elements
+        document.getElementById('floating-measure-object').innerHTML = 
+            `<strong>Object:</strong> ${definition.object}`;
+        document.getElementById('floating-measure-definition').innerHTML = 
+            `<strong>Definition:</strong> ${definition.definition}`;
+        document.getElementById('floating-measure-description').innerHTML = 
+            `<strong>How to measure:</strong> ${definition.description}`;
     }
 
     /**
