@@ -1,4 +1,6 @@
 /* measurements-compact.css - Optimized Compact Design */
+/*original design*/
+/*with floating window for measurement guide on mobile/tablet*/
 .container {
     max-width: 1200px;
     margin: 20px auto;
