@@ -1,6 +1,6 @@
-/* measurements.css - Optimized Compact Design */
-/* Responsive design with desktop/mobile specific behaviors */
-
+/* measurements-compact.css - Optimized Compact Design */
+/*original design*/
+/*with floating window for measurement guide on mobile/tablet*/
 .container {
     max-width: 1200px;
     margin: 20px auto;
@@ -98,33 +98,6 @@ h2, h3 {
 .label-text {
     flex: 1;
     font-size: 0.82rem;
-}
-
-/* Eye icon - hidden by default on desktop, shown on mobile */
-.fa-regular.fa-eye {
-    cursor: pointer;
-    color: #3498db;
-    margin-left: 5px;
-    font-size: 0.9rem;
-    transition: color 0.2s;
-}
-
-.fa-regular.fa-eye:hover {
-    color: #2980b9;
-}
-
-/* Hide eye icon on desktop/laptop */
-@media (min-width: 993px) {
-    .fa-regular.fa-eye {
-        display: none;
-    }
-}
-
-/* Show eye icon on tablet/mobile */
-@media (max-width: 992px) {
-    .fa-regular.fa-eye {
-        display: inline-block;
-    }
 }
 
 input[type="number"],
@@ -234,12 +207,6 @@ input:focus, select:focus {
     margin-bottom: 6px;
     overflow: hidden;
     flex-shrink: 0;
-    cursor: grab;
-    position: relative;
-}
-
-.guide-image-container.grabbing {
-    cursor: grabbing;
 }
 
 .guide-placeholder {
@@ -266,8 +233,6 @@ input:focus, select:focus {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
-    transition: transform 0.1s ease;
-    transform-origin: 0 0;
 }
 
 /* ENHANCED: Compact guide-text for desktop/laptop */
@@ -962,8 +927,7 @@ footer {
     
     .button-section-right,
     .btn-icon,
-    .guide-image-container,
-    .fa-regular.fa-eye {
+    .guide-image-container {
         display: none !important;
     }
     
@@ -984,9 +948,5 @@ footer {
     input, select {
         border: 1px solid #ccc;
         background: transparent;
-    }
-    
-    #summary-content {
-        min-height: auto;
     }
 }
