@@ -1,8 +1,8 @@
 /**
-* measurement-DataMaps.js
-* Contains all static data, images, and configuration for the measurement system
-* Centralized data store for easy updates and maintenance
-*/
+ * measurement-DataMaps.js
+ * Centralized data store for measurement system with enhanced scalability
+ * Contains all static data, images, configuration, and validation rules
+ */
 
 export const MeasurementData = {
     // Desktop guide images by gender (for large screens)
@@ -198,6 +198,14 @@ export const MeasurementData = {
         female: ['AA', 'A', 'B', 'C', 'D', 'DD/E', 'DDD/F']
     },
     
+    // Validation configuration
+    validation: {
+        nameRegex: /^[A-Za-z\s]+$/, // Only alphabetic characters and spaces
+        minNameLength: 2,
+        maxNameLength: 50,
+        dateFormat: 'YYYY-MM-DD'
+    },
+    
     // Default configuration
     config: {
         measurementUnit: 'inches',
@@ -206,11 +214,65 @@ export const MeasurementData = {
         minZoom: 0.5,
         maxZoom: 3,
         defaultZoom: 1,
-        mobileBreakpoint: 992 // px
+        mobileBreakpoint: 992, // px
+        desktopBreakpoint: 993 // px
     },
     
-    // Device detection helper
+    // Helper methods for device detection
     isMobileView: function() {
         return window.innerWidth <= this.config.mobileBreakpoint;
+    },
+    
+    isDesktopView: function() {
+        return window.innerWidth >= this.config.desktopBreakpoint;
+    },
+    
+    // Method to get all measurement fields for a specific gender
+    getMeasurementFields: function(gender) {
+        const commonFields = [
+            'neck', 'shoulder-length', 'arm-length', 'chest-circumference', 'waist',
+            'hip-circumference', 'thigh', 'knee', 'calf', 'ankle', 'bicep', 'elbow',
+            'wrist', 'inseam-ankle', 'inseam-floor', 'neck-waist', 'neck-floor',
+            'waist-floor', 'height'
+        ];
+        
+        if (gender === 'male') {
+            return [...commonFields, 'across-front', 'total-rise'];
+        } else if (gender === 'female') {
+            return [...commonFields, 'under-bust', 'hip-bone-circumference'];
+        }
+        
+        return commonFields;
+    },
+    
+    // Method to get label text for a measurement
+    getLabelText: function(measurementKey) {
+        const definitions = {
+            'neck': 'Neck circumference',
+            'shoulder-length': 'Shoulder length',
+            'arm-length': 'Arm length',
+            'across-front': 'Across front',
+            'chest-circumference': 'Chest circumference',
+            'waist': 'Waist circumference',
+            'hip-circumference': 'Hip circumference',
+            'total-rise': 'Total rise',
+            'thigh': 'Thigh',
+            'knee': 'Knee',
+            'calf': 'Calf',
+            'ankle': 'Ankle',
+            'bicep': 'Bicep',
+            'elbow': 'Elbow',
+            'wrist': 'Wrist',
+            'inseam-ankle': 'Inseam to ankle',
+            'inseam-floor': 'Inseam to floor',
+            'neck-waist': 'Neck to waist',
+            'neck-floor': 'Neck to floor',
+            'waist-floor': 'Waist to floor',
+            'height': 'Height',
+            'under-bust': 'Under bust',
+            'hip-bone-circumference': 'Hip bone circumference'
+        };
+        
+        return definitions[measurementKey] || measurementKey;
     }
 };
