@@ -233,12 +233,12 @@ input:focus, select:focus {
     object-fit: contain;
 }
 
+/* ENHANCED: Compact guide-text for desktop/laptop */
 .guide-text {
-    flex: 1;
     font-size: 0.78rem;
-    line-height: 1.3;
+    line-height: 1.2;
     min-height: 25%;
-    overflow-y: auto;
+    padding: 4px 2px;
 }
 
 #current-guide {
@@ -250,7 +250,7 @@ input:focus, select:focus {
 #measure-definition,
 #measure-description {
     display: block;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
 }
 
 #measure-object strong,
@@ -354,9 +354,8 @@ footer {
 }
 
 /* =========================================== */
-/* FLOATING GUIDE STYLES (Mobile/Tablet) */
+/* FLOATING GUIDE STYLES (Mobile/Tablet) - ENHANCED */
 /* =========================================== */
-
 .measurement-guide-overlay {
     position: fixed;
     top: 0;
@@ -412,14 +411,15 @@ footer {
 
 .measurement-guide-floating h2 {
     margin-top: 0;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     padding-right: 40px;
     font-size: 1.3rem;
     color: #2c3e50;
     padding: 15px 15px 0 15px;
 }
 
-.measurement-guide-floating .guide-images {
+/* ENHANCED: Larger floating guide images for tablet/mobile */
+.measurement-guide-floating .floating-guide-images {
     flex: 1;
     display: flex;
     align-items: center;
@@ -427,34 +427,35 @@ footer {
     overflow: hidden;
     background-color: #f9f9f9;
     border-radius: 5px;
-    margin: 0 15px 15px 15px;
-    min-height: 200px;
+    margin: 0 15px;
+    min-height: 250px;
+    max-height: 55vh;
 }
 
-.measurement-guide-floating .guide-images img {
+.measurement-guide-floating .floating-guide-images img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
     display: none;
 }
 
-.measurement-guide-floating .guide-images img.active {
+.measurement-guide-floating .floating-guide-images img.active {
     display: block;
 }
 
-.measurement-guide-floating .guide-text {
-    padding: 0 15px 15px 15px;
+/* ENHANCED: Compact floating guide text with better readability */
+.measurement-guide-floating .floating-guide-text {
+    padding: 10px 15px 15px;
     font-size: 0.85rem;
-    line-height: 1.4;
-    overflow-y: auto;
-    max-height: 40%;
+    line-height: 1.3;
+    overflow-y: visible;
+    max-height: none;
     border-top: 1px solid #e9ecef;
-    margin-top: 10px;
-    padding-top: 15px;
+    margin: 10px 15px 0;
 }
 
 .measurement-guide-floating #current-guide {
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     font-size: 0.9rem;
     color: #2c3e50;
 }
@@ -463,8 +464,9 @@ footer {
 .measurement-guide-floating #floating-measure-definition,
 .measurement-guide-floating #floating-measure-description {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     color: #495057;
+    padding: 2px 0;
 }
 
 .measurement-guide-floating #floating-measure-object strong,
@@ -572,6 +574,24 @@ footer {
     .label-text {
         font-size: 0.8rem;
     }
+    
+    /* ENHANCED: Tablet adjustments for floating guide */
+    .measurement-guide-floating .floating-guide-images {
+        min-height: 280px;
+        max-height: 60vh;
+    }
+    
+    .measurement-guide-floating .floating-guide-text {
+        padding: 8px 15px 12px;
+        margin: 8px 15px 0;
+        font-size: 0.82rem;
+    }
+    
+    .measurement-guide-floating #floating-measure-object,
+    .measurement-guide-floating #floating-measure-definition,
+    .measurement-guide-floating #floating-measure-description {
+        margin-bottom: 4px;
+    }
 }
 
 /* Large Mobile (576px - 768px) */
@@ -643,6 +663,37 @@ footer {
     .btn-primary, .btn-secondary {
         height: 38px;
         font-size: 0.85rem;
+    }
+    
+    /* ENHANCED: Mobile adjustments for floating guide */
+    .measurement-guide-floating {
+        width: 95%;
+        height: 80vh;
+    }
+    
+    .measurement-guide-floating .floating-guide-images {
+        min-height: 300px;
+        max-height: 65vh;
+        margin: 0 10px;
+    }
+    
+    .measurement-guide-floating .floating-guide-text {
+        padding: 6px 10px 10px;
+        margin: 6px 10px 0;
+        font-size: 0.8rem;
+        line-height: 1.25;
+    }
+    
+    .measurement-guide-floating h2 {
+        font-size: 1.2rem;
+        padding: 12px 12px 0 12px;
+        margin-bottom: 8px;
+    }
+    
+    .measurement-guide-floating #floating-measure-object,
+    .measurement-guide-floating #floating-measure-definition,
+    .measurement-guide-floating #floating-measure-description {
+        margin-bottom: 3px;
     }
 }
 
@@ -718,24 +769,26 @@ footer {
         font-size: 0.85rem;
     }
     
+    /* ENHANCED: Small mobile adjustments for floating guide */
     .measurement-guide-floating {
-        width: 95%;
-        height: 80vh;
-        padding: 0;
+        width: 98%;
+        height: 85vh;
+    }
+    
+    .measurement-guide-floating .floating-guide-images {
+        min-height: 320px;
+        max-height: 70vh;
+    }
+    
+    .measurement-guide-floating .floating-guide-text {
+        padding: 4px 8px 8px;
+        margin: 4px 8px 0;
+        font-size: 0.78rem;
     }
     
     .measurement-guide-floating h2 {
-        font-size: 1.2rem;
-        margin-bottom: 10px;
+        font-size: 1.1rem;
         padding: 10px 10px 0 10px;
-    }
-    
-    .measurement-guide-floating .guide-images {
-        margin: 0 10px 10px 10px;
-    }
-    
-    .measurement-guide-floating .guide-text {
-        padding: 0 10px 10px 10px;
     }
 }
 
@@ -794,94 +847,40 @@ footer {
         gap: 8px;
     }
     
+    /* ENHANCED: Extra small mobile adjustments for floating guide */
     .measurement-guide-floating {
-        width: 98%;
-        height: 85vh;
+        width: 100%;
+        height: 90vh;
+        border-radius: 8px;
+    }
+    
+    .measurement-guide-floating .floating-guide-images {
+        min-height: 340px;
+        max-height: 75vh;
+        margin: 0 5px;
+    }
+    
+    .measurement-guide-floating .floating-guide-text {
+        padding: 3px 6px 6px;
+        margin: 3px 6px 0;
+        font-size: 0.76rem;
+        line-height: 1.2;
     }
     
     .measurement-guide-floating h2 {
-        font-size: 1.1rem;
+        font-size: 1rem;
         padding: 8px 8px 0 8px;
     }
     
-    .measurement-guide-floating .guide-images {
-        margin: 0 8px 8px 8px;
-        min-height: 180px;
-    }
-    
-    .measurement-guide-floating .guide-text {
-        padding: 0 8px 8px 8px;
-        font-size: 0.82rem;
-    }
-    
-    /* Adjust measurement form layout for very small screens */
-    .form-group {
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .measurement-label {
+    .measurement-guide-floating #floating-measure-object,
+    .measurement-guide-floating #floating-measure-definition,
+    .measurement-guide-floating #floating-measure-description {
         margin-bottom: 2px;
-    }
-    
-    /* Ensure proper spacing in name/date section */
-    .name-date-section-container-middle .form-group {
-        margin-bottom: 8px;
     }
     
     /* Improve touch targets */
     .measurement-input, select, input[type="date"], input[type="text"] {
         min-height: 36px;
-    }
-}
-
-/* Portrait Orientation Specific Adjustments */
-@media (max-width: 768px) and (orientation: portrait) {
-    .guide-image-container {
-        height: 35vh;
-    }
-    
-    .top {
-        gap: 12px;
-    }
-    
-    .measurement-guide-floating {
-        height: 75vh;
-    }
-}
-
-/* Landscape Orientation Specific Adjustments */
-@media (max-width: 992px) and (orientation: landscape) {
-    .guide-image-container {
-        height: 55vh;
-    }
-    
-    .top {
-        grid-template-columns: 1fr 1fr;
-    }
-    
-    #measurement-guide {
-        display: none;
-    }
-    
-    .measurement-guide-floating {
-        width: 80%;
-        height: 85vh;
-    }
-}
-
-/* High DPI Screens */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .container {
-        box-shadow: 0 1px 2px rgba(0,0,0,0.08);
-    }
-    
-    input[type="number"],
-    input[type="text"],
-    input[type="date"],
-    select,
-    .measurement-input {
-        border-width: 0.5px;
     }
 }
 
