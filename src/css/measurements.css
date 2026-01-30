@@ -189,7 +189,7 @@ input:focus, select:focus {
     border: 1px solid #e0e0e0;
     border-radius: 5px;
     padding: 10px;
-    background-color: #f9f9f9;
+    background-color: white;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -425,7 +425,7 @@ footer {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background-color: #f9f9f9;
+    background-color: white;
     border-radius: 5px;
     margin: 0 15px;
     min-height: 250px;
