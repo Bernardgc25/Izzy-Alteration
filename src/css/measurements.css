@@ -88,7 +88,7 @@ h2, h3 {
 
 .label-letter {
     font-weight: 700;
-    color: #3498db;
+    color: #e74c3c;
     font-size: 0.85rem;
     min-width: 20px;
 }
@@ -251,6 +251,12 @@ input:focus, select:focus {
 #measure-description {
     display: block;
     margin-bottom: 2px;
+}
+
+.measurement-guide-container-right #measure-object{
+    color: #e74c3c;
+    margin-right: 4px;
+    font-size: 0.8rem;
 }
 
 #measure-object strong,
@@ -460,7 +466,13 @@ footer {
     color: #2c3e50;
 }
 
-.measurement-guide-floating #floating-measure-object,
+.measurement-guide-floating #floating-measure-object{
+    display: block;
+    margin-bottom: 6px;
+    color: #e74c3c;
+    padding: 2px 0;
+}
+
 .measurement-guide-floating #floating-measure-definition,
 .measurement-guide-floating #floating-measure-description {
     display: block;
