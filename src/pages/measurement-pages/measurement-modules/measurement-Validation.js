@@ -27,11 +27,14 @@ export class MeasurementValidator {
         this.rules = {
             'client-name': {
                 required: true,
-                message: 'Name is required'
+                // message: 'Name is required'
+                message: ' '
+
             },
             'save-date': {
                 required: true,
-                message: 'Date is required'
+                //message: 'Date is required'
+                message: ' '
             }
         };
 
@@ -39,12 +42,14 @@ export class MeasurementValidator {
         if (this.gender === 'male') {
             this.rules['size-number'] = {
                 required: true,
-                message: 'Size number is required'
+                //message: 'Size number is required'
+                message: ' '
             };
         } else {
             this.rules['cupSize'] = {
                 required: true,
-                message: 'Cup size is required'
+                //message: 'Cup size is required'
+                message: ' '
             };
         }
     }

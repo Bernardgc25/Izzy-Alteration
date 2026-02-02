@@ -1,6 +1,6 @@
 /* measurements-compact.css - Optimized Compact Design */
-/*original design*/
-/*with floating window for measurement guide on mobile/tablet*/
+/* original design */
+/* with floating window for measurement guide on mobile/tablet */
 .container {
     max-width: 1200px;
     margin: 20px auto;
@@ -368,8 +368,9 @@ footer {
 }
 
 /* =========================================== */
-/* FLOATING GUIDE STYLES (Mobile/Tablet) - ENHANCED */
+/* FLOATING GUIDE STYLES - ENHANCED & DEVICE-RESPONSIVE */
 /* =========================================== */
+
 .measurement-guide-overlay {
     position: fixed;
     top: 0;
@@ -381,15 +382,13 @@ footer {
     display: none;
 }
 
+/* Base floating guide styles - Desktop default */
 .measurement-guide-floating {
     display: none;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 500px;
-    height: 70vh;
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
@@ -398,6 +397,60 @@ footer {
     overflow: hidden;
 }
 
+/* Desktop/Laptop specific floating guide (992px and above) */
+@media (min-width: 993px) {
+    .measurement-guide-floating {
+        width: 600px; /* Smaller window for desktop */
+        height: 500px; /* Moderate height for desktop */
+        max-width: 80%; /* Percentage based on screen */
+        max-height: 80vh;
+    }
+    
+    .measurement-guide-floating .floating-guide-images {
+        height: 300px; /* Moderate image height for desktop */
+        max-height: 60%;
+    }
+    
+    .measurement-guide-floating .floating-guide-text {
+        padding: 15px 20px 20px;
+        font-size: 0.9rem;
+        max-height: 40%;
+    }
+}
+
+/* Tablet (768px - 992px) */
+@media (max-width: 992px) and (min-width: 769px) {
+    .measurement-guide-floating {
+        width: 90%; /* Larger percentage for tablets */
+        height: 70vh; /* Taller for tablets */
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    .measurement-guide-floating .floating-guide-images {
+        height: 350px;
+        max-height: 60vh;
+    }
+}
+
+/* Mobile (below 768px) */
+@media (max-width: 768px) {
+    .measurement-guide-floating {
+        width: 95%; /* Almost full width for mobile */
+        height: 85vh; /* Very tall for mobile */
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    .measurement-guide-floating .floating-guide-images {
+        height: 400px;
+        max-height: 70vh;
+    }
+}
+
+/* Common floating guide elements */
 .measurement-guide-floating .close-btn {
     position: absolute;
     top: 10px;
@@ -432,7 +485,6 @@ footer {
     padding: 15px 15px 0 15px;
 }
 
-/* ENHANCED: Larger floating guide images for tablet/mobile */
 .measurement-guide-floating .floating-guide-images {
     flex: 1;
     display: flex;
@@ -442,8 +494,7 @@ footer {
     background-color: white;
     border-radius: 5px;
     margin: 0 15px;
-    min-height: 250px;
-    max-height: 55vh;
+    min-height: 200px;
 }
 
 .measurement-guide-floating .floating-guide-images img {
@@ -457,13 +508,10 @@ footer {
     display: block;
 }
 
-/* ENHANCED: Compact floating guide text with better readability */
 .measurement-guide-floating .floating-guide-text {
-    padding: 10px 15px 15px;
     font-size: 0.85rem;
     line-height: 1.3;
-    overflow-y: visible;
-    max-height: none;
+    overflow-y: auto;
     border-top: 1px solid #e9ecef;
     margin: 10px 15px 0;
 }
@@ -474,7 +522,6 @@ footer {
     color: #2c3e50;
 }
 
-/* FIXED: Added proper styling for floating guide text elements */
 .measurement-guide-floating #floating-measure-object {
     display: block;
     margin-bottom: 8px;
@@ -501,7 +548,6 @@ footer {
     font-weight: 600;
 }
 
-/* Ensure floating guide text is visible and properly formatted */
 .measurement-guide-floating .floating-guide-text span {
     display: block;
     margin-bottom: 6px;
@@ -615,13 +661,13 @@ footer {
         margin-left: 4px;
     }
     
-    /* ENHANCED: Tablet adjustments for floating guide - FIXED */
+    /* Tablet floating guide adjustments */
     .measurement-guide-floating {
-        top: 20px;
+        top: 50%;
         left: 50%;
-        transform: translate(-50%, 0);
-        height: calc(100vh - 40px);
-        width: 95%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        height: 70vh;
     }
     
     .measurement-guide-floating .floating-guide-images {
@@ -724,13 +770,13 @@ footer {
         margin-left: 4px;
     }
     
-    /* ENHANCED: Mobile adjustments for floating guide - FIXED */
+    /* Mobile floating guide adjustments */
     .measurement-guide-floating {
         width: 95%;
-        height: calc(100vh - 20px);
-        top: 10px;
+        height: 85vh;
+        top: 50%;
         left: 50%;
-        transform: translate(-50%, 0);
+        transform: translate(-50%, -50%);
     }
     
     .measurement-guide-floating .floating-guide-images {
@@ -843,13 +889,13 @@ footer {
         margin-left: 4px;
     }
     
-    /* ENHANCED: Small mobile adjustments for floating guide - FIXED */
+    /* Small mobile floating guide adjustments */
     .measurement-guide-floating {
         width: 98%;
-        height: calc(100vh - 15px);
-        top: 10px;
+        height: 90vh;
+        top: 50%;
         left: 50%;
-        transform: translate(-50%, 0);
+        transform: translate(-50%, -50%);
         border-radius: 8px;
     }
     
@@ -943,13 +989,13 @@ footer {
         flex-shrink: 0;
     }
     
-    /* ENHANCED: Extra small mobile adjustments for floating guide - FIXED */
+    /* Extra small mobile floating guide adjustments */
     .measurement-guide-floating {
         width: 100%;
-        height: calc(100vh - 10px);
-        top: 5px;
+        height: 95vh;
+        top: 50%;
         left: 50%;
-        transform: translate(-50%, 0);
+        transform: translate(-50%, -50%);
         border-radius: 6px;
     }
     
