@@ -474,19 +474,22 @@ footer {
     color: #2c3e50;
 }
 
-.measurement-guide-floating #floating-measure-object{
+/* FIXED: Added proper styling for floating guide text elements */
+.measurement-guide-floating #floating-measure-object {
     display: block;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     color: #e74c3c;
     padding: 2px 0;
+    font-size: 0.9rem;
 }
 
 .measurement-guide-floating #floating-measure-definition,
 .measurement-guide-floating #floating-measure-description {
     display: block;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     color: #495057;
     padding: 2px 0;
+    font-size: 0.85rem;
 }
 
 .measurement-guide-floating #floating-measure-object strong,
@@ -495,6 +498,13 @@ footer {
     color: #2c3e50;
     margin-right: 5px;
     font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* Ensure floating guide text is visible and properly formatted */
+.measurement-guide-floating .floating-guide-text span {
+    display: block;
+    margin-bottom: 6px;
 }
 
 /* =========================================== */
@@ -628,7 +638,8 @@ footer {
     .measurement-guide-floating #floating-measure-object,
     .measurement-guide-floating #floating-measure-definition,
     .measurement-guide-floating #floating-measure-description {
-        margin-bottom: 4px;
+        margin-bottom: 6px;
+        font-size: 0.85rem;
     }
 }
 
@@ -744,7 +755,8 @@ footer {
     .measurement-guide-floating #floating-measure-object,
     .measurement-guide-floating #floating-measure-definition,
     .measurement-guide-floating #floating-measure-description {
-        margin-bottom: 3px;
+        margin-bottom: 5px;
+        font-size: 0.82rem;
     }
 }
 
@@ -856,6 +868,13 @@ footer {
         font-size: 1.1rem;
         padding: 10px 10px 0 10px;
     }
+    
+    .measurement-guide-floating #floating-measure-object,
+    .measurement-guide-floating #floating-measure-definition,
+    .measurement-guide-floating #floating-measure-description {
+        font-size: 0.8rem;
+        margin-bottom: 4px;
+    }
 }
 
 /* Extra Small Mobile (below 480px) */
@@ -955,7 +974,8 @@ footer {
     .measurement-guide-floating #floating-measure-object,
     .measurement-guide-floating #floating-measure-definition,
     .measurement-guide-floating #floating-measure-description {
-        margin-bottom: 2px;
+        margin-bottom: 3px;
+        font-size: 0.78rem;
     }
     
     /* Improve touch targets */

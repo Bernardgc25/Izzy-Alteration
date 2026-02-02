@@ -292,19 +292,25 @@ class MeasurementApp {
     }
 
     /**
-     * Update guide text elements
+     * Update guide text elements for both desktop and mobile
      */
     updateGuideText(measurement) {
         const elements = {
             'measure-object': measurement.object,
             'measure-definition': measurement.definition,
-            'measure-description': measurement.description
+            'measure-description': measurement.description,
+            // ADD THESE FOR FLOATING GUIDE
+            'floating-measure-object': measurement.object,
+            'floating-measure-definition': measurement.definition,
+            'floating-measure-description': measurement.description
         };
 
         Object.entries(elements).forEach(([id, content]) => {
             const element = document.getElementById(id);
             if (element) {
-                element.innerHTML = `<strong>${id.split('-')[0].charAt(0).toUpperCase() + id.split('-')[0].slice(1)}:</strong> ${content}`;
+                const label = id.includes('object') ? 'Object' : 
+                            id.includes('definition') ? 'Definition' : 'Description';
+                element.innerHTML = `<strong>${label}:</strong> ${content}`;
             }
         });
     }
