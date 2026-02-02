@@ -27,7 +27,7 @@ export const measurementDataMap = {
                 object: "Shoulder Length",
                 definition: "Measure from the edge of one shoulder to the edge of the other shoulder.",
                 description: "Place the tape measure from the outer edge of one shoulder bone (acromion) to the other, across the back.",
-                imageMobile: "/images/measurements/mobile/male/shoulder-length-mobile.jpg"
+                imageMobile: "/src/images/male-back.png"
             },
             "arm-length": {
                 object: "Arm Length",
