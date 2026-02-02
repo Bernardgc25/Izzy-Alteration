@@ -100,6 +100,12 @@ h2, h3 {
     font-size: 0.82rem;
 }
 
+/* HIDE EYE ICON ON DESKTOP/LAPTOP */
+.measurement-label .fa-eye,
+.measurement-label .fa-regular.fa-eye {
+    display: none !important;
+}
+
 input[type="number"],
 input[type="text"],
 input[type="date"],
@@ -589,6 +595,16 @@ footer {
         font-size: 0.8rem;
     }
     
+    /* SHOW EYE ICON ON TABLET/MOBILE */
+    .measurement-label .fa-eye,
+    .measurement-label .fa-regular.fa-eye {
+        display: inline-flex !important;
+        font-size: 0.75rem;
+        color: #3498db;
+        cursor: pointer;
+        margin-left: 4px;
+    }
+    
     /* ENHANCED: Tablet adjustments for floating guide - FIXED */
     .measurement-guide-floating {
         top: 20px;
@@ -687,6 +703,16 @@ footer {
         font-size: 0.85rem;
     }
     
+    /* SHOW EYE ICON ON MOBILE */
+    .measurement-label .fa-eye,
+    .measurement-label .fa-regular.fa-eye {
+        display: inline-flex !important;
+        font-size: 0.8rem;
+        color: #3498db;
+        cursor: pointer;
+        margin-left: 4px;
+    }
+    
     /* ENHANCED: Mobile adjustments for floating guide - FIXED */
     .measurement-guide-floating {
         width: 95%;
@@ -779,6 +805,7 @@ footer {
     .measurement-input {
         font-size: 0.88rem;
         height: 36px;
+        padding: 5px 7px;
     }
     
     .btn-primary, .btn-secondary {
@@ -792,6 +819,16 @@ footer {
     
     .summary-item {
         font-size: 0.85rem;
+    }
+    
+    /* SHOW EYE ICON ON SMALL MOBILE */
+    .measurement-label .fa-eye,
+    .measurement-label .fa-regular.fa-eye {
+        display: inline-flex !important;
+        font-size: 0.85rem;
+        color: #3498db;
+        cursor: pointer;
+        margin-left: 4px;
     }
     
     /* ENHANCED: Small mobile adjustments for floating guide - FIXED */
@@ -876,6 +913,17 @@ footer {
         gap: 8px;
     }
     
+    /* SHOW EYE ICON ON EXTRA SMALL MOBILE */
+    .measurement-label .fa-eye,
+    .measurement-label .fa-regular.fa-eye {
+        display: inline-flex !important;
+        font-size: 0.9rem;
+        color: #3498db;
+        cursor: pointer;
+        margin-left: 4px;
+        flex-shrink: 0;
+    }
+    
     /* ENHANCED: Extra small mobile adjustments for floating guide - FIXED */
     .measurement-guide-floating {
         width: 100%;
@@ -948,5 +996,11 @@ footer {
     input, select {
         border: 1px solid #ccc;
         background: transparent;
+    }
+    
+    /* Hide eye icon in print */
+    .measurement-label .fa-eye,
+    .measurement-label .fa-regular.fa-eye {
+        display: none !important;
     }
 }
