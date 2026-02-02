@@ -105,10 +105,44 @@ class MeasurementApp {
                 this.validator.validateField(e.target.id);
             });
             
-            // Show floating guide on mobile/tablet
-            input.addEventListener('click', (e) => {
-                if (this.isMobileView) {
-                    this.showFloatingGuide(e.target.dataset.measurement);
+            // REMOVED: The event listener that was showing floating guide on click
+            // This was causing the floating window to appear unintentionally
+            // input.addEventListener('click', (e) => {
+            //     if (this.isMobileView) {
+            //         this.showFloatingGuide(e.target.dataset.measurement);
+            //     }
+            // });
+        });
+        
+        // Setup eye icon click listeners for mobile/tablet to show floating guide
+        this.setupEyeIconListeners();
+    }
+
+    /**
+    * Sets up listeners for eye icons to show floating guide on mobile/tablet
+    */
+    setupEyeIconListeners() {
+        const eyeIcons = document.querySelectorAll('.measurement-label .fa-eye, .measurement-label .fa-regular.fa-eye');
+        
+        eyeIcons.forEach(icon => {
+            icon.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent event bubbling
+                
+                // Find the associated measurement input
+                const labelElement = e.target.closest('.measurement-label');
+                if (!labelElement) return;
+                
+                // Find the measurement input associated with this label
+                const formGroup = labelElement.closest('.form-group');
+                if (!formGroup) return;
+                
+                const inputElement = formGroup.querySelector('.measurement-input');
+                if (!inputElement) return;
+                
+                // Show floating guide for this measurement
+                const measurementKey = inputElement.dataset.measurement;
+                if (measurementKey && this.isMobileView) {
+                    this.showFloatingGuide(measurementKey);
                 }
             });
         });
