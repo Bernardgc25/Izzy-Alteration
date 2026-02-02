@@ -1,216 +1,315 @@
-/**
-* measurement-DataMaps.js
-* Contains all static data, images, and configuration for the measurement system
-* Centralized data store for easy updates and maintenance
-*/
+// measurement-DataMaps.js
 
-export const MeasurementData = {
-    // Desktop guide images by gender (for large screens)
-    guideImages: {
-        male: '/src/images/male-chart.jpg',
-        female: '/src/images/female-chart.jpg'
-    },
-    
-    // Mobile/Tablet guide images by measurement (individual images)
-    guideImagesMobile: {
-        // Male-specific mobile images
+export const measurementDataMap = {
+    // Gender-specific measurement guides and images
+    gender: {
         male: {
-            neck: '/src/images/male-front.jpg',
-            'shoulder-length': '/src/images/mobile/male-shoulder-mobile.png',
-            'arm-length': '/src/images/mobile/male-arm-length-mobile.png',
-            'across-front': '/src/images/mobile/male-across-front-mobile.png',
-            'chest-circumference': '/src/images/mobile/male-chest-mobile.png',
-            waist: '/src/images/mobile/male-waist-mobile.png',
-            'hip-circumference': '/src/images/mobile/male-hips-mobile.png',
-            'total-rise': '/src/images/mobile/male-total-rise-mobile.png',
-            thigh: '/src/images/mobile/male-thigh-mobile.png',
-            knee: '/src/images/mobile/male-knee-mobile.png',
-            calf: '/src/images/mobile/male-calf-mobile.png',
-            ankle: '/src/images/mobile/male-ankle-mobile.png',
-            bicep: '/src/images/mobile/male-bicep-mobile.png',
-            elbow: '/src/images/mobile/male-elbow-mobile.png',
-            wrist: '/src/images/mobile/male-wrist-mobile.png',
-            'inseam-ankle': '/src/images/mobile/male-inseam-ankle-mobile.png',
-            'inseam-floor': '/src/images/mobile/male-inseam-floor-mobile.png',
-            'neck-waist': '/src/images/mobile/male-neck-waist-mobile.png',
-            'neck-floor': '/src/images/mobile/male-neck-floor-mobile.png',
-            'waist-floor': '/src/images/mobile/male-waist-floor-mobile.png',
-            height: '/src/images/mobile/male-height-mobile.png'
+            imageDesktop: "/src/images/male-chart.jpg",
+            imageMobile: "/images/measurements/mobile/male-mobile.jpg"
         },
-        // Female-specific mobile images
         female: {
-            neck: '/src/images/mobile/female-neck-mobile.png',
-            'shoulder-length': '/src/images/mobile/female-shoulder-mobile.png',
-            'arm-length': '/src/images/mobile/female-arm-length-mobile.png',
-            'chest-circumference': '/src/images/mobile/female-bust-mobile.png',
-            'under-bust': '/src/images/mobile/female-under-bust-mobile.png',
-            waist: '/src/images/mobile/female-waist-mobile.png',
-            'hip-circumference': '/src/images/mobile/female-hips-mobile.png',
-            'hip-bone-circumference': '/src/images/mobile/female-hip-bone-mobile.png',
-            thigh: '/src/images/mobile/female-thigh-mobile.png',
-            knee: '/src/images/mobile/female-knee-mobile.png',
-            calf: '/src/images/mobile/female-calf-mobile.png',
-            ankle: '/src/images/mobile/female-ankle-mobile.png',
-            bicep: '/src/images/mobile/female-bicep-mobile.png',
-            elbow: '/src/images/mobile/female-elbow-mobile.png',
-            wrist: '/src/images/mobile/female-wrist-mobile.png',
-            'inseam-ankle': '/src/images/mobile/female-inseam-ankle-mobile.png',
-            'inseam-floor': '/src/images/mobile/female-inseam-floor-mobile.png',
-            'neck-waist': '/src/images/mobile/female-neck-waist-mobile.png',
-            'neck-floor': '/src/images/mobile/female-neck-floor-mobile.png',
-            'waist-floor': '/src/images/mobile/female-waist-floor-mobile.png',
-            height: '/src/images/mobile/female-height-mobile.png'
+            imageDesktop: "/src/images/female-chart.jpg",
+            imageMobile: "/images/measurements/mobile/female-mobile.jpg"
         }
     },
-    
-    // Comprehensive measurement definitions and guidance text
-    measurementDefinitions: {
-        // Common measurements (shared by both genders)
-        neck: {
-            object: 'Neck',
-            definition: 'Circumference around the base of the neck',
-            description: 'Measure around the neck where the collar would normally sit. Keep tape measure comfortably snug.'
+
+    // Measurements organized by gender
+    measurements: {
+        male: {
+            // Male-specific measurements
+            "neck": {
+                object: "Neck Circumference",
+                definition: "Measure around the base of the neck where the collar would normally sit.",
+                description: "Place the tape measure around the base of the neck, keeping it parallel to the floor. Ensure it's not too tight or too loose.",
+                imageMobile: "/src/images/male-front.jpg"
+            },
+            "shoulder-length": {
+                object: "Shoulder Length",
+                definition: "Measure from the edge of one shoulder to the edge of the other shoulder.",
+                description: "Place the tape measure from the outer edge of one shoulder bone (acromion) to the other, across the back.",
+                imageMobile: "/images/measurements/mobile/male/shoulder-length-mobile.jpg"
+            },
+            "arm-length": {
+                object: "Arm Length",
+                definition: "Measure from the shoulder point to the wrist bone.",
+                description: "Bend arm slightly at elbow. Measure from the shoulder bone edge, along the outside of the arm, over the elbow, to the wrist bone.",
+                imageMobile: "/images/measurements/mobile/male/arm-length-mobile.jpg"
+            },
+            "chest-circumference": {
+                object: "Chest Circumference",
+                definition: "Measure around the fullest part of the chest.",
+                description: "Wrap the tape measure around the fullest part of the chest, under the armpits, and across the shoulder blades. Keep tape parallel to the floor.",
+                imageMobile: "/images/measurements/mobile/male/chest-circumference-mobile.jpg"
+            },
+            "waist": {
+                object: "Waist Circumference",
+                definition: "Measure around the natural waistline.",
+                description: "Find the natural waist (smallest part of torso). Wrap tape measure around waist, keeping it parallel to the floor.",
+                imageMobile: "/images/measurements/mobile/male/waist-mobile.jpg"
+            },
+            "hip-circumference": {
+                object: "Hip Circumference",
+                definition: "Measure around the fullest part of the hips.",
+                description: "Wrap tape measure around the fullest part of the hips/buttocks, keeping it parallel to the floor.",
+                imageMobile: "/images/measurements/mobile/male/hip-circumference-mobile.jpg"
+            },
+            "thigh": {
+                object: "Thigh Circumference",
+                definition: "Measure around the fullest part of the thigh.",
+                description: "Wrap tape measure around the fullest part of the thigh, usually about 1-2 inches below the crotch.",
+                imageMobile: "/images/measurements/mobile/male/thigh-mobile.jpg"
+            },
+            "knee": {
+                object: "Knee Circumference",
+                definition: "Measure around the center of the knee.",
+                description: "With leg slightly bent, measure around the center of the knee cap.",
+                imageMobile: "/images/measurements/mobile/male/knee-mobile.jpg"
+            },
+            "calf": {
+                object: "Calf Circumference",
+                definition: "Measure around the fullest part of the calf.",
+                description: "Stand with feet apart. Measure around the fullest part of the calf muscle.",
+                imageMobile: "/images/measurements/mobile/male/calf-mobile.jpg"
+            },
+            "ankle": {
+                object: "Ankle Circumference",
+                definition: "Measure around the narrowest part of the ankle.",
+                description: "Measure around the narrowest part of the ankle, just above the ankle bone.",
+                imageMobile: "/images/measurements/mobile/male/ankle-mobile.jpg"
+            },
+            "bicep": {
+                object: "Bicep Circumference",
+                definition: "Measure around the fullest part of the bicep.",
+                description: "With arm relaxed at side, measure around the fullest part of the bicep.",
+                imageMobile: "/images/measurements/mobile/male/bicep-mobile.jpg"
+            },
+            "elbow": {
+                object: "Elbow Circumference",
+                definition: "Measure around the bent elbow.",
+                description: "Bend arm to 90 degrees. Measure around the elbow at its fullest point with arm bent.",
+                imageMobile: "/images/measurements/mobile/male/elbow-mobile.jpg"
+            },
+            "wrist": {
+                object: "Wrist Circumference",
+                definition: "Measure around the wrist bone.",
+                description: "Measure around the wrist bone, just below the hand. Tape should be snug but not tight.",
+                imageMobile: "/images/measurements/mobile/male/wrist-mobile.jpg"
+            },
+            "inseam-ankle": {
+                object: "Inseam to Ankle",
+                definition: "Measure from crotch to ankle bone.",
+                description: "Stand with legs slightly apart. Measure from the crotch along the inside of the leg to the ankle bone.",
+                imageMobile: "/images/measurements/mobile/male/inseam-ankle-mobile.jpg"
+            },
+            "inseam-floor": {
+                object: "Inseam to Floor",
+                definition: "Measure from crotch to floor.",
+                description: "Stand with legs slightly apart. Measure from the crotch straight down to the floor along the inside of the leg.",
+                imageMobile: "/images/measurements/mobile/male/inseam-floor-mobile.jpg"
+            },
+            "neck-waist": {
+                object: "Neck to Waist",
+                definition: "Measure from nape of neck to natural waist.",
+                description: "Measure from the prominent bone at the base of the neck (C7 vertebra) down the back to the natural waistline.",
+                imageMobile: "/images/measurements/mobile/male/neck-waist-mobile.jpg"
+            },
+            "neck-floor": {
+                object: "Neck to Floor",
+                definition: "Measure from nape of neck to floor.",
+                description: "Stand straight. Measure from the prominent bone at the base of the neck (C7 vertebra) straight down to the floor.",
+                imageMobile: "/images/measurements/mobile/male/neck-floor-mobile.jpg"
+            },
+            "waist-floor": {
+                object: "Waist to Floor",
+                definition: "Measure from natural waist to floor.",
+                description: "Stand straight. Measure from the natural waistline straight down to the floor.",
+                imageMobile: "/images/measurements/mobile/male/waist-floor-mobile.jpg"
+            },
+            "height": {
+                object: "Height",
+                definition: "Total standing height.",
+                description: "Stand straight against a wall without shoes. Measure from the top of the head to the floor.",
+                imageMobile: "/images/measurements/mobile/male/height-mobile.jpg"
+            },
+            "across-front": {
+                object: "Across Front",
+                definition: "Measure across the front from armhole to armhole.",
+                description: "Measure horizontally across the front from one armhole seam to the other, about 1 inch below the underarm.",
+                imageMobile: "/images/measurements/mobile/male/across-front-mobile.jpg"
+            },
+            "total-rise": {
+                object: "Total Rise",
+                definition: "Measure from waist front through crotch to waist back.",
+                description: "Measure from the front waistline, through the legs, up to the back waistline. This determines pants fit.",
+                imageMobile: "/images/measurements/mobile/male/total-rise-mobile.jpg"
+            }
         },
-        'shoulder-length': {
-            object: 'Shoulder',
-            definition: 'Length from neck point to shoulder tip',
-            description: 'Measure from base of neck (where collar sits) to edge of shoulder bone.'
-        },
-        'arm-length': {
-            object: 'Arm',
-            definition: 'Length from shoulder tip to wrist bone',
-            description: 'Measure with arm slightly bent, from shoulder tip over elbow to wrist bone.'
-        },
-        'chest-circumference': {
-            object: 'Chest',
-            definition: 'Circumference around the fullest part of chest',
-            description: 'Measure around the chest at the fullest part, under armpits and over shoulder blades.'
-        },
-        waist: {
-            object: 'Waist',
-            definition: 'Circumference at natural waistline',
-            description: 'Measure at the narrowest part of waist, usually above navel and below rib cage.'
-        },
-        'hip-circumference': {
-            object: 'Hip',
-            definition: 'Circumference around the fullest part of hips',
-            description: 'Measure around the fullest part of hips and buttocks.'
-        },
-        thigh: {
-            object: 'Thigh',
-            definition: 'Circumference at fullest part of thigh',
-            description: 'Measure around the fullest part of thigh, usually 1-2 inches below crotch.'
-        },
-        knee: {
-            object: 'Knee',
-            definition: 'Circumference around the knee',
-            description: 'Measure around the center of the knee cap with leg slightly bent.'
-        },
-        calf: {
-            object: 'Calf',
-            definition: 'Circumference at fullest part of calf',
-            description: 'Measure around the fullest part of calf muscle.'
-        },
-        ankle: {
-            object: 'Ankle',
-            definition: 'Circumference around the ankle bone',
-            description: 'Measure just above the ankle bone at the narrowest point.'
-        },
-        bicep: {
-            object: 'Bicep',
-            definition: 'Circumference at fullest part of upper arm',
-            description: 'Measure around the fullest part of bicep with arm relaxed.'
-        },
-        elbow: {
-            object: 'Elbow',
-            definition: 'Circumference around elbow joint',
-            description: 'Measure around elbow with arm bent at 90 degrees.'
-        },
-        wrist: {
-            object: 'Wrist',
-            definition: 'Circumference around wrist bone',
-            description: 'Measure just below the wrist bone.'
-        },
-        'inseam-ankle': {
-            object: 'Inseam (to ankle)',
-            definition: 'Length from crotch to ankle bone',
-            description: 'Measure from crotch along inner leg to ankle bone.'
-        },
-        'inseam-floor': {
-            object: 'Inseam (to floor)',
-            definition: 'Length from crotch to floor',
-            description: 'Measure from crotch straight down to floor.'
-        },
-        'neck-waist': {
-            object: 'Neck to Waist',
-            definition: 'Length from base of neck to waistline',
-            description: 'Measure from base of neck at back to natural waistline.'
-        },
-        'neck-floor': {
-            object: 'Neck to Floor',
-            definition: 'Full height from neck base to floor',
-            description: 'Measure from base of neck at back straight down to floor.'
-        },
-        'waist-floor': {
-            object: 'Waist to Floor',
-            definition: 'Length from waistline to floor',
-            description: 'Measure from natural waistline straight down to floor.'
-        },
-        height: {
-            object: 'Height',
-            definition: 'Total body height',
-            description: 'Stand straight against wall and measure from top of head to floor.'
-        },
-        
-        // Male-specific measurements
-        'across-front': {
-            object: 'Across Front',
-            definition: 'Width across chest from armhole to armhole',
-            description: 'Measure across front from one armhole seam to the other.'
-        },
-        'total-rise': {
-            object: 'Total Rise',
-            definition: 'Length from waist front through crotch to waist back',
-            description: 'Measure from waist front, through legs, to waist back.'
-        },
-        
-        // Female-specific measurements
-        'under-bust': {
-            object: 'Under Bust',
-            definition: 'Circumference under the bust',
-            description: 'Measure around ribcage directly under the bust.'
-        },
-        'hip-bone-circumference': {
-            object: 'Hip Bone',
-            definition: 'Circumference around hip bones',
-            description: 'Measure around the hip bones (iliac crest).'
+
+        female: {
+            // Female-specific measurements
+            "neck": {
+                object: "Neck Circumference",
+                definition: "Measure around the base of the neck where the collar would normally sit.",
+                description: "Place the tape measure around the base of the neck, keeping it parallel to the floor. Ensure it's not too tight or too loose.",
+                imageMobile: "/src/images/female-front.png"
+            },
+            "shoulder-length": {
+                object: "Shoulder Length",
+                definition: "Measure from the edge of one shoulder to the edge of the other shoulder.",
+                description: "Place the tape measure from the outer edge of one shoulder bone (acromion) to the other, across the back.",
+                imageMobile: "/images/measurements/mobile/female/shoulder-length-mobile.jpg"
+            },
+            "arm-length": {
+                object: "Arm Length",
+                definition: "Measure from the shoulder point to the wrist bone.",
+                description: "Bend arm slightly at elbow. Measure from the shoulder bone edge, along the outside of the arm, over the elbow, to the wrist bone.",
+                imageMobile: "/images/measurements/mobile/female/arm-length-mobile.jpg"
+            },
+            "chest-circumference": {
+                object: "Bust Circumference",
+                definition: "Measure around the fullest part of the bust.",
+                description: "Wrap the tape measure around the fullest part of the bust, keeping it parallel to the floor. Do not compress breast tissue.",
+                imageMobile: "/images/measurements/mobile/female/bust-circumference-mobile.jpg"
+            },
+            "under-bust": {
+                object: "Under Bust",
+                definition: "Measure around the torso directly under the bust.",
+                description: "Wrap tape measure around the ribcage directly under the bust. Keep tape parallel to the floor.",
+                imageMobile: "/images/measurements/mobile/female/under-bust-mobile.jpg"
+            },
+            "waist": {
+                object: "Waist Circumference",
+                definition: "Measure around the natural waistline.",
+                description: "Find the natural waist (smallest part of torso). Wrap tape measure around waist, keeping it parallel to the floor.",
+                imageMobile: "/images/measurements/mobile/female/waist-mobile.jpg"
+            },
+            "hip-circumference": {
+                object: "Hip Circumference",
+                definition: "Measure around the fullest part of the hips.",
+                description: "Wrap tape measure around the fullest part of the hips/buttocks, keeping it parallel to the floor.",
+                imageMobile: "/images/measurements/mobile/female/hip-circumference-mobile.jpg"
+            },
+            "hip-bone-circumference": {
+                object: "Hip Bone Circumference",
+                definition: "Measure around the hip bones (iliac crest).",
+                description: "Measure around the top of the hip bones (iliac crest), usually about 3-4 inches below the natural waist.",
+                imageMobile: "/images/measurements/mobile/female/hip-bone-circumference-mobile.jpg"
+            },
+            "thigh": {
+                object: "Thigh Circumference",
+                definition: "Measure around the fullest part of the thigh.",
+                description: "Wrap tape measure around the fullest part of the thigh, usually about 1-2 inches below the crotch.",
+                imageMobile: "/images/measurements/mobile/female/thigh-mobile.jpg"
+            },
+            "knee": {
+                object: "Knee Circumference",
+                definition: "Measure around the center of the knee.",
+                description: "With leg slightly bent, measure around the center of the knee cap.",
+                imageMobile: "/images/measurements/mobile/female/knee-mobile.jpg"
+            },
+            "calf": {
+                object: "Calf Circumference",
+                definition: "Measure around the fullest part of the calf.",
+                description: "Stand with feet apart. Measure around the fullest part of the calf muscle.",
+                imageMobile: "/images/measurements/mobile/female/calf-mobile.jpg"
+            },
+            "ankle": {
+                object: "Ankle Circumference",
+                definition: "Measure around the narrowest part of the ankle.",
+                description: "Measure around the narrowest part of the ankle, just above the ankle bone.",
+                imageMobile: "/images/measurements/mobile/female/ankle-mobile.jpg"
+            },
+            "bicep": {
+                object: "Bicep Circumference",
+                definition: "Measure around the fullest part of the bicep.",
+                description: "With arm relaxed at side, measure around the fullest part of the bicep.",
+                imageMobile: "/images/measurements/mobile/female/bicep-mobile.jpg"
+            },
+            "elbow": {
+                object: "Elbow Circumference",
+                definition: "Measure around the bent elbow.",
+                description: "Bend arm to 90 degrees. Measure around the elbow at its fullest point with arm bent.",
+                imageMobile: "/images/measurements/mobile/female/elbow-mobile.jpg"
+            },
+            "wrist": {
+                object: "Wrist Circumference",
+                definition: "Measure around the wrist bone.",
+                description: "Measure around the wrist bone, just below the hand. Tape should be snug but not tight.",
+                imageMobile: "/images/measurements/mobile/female/wrist-mobile.jpg"
+            },
+            "inseam-ankle": {
+                object: "Inseam to Ankle",
+                definition: "Measure from crotch to ankle bone.",
+                description: "Stand with legs slightly apart. Measure from the crotch along the inside of the leg to the ankle bone.",
+                imageMobile: "/images/measurements/mobile/female/inseam-ankle-mobile.jpg"
+            },
+            "inseam-floor": {
+                object: "Inseam to Floor",
+                definition: "Measure from crotch to floor.",
+                description: "Stand with legs slightly apart. Measure from the crotch straight down to the floor along the inside of the leg.",
+                imageMobile: "/images/measurements/mobile/female/inseam-floor-mobile.jpg"
+            },
+            "neck-waist": {
+                object: "Neck to Waist",
+                definition: "Measure from nape of neck to natural waist.",
+                description: "Measure from the prominent bone at the base of the neck (C7 vertebra) down the back to the natural waistline.",
+                imageMobile: "/images/measurements/mobile/female/neck-waist-mobile.jpg"
+            },
+            "neck-floor": {
+                object: "Neck to Floor",
+                definition: "Measure from nape of neck to floor.",
+                description: "Stand straight. Measure from the prominent bone at the base of the neck (C7 vertebra) straight down to the floor.",
+                imageMobile: "/images/measurements/mobile/female/neck-floor-mobile.jpg"
+            },
+            "waist-floor": {
+                object: "Waist to Floor",
+                definition: "Measure from natural waist to floor.",
+                description: "Stand straight. Measure from the natural waistline straight down to the floor.",
+                imageMobile: "/images/measurements/mobile/female/waist-floor-mobile.jpg"
+            },
+            "height": {
+                object: "Height",
+                definition: "Total standing height.",
+                description: "Stand straight against a wall without shoes. Measure from the top of the head to the floor.",
+                imageMobile: "/images/measurements/mobile/female/height-mobile.jpg"
+            }
         }
     },
-    
-    // Size options by gender
-    sizeOptions: {
-        male: [
-            '30S', '34S', '36S', '38S', '40S', '42S', '44S', '46S', '48S', '50S',
-            '30M', '34M', '36M', '38M', '40M', '42M', '44M', '46M', '48M', '50M',
-            '30L', '34L', '36L', '38L', '40L', '42L', '44L', '46L', '48L', '50L',
-            '30XL', '34XL', '36XL', '38XL', '40XL', '42XL', '44XL', '46XL', '48XL', '50XL'
-        ],
-        female: ['AA', 'A', 'B', 'C', 'D', 'DD/E', 'DDD/F']
-    },
-    
-    // Default configuration
-    config: {
-        measurementUnit: 'inches',
-        maxSummaryItems: 30,
-        zoomResetTime: 500, // ms
-        minZoom: 0.5,
-        maxZoom: 3,
-        defaultZoom: 1,
-        mobileBreakpoint: 992 // px
-    },
-    
-    // Device detection helper
-    isMobileView: function() {
-        return window.innerWidth <= this.config.mobileBreakpoint;
+
+    // Size-related fields (common to both genders)
+    sizes: {
+        "cupSize": {
+            object: "Cup Size",
+            definition: "Bust cup size determined by difference between bust and under-bust measurements.",
+            description: "Cup size is calculated from the difference between bust and under-bust measurements: AA (0-1\"), A (1-2\"), B (2-3\"), C (3-4\"), D (4-5\"), DD/E (5-6\"), DDD/F (6-7\").",
+            gender: "female",
+            imageMobile: "/images/measurements/mobile/cup-size-mobile.jpg"
+        },
+        "size-number": {
+            object: "Size Number",
+            definition: "Standard clothing size based on chest/waist measurements.",
+            description: "Size number corresponds to chest measurement for men (30=30\", 34=34\", etc.) or dress size for women. Letter indicates height: S=Short, M=Medium, L=Long, XL=Extra Long.",
+            imageMobile: "/images/measurements/mobile/size-number-mobile.jpg"
+        }
     }
+};
+
+// Helper function to get measurement by gender and key
+export const getMeasurement = (gender, measurementKey) => {
+    if (!gender || !measurementDataMap.measurements[gender]) {
+        console.warn(`Gender "${gender}" not found in measurements`);
+        return null;
+    }
+    
+    return measurementDataMap.measurements[gender][measurementKey] || null;
+};
+
+// Helper function to get all measurements for a specific gender
+export const getAllMeasurementsForGender = (gender) => {
+    if (!gender || !measurementDataMap.measurements[gender]) {
+        console.warn(`Gender "${gender}" not found in measurements`);
+        return {};
+    }
+    
+    return measurementDataMap.measurements[gender];
 };
