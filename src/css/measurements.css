@@ -412,9 +412,10 @@ footer {
     }
     
     .measurement-guide-floating .floating-guide-text {
-        padding: 15px 20px 20px;
-        font-size: 0.9rem;
+        padding: 10px 15px 15px; /* Reduced padding */
+        font-size: 0.78rem; /* Same as desktop guide */
         max-height: 40%;
+        line-height: 1.2; /* Match desktop line height */
     }
 }
 
@@ -478,11 +479,11 @@ footer {
 
 .measurement-guide-floating h2 {
     margin-top: 0;
-    margin-bottom: 10px;
+    margin-bottom: 8px; /* Reduced margin */
     padding-right: 40px;
-    font-size: 1.3rem;
+    font-size: 1.2rem; /* Slightly smaller */
     color: #2c3e50;
-    padding: 15px 15px 0 15px;
+    padding: 12px 15px 0 15px; /* Adjusted padding */
 }
 
 .measurement-guide-floating .floating-guide-images {
@@ -509,48 +510,49 @@ footer {
 }
 
 .measurement-guide-floating .floating-guide-text {
-    font-size: 0.85rem;
-    line-height: 1.3;
+    font-size: 0.78rem; /* Match desktop size */
+    line-height: 1.2; /* Match desktop line height */
     overflow-y: auto;
     border-top: 1px solid #e9ecef;
-    margin: 10px 15px 0;
+    margin: 8px 15px 0; /* Reduced margin */
+    padding: 6px 0; /* Reduced padding */
 }
 
 .measurement-guide-floating #current-guide {
-    margin-bottom: 8px;
-    font-size: 0.9rem;
+    margin-bottom: 4px; /* Reduced margin */
+    font-size: 0.8rem;
     color: #2c3e50;
 }
 
-.measurement-guide-floating #floating-measure-object {
-    display: block;
-    margin-bottom: 8px;
-    color: #e74c3c;
-    padding: 2px 0;
-    font-size: 0.9rem;
-}
-
+/* FIXED: Removed line gaps in floating guide - made compact like desktop */
+.measurement-guide-floating #floating-measure-object,
 .measurement-guide-floating #floating-measure-definition,
 .measurement-guide-floating #floating-measure-description {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 2px; /* Reduced from 8px to match desktop */
     color: #495057;
-    padding: 2px 0;
-    font-size: 0.85rem;
+    padding: 1px 0; /* Reduced padding */
+    font-size: 0.78rem; /* Match desktop font size */
+    line-height: 1.2; /* Match desktop line height */
+}
+
+.measurement-guide-floating #floating-measure-object {
+    color: #e74c3c; /* Match desktop color */
+    margin-bottom: 2px; /* Reduced margin */
 }
 
 .measurement-guide-floating #floating-measure-object strong,
 .measurement-guide-floating #floating-measure-definition strong,
 .measurement-guide-floating #floating-measure-description strong {
     color: #2c3e50;
-    margin-right: 5px;
-    font-size: 0.9rem;
+    margin-right: 4px; /* Match desktop spacing */
+    font-size: 0.8rem; /* Match desktop font size */
     font-weight: 600;
 }
 
 .measurement-guide-floating .floating-guide-text span {
     display: block;
-    margin-bottom: 6px;
+    margin-bottom: 2px; /* Reduced from 6px to match desktop */
 }
 
 /* =========================================== */
@@ -676,16 +678,16 @@ footer {
     }
     
     .measurement-guide-floating .floating-guide-text {
-        padding: 8px 15px 12px;
-        margin: 8px 15px 0;
-        font-size: 0.82rem;
+        padding: 8px 12px 12px; /* Adjusted padding */
+        margin: 6px 12px 0; /* Adjusted margin */
+        font-size: 0.78rem; /* Match desktop size */
     }
     
     .measurement-guide-floating #floating-measure-object,
     .measurement-guide-floating #floating-measure-definition,
     .measurement-guide-floating #floating-measure-description {
-        margin-bottom: 6px;
-        font-size: 0.85rem;
+        margin-bottom: 2px; /* Match desktop spacing */
+        font-size: 0.78rem; /* Match desktop size */
     }
 }
 
@@ -786,23 +788,23 @@ footer {
     }
     
     .measurement-guide-floating .floating-guide-text {
-        padding: 6px 10px 10px;
-        margin: 6px 10px 0;
-        font-size: 0.8rem;
-        line-height: 1.25;
+        padding: 6px 8px 8px; /* Adjusted padding */
+        margin: 4px 10px 0; /* Adjusted margin */
+        font-size: 0.78rem; /* Match desktop size */
+        line-height: 1.2; /* Match desktop line height */
     }
     
     .measurement-guide-floating h2 {
         font-size: 1.2rem;
-        padding: 12px 12px 0 12px;
-        margin-bottom: 8px;
+        padding: 10px 12px 0 12px; /* Adjusted padding */
+        margin-bottom: 6px; /* Reduced margin */
     }
     
     .measurement-guide-floating #floating-measure-object,
     .measurement-guide-floating #floating-measure-definition,
     .measurement-guide-floating #floating-measure-description {
-        margin-bottom: 5px;
-        font-size: 0.82rem;
+        margin-bottom: 2px; /* Match desktop spacing */
+        font-size: 0.78rem; /* Match desktop size */
     }
 }
 
@@ -905,21 +907,22 @@ footer {
     }
     
     .measurement-guide-floating .floating-guide-text {
-        padding: 4px 8px 8px;
-        margin: 4px 8px 0;
-        font-size: 0.78rem;
+        padding: 4px 6px 6px; /* Adjusted padding */
+        margin: 3px 8px 0; /* Adjusted margin */
+        font-size: 0.78rem; /* Match desktop size */
     }
     
     .measurement-guide-floating h2 {
         font-size: 1.1rem;
-        padding: 10px 10px 0 10px;
+        padding: 8px 10px 0 10px; /* Adjusted padding */
+        margin-bottom: 4px; /* Reduced margin */
     }
     
     .measurement-guide-floating #floating-measure-object,
     .measurement-guide-floating #floating-measure-definition,
     .measurement-guide-floating #floating-measure-description {
-        font-size: 0.8rem;
-        margin-bottom: 4px;
+        font-size: 0.78rem; /* Match desktop size */
+        margin-bottom: 2px; /* Match desktop spacing */
     }
 }
 
@@ -1006,22 +1009,23 @@ footer {
     }
     
     .measurement-guide-floating .floating-guide-text {
-        padding: 3px 6px 6px;
-        margin: 3px 6px 0;
+        padding: 3px 5px 5px; /* Adjusted padding */
+        margin: 2px 5px 0; /* Adjusted margin */
         font-size: 0.76rem;
         line-height: 1.2;
     }
     
     .measurement-guide-floating h2 {
         font-size: 1rem;
-        padding: 8px 8px 0 8px;
+        padding: 6px 8px 0 8px; /* Adjusted padding */
+        margin-bottom: 3px; /* Reduced margin */
     }
     
     .measurement-guide-floating #floating-measure-object,
     .measurement-guide-floating #floating-measure-definition,
     .measurement-guide-floating #floating-measure-description {
-        margin-bottom: 3px;
-        font-size: 0.78rem;
+        margin-bottom: 2px; /* Match desktop spacing */
+        font-size: 0.76rem;
     }
     
     /* Improve touch targets */
