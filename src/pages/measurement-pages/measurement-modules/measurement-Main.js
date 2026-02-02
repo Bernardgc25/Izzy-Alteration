@@ -358,24 +358,42 @@ class MeasurementApp {
      * Update mobile guide image
      */
     updateMobileGuideImage(measurementKey) {
-        const mobileImages = measurementDataMap.measurements[this.manager.gender];
-        if (!mobileImages || !mobileImages[measurementKey]) return;
+        const measurement = getMeasurement(this.manager.gender, measurementKey);
+        if (!measurement || !measurement.imageMobile) return;
         
-        // Hide all images first
-        document.querySelectorAll('.measurement-guide-floating .floating-guide-images img').forEach(img => {
-            img.style.display = 'none';
-            img.classList.remove('active');
-        });
+        const floatingGuideImages = document.querySelector('.measurement-guide-floating .floating-guide-images');
+        if (!floatingGuideImages) return;
         
-        // Show target image
-        const imageId = `floating-guide-${measurementKey}`;
-        const targetImage = document.getElementById(imageId);
+        // Clear existing images
+        floatingGuideImages.innerHTML = '';
         
-        if (targetImage && mobileImages[measurementKey].imageMobile) {
-            targetImage.src = mobileImages[measurementKey].imageMobile;
-            targetImage.style.display = 'block';
-            targetImage.classList.add('active');
-        }
+        // Create and add the new image
+        const img = document.createElement('img');
+        img.src = measurement.imageMobile;
+        img.alt = measurement.object || 'Measurement Guide';
+        img.className = 'active';
+        img.style.maxWidth = '100%';
+        img.style.maxHeight = '100%';
+        img.style.objectFit = 'contain';
+        
+        floatingGuideImages.appendChild(img);
+    }
+
+    /**
+     * Show floating guide for mobile
+     */
+    showFloatingGuide(measurementKey) {
+        const measurement = getMeasurement(this.manager.gender, measurementKey);
+        if (!measurement) return;
+        
+        // Update guide text
+        this.showMeasurementGuide(measurementKey);
+        
+        // Update mobile guide image BEFORE showing
+        this.updateMobileGuideImage(measurementKey);
+        
+        // Show overlay and guide
+        this.showFloatingGuideElements();
     }
 
     /**

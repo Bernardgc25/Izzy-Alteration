@@ -33,7 +33,7 @@ export const measurementDataMap = {
                 object: "Arm Length",
                 definition: "Measure from the shoulder point to the wrist bone.",
                 description: "Bend arm slightly at elbow. Measure from the shoulder bone edge, along the outside of the arm, over the elbow, to the wrist bone.",
-                imageMobile: "/images/measurements/mobile/male/arm-length-mobile.jpg"
+                imageMobile: "/src/images/female-front.png"
             },
             "chest-circumference": {
                 object: "Chest Circumference",

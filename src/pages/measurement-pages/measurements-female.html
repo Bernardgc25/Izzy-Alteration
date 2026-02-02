@@ -51,16 +51,15 @@
         <!-- tablet and mobile floating measurement guide -->
         <div class="measurement-guide-overlay" id="floating-guide-overlay" style="display: none;"></div>
         <div class="measurement-guide-floating" id="floating-measurement-guide">
-            <button class="close-btn" id="close-floating-guide">x</button>
             <h2>Measurement Guide</h2>
+            <button id="close-floating-guide" class="close-btn">&times;</button>
+            
             <div class="floating-guide-images">
-                <img id="floating-guide-neck" src="" alt="Neck Measurement Guide">
-                <img id="floating-guide-chest" src="" alt="Chest Measurement Guide">
-                <img id="floating-guide-waist" src="" alt="Waist Measurement Guide">
-                <img id="floating-guide-hips" src="" alt="Hips Measurement Guide">
+                <!-- Images will be dynamically inserted here -->
             </div>
+            
             <div class="floating-guide-text">
-                <!-- <p id="current-guide"><strong>How to use:</strong> Click on any measurement field to see detailed instructions and visual guidance.</p> -->
+                <div id="current-guide">Current Measurement:</div>
                 <span id="floating-measure-object"></span>
                 <span id="floating-measure-definition"></span>
                 <span id="floating-measure-description"></span>

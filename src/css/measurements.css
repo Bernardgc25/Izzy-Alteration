@@ -486,6 +486,7 @@ footer {
     padding: 12px 15px 0 15px; /* Adjusted padding */
 }
 
+/* Add to the floating guide styles section */
 .measurement-guide-floating .floating-guide-images {
     flex: 1;
     display: flex;
@@ -496,6 +497,7 @@ footer {
     border-radius: 5px;
     margin: 0 15px;
     min-height: 200px;
+    width: calc(100% - 30px);
 }
 
 .measurement-guide-floating .floating-guide-images img {
@@ -785,6 +787,7 @@ footer {
         min-height: 300px;
         max-height: 65vh;
         margin: 0 10px;
+        width: calc(100% - 20px);
     }
     
     .measurement-guide-floating .floating-guide-text {
@@ -1006,6 +1009,7 @@ footer {
         min-height: 340px;
         max-height: 75vh;
         margin: 0 5px;
+        width: calc(100% - 10px);
     }
     
     .measurement-guide-floating .floating-guide-text {
