@@ -224,33 +224,8 @@ export class MeasurementManager {
      * Sets up global event listeners
      */
     setupEventListeners() {
-        this.setupAutoFillListeners();
+        // Removed auto-fill listeners - this was causing the auto-population issue
         this.setupPrintButton();
-    }
-
-    /**
-     * Setup auto-fill listeners for measurement inputs
-     */
-    setupAutoFillListeners() {
-        document.querySelectorAll('.measurement-input').forEach(input => {
-            input.addEventListener('focus', (e) => {
-                this.handleInputFocus(e);
-            });
-        });
-    }
-
-    /**
-     * Handle input focus event for auto-fill
-     */
-    handleInputFocus(event) {
-        const input = event.target;
-        if (!input.value && input.dataset.min) {
-            input.value = input.dataset.min;
-            input.classList.add('valid');
-            
-            const label = input.parentElement.querySelector('.label-text')?.textContent || '';
-            this.saveMeasurement(input.id, input.value, label);
-        }
     }
 
     /**
