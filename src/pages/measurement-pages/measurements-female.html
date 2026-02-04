@@ -48,7 +48,25 @@
 
     <!--Main Content Section-->
     <div class="container">
-        <h1 id="measurement-info"><i class="fas fa-ruler-combined"></i> Measurement Information (female)</h1>
+        <!-- tablet and mobile floating measurement guide -->
+        <div class="measurement-guide-overlay" id="floating-guide-overlay" style="display: none;"></div>
+        <div class="measurement-guide-floating" id="floating-measurement-guide">
+            <h2>Measurement Guide</h2>
+            <button id="close-floating-guide" class="close-btn">&times;</button>
+            
+            <div class="floating-guide-images">
+                <!-- Images will be dynamically inserted here -->
+            </div>
+            
+            <div class="floating-guide-text">
+                <div id="current-guide">Current Measurement:</div>
+                <span id="floating-measure-object"></span>
+                <span id="floating-measure-definition"></span>
+                <span id="floating-measure-description"></span>
+            </div>
+        </div>
+        
+        <h1 id="measurement-info"><i class="fa-solid fa-circle-info"></i></i> Measurement Information (female)</h1>
         
         <form id="measurement-form" class="measurement-form" data-gender="female" action="#" method="post">
             <div class="measurement-container">
@@ -59,10 +77,12 @@
                                 <span class="label-letter">A.</span>
                                 <span class="label-text">Neck circumference:</span>
                                 <span class="error-message" id="neck-error"></span>
+                                <i class="fa-regular fa-eye"></i>
                             </label>
                             <input type="number" id="neck" name="neck" class="measurement-input"
                                 data-measurement="neck" data-min="20" data-max="80" step="0.5" 
                                 placeholder="inches (20-80)">
+                                
                         </div>
 
                         <div class="form-group">
@@ -70,6 +90,7 @@
                                 <span class="label-letter">B.</span>
                                 <span class="label-text">Shoulder length:</span>
                                 <span class="error-message" id="shoulder-length-error"></span>
+                                <i class="fa-regular fa-eye"></i>
                             </label>
                             <input type="number" id="shoulder-length" name="shoulder-length" class="measurement-input"
                                 data-measurement="shoulder-length" data-min="10" data-max="30" step="0.5" 
@@ -81,6 +102,7 @@
                                 <span class="label-letter">C.</span>
                                 <span class="label-text">Arm length:</span>
                                 <span class="error-message" id="arm-length-error"></span>
+                                <i class="fa-regular fa-eye"></i>
                             </label>
                             <input type="number" id="arm-length" name="arm-length" class="measurement-input"
                                 data-measurement="arm-length" data-min="15" data-max="50" step="0.5" 
@@ -92,6 +114,7 @@
                                 <span class="label-letter">D.</span>
                                 <span class="label-text">Chest circumference:</span>
                                 <span class="error-message" id="chest-circumference-error"></span>
+                                <i class="fa-regular fa-eye"></i>
                             </label>
                             <input type="number" id="chest-circumference" name="chest-circumference" class="measurement-input"
                                 data-measurement="chest-circumference" data-min="10" data-max="30" step="0.5" 
@@ -103,6 +126,7 @@
                                 <span class="label-letter">E.</span>
                                 <span class="label-text">Under bust:</span>
                                 <span class="error-message" id="under-bust-error"></span>
+                                <i class="fa-regular fa-eye"></i>
                             </label>
                             <input type="number" id="under-bust" name="under-bust" class="measurement-input"
                                 data-measurement="under-bust" data-min="60" data-max="150" step="0.5" 
@@ -114,6 +138,7 @@
                                 <span class="label-letter">F.</span>
                                 <span class="label-text">Waist circumference:</span>
                                 <span class="error-message" id="waist-error"></span>
+                                <i class="fa-regular fa-eye"></i>
                             </label>
                             <input type="number" id="waist" name="waist" class="measurement-input"
                                 data-measurement="waist" data-min="50" data-max="130" step="0.5" 
@@ -125,6 +150,7 @@
                                 <span class="label-letter">G.</span>
                                 <span class="label-text">Hip bone circumference:</span>
                                 <span class="error-message" id="hip-bone-circumference-error"></span>
+                                <i class="fa-regular fa-eye"></i>
                             </label>
                             <input type="number" id="hip-bone-circumference" name="hip-bone-circumference" class="measurement-input"
                                 data-measurement="hip-bone-circumference" data-min="60" data-max="150" step="0.5" 
@@ -136,6 +162,7 @@
                                 <span class="label-letter">H.</span>
                                 <span class="label-text">Hip circumference:</span>
                                 <span class="error-message" id="hip-circumference-error"></span>
+                                 <i class="fa-regular fa-eye"></i>
                             </label>
                             <input type="number" id="hip-circumference" name="hip-circumference" class="measurement-input"
                                 data-measurement="hip-circumference" data-min="20" data-max="50" step="0.5" 
@@ -147,6 +174,7 @@
                                 <span class="label-letter">I.</span>
                                 <span class="label-text">Thigh:</span>
                                 <span class="error-message" id="thigh-error"></span>
+                                <i class="fa-regular fa-eye"></i>
                             </label>
                             <input type="number" id="thigh" name="thigh" class="measurement-input"
                                 data-measurement="thigh" data-min="15" data-max="50" step="0.5" 
@@ -158,6 +186,7 @@
                                 <span class="label-letter">J.</span>
                                 <span class="label-text">Knee:</span>
                                 <span class="error-message" id="knee-error"></span>
+                                <i class="fa-regular fa-eye"></i>
                             </label>
                             <input type="number" id="knee" name="knee" class="measurement-input"
                                 data-measurement="knee" data-min="10" data-max="30" step="0.5" 
@@ -166,12 +195,12 @@
                     </div>
 
                     <div class="measurement-container-middle">
-                        <!-- <h2 id="back-face">Back Face (image-guide)</h2> -->
                         <div class="form-group">
                             <label for="calf" class="measurement-label">
                                 <span class="label-letter">K.</span>
                                 <span class="label-text">Calf:</span>
                                 <span class="error-message" id="calf-error"></span>
+                                <i class="fa-regular fa-eye"></i>
                             </label>
                             <input type="number" id="calf" name="calf" class="measurement-input"
                                 data-measurement="calf" data-min="8" data-max="25" step="0.5" 
@@ -183,6 +212,7 @@
                                 <span class="label-letter">L.</span>
                                 <span class="label-text">Ankle:</span>
                                 <span class="error-message" id="ankle-error"></span>
+                                <i class="fa-regular fa-eye"></i>
                             </label>
                             <input type="number" id="ankle" name="ankle" class="measurement-input"
                                 data-measurement="ankle" data-min="5" data-max="15" step="0.5" 
@@ -194,6 +224,7 @@
                                 <span class="label-letter">M.</span>
                                 <span class="label-text">Bicep:</span>
                                 <span class="error-message" id="bicep-error"></span>
+                                <i class="fa-regular fa-eye"></i>
                             </label>
                             <input type="number" id="bicep" name="bicep" class="measurement-input"
                                 data-measurement="bicep" data-min="8" data-max="25" step="0.5" 
@@ -205,6 +236,7 @@
                                 <span class="label-letter">N.</span>
                                 <span class="label-text">Elbow:</span>
                                 <span class="error-message" id="elbow-error"></span>
+                                <i class="fa-regular fa-eye"></i>
                             </label>
                             <input type="number" id="elbow" name="elbow" class="measurement-input"
                                 data-measurement="elbow" data-min="6" data-max="15" step="0.5" 
@@ -216,6 +248,7 @@
                                 <span class="label-letter">O.</span>
                                 <span class="label-text">Wrist:</span>
                                 <span class="error-message" id="wrist-error"></span>
+                                <i class="fa-regular fa-eye"></i>
                             </label>
                             <input type="number" id="wrist" name="wrist" class="measurement-input"
                                 data-measurement="wrist" data-min="4" data-max="12" step="0.5" 
@@ -227,6 +260,7 @@
                                 <span class="label-letter">P.</span>
                                 <span class="label-text">Inseam to ankle:</span>
                                 <span class="error-message" id="inseam-ankle-error"></span>
+                                <i class="fa-regular fa-eye"></i>
                             </label>
                             <input type="number" id="inseam-ankle" name="inseam-ankle" class="measurement-input"
                                 data-measurement="inseam-ankle" data-min="20" data-max="50" step="0.5" 
@@ -238,6 +272,7 @@
                                 <span class="label-letter">Q.</span>
                                 <span class="label-text">Inseam to floor:</span>
                                 <span class="error-message" id="inseam-floor-error"></span>
+                                <i class="fa-regular fa-eye"></i>
                             </label>
                             <input type="number" id="inseam-floor" name="inseam-floor" class="measurement-input"
                                 data-measurement="inseam-floor" data-min="25" data-max="60" step="0.5" 
@@ -249,6 +284,7 @@
                                 <span class="label-letter">R.</span>
                                 <span class="label-text">Neck to waist:</span>
                                 <span class="error-message" id="neck-waist-error"></span>
+                                <i class="fa-regular fa-eye"></i>
                             </label>
                             <input type="number" id="neck-waist" name="neck-waist" class="measurement-input"
                                 data-measurement="neck-waist" data-min="10" data-max="40" step="0.5" 
@@ -260,6 +296,7 @@
                                 <span class="label-letter">S.</span>
                                 <span class="label-text">Neck to floor:</span>
                                 <span class="error-message" id="neck-floor-error"></span>
+                                <i class="fa-regular fa-eye"></i>
                             </label>
                             <input type="number" id="neck-floor" name="neck-floor" class="measurement-input"
                                 data-measurement="neck-floor" data-min="40" data-max="100" step="0.5" 
@@ -271,6 +308,7 @@
                                 <span class="label-letter">T.</span>
                                 <span class="label-text">Waist to floor:</span>
                                 <span class="error-message" id="waist-floor-error"></span>
+                                <i class="fa-regular fa-eye"></i>
                             </label>
                             <input type="number" id="waist-floor" name="waist-floor" class="measurement-input"
                                 data-measurement="waist-floor" data-min="30" data-max="70" step="0.5" 
@@ -282,6 +320,7 @@
                                 <span class="label-letter">U.</span>
                                 <span class="label-text">Height:</span>
                                 <span class="error-message" id="height-error"></span>
+                                <i class="fa-regular fa-eye"></i>
                             </label>
                             <input type="number" id="height" name="height" class="measurement-input"
                                 data-measurement="height" data-min="48" data-max="96" step="0.5" 
@@ -290,7 +329,7 @@
                     </div>
 
                     <div class="measurement-guide-container-right" id="measurement-guide">
-                        <h3><i class="fas fa-info-circle"></i> Measurement Guide</h3>
+                        <h3><i class="fas fa-ruler"></i></i> Measurement Guide</h3>
                         <div class="guide-image-container">
                             <div class="guide-placeholder" id="default-guide">
                                 <i class="fas fa-mouse-pointer"></i>
@@ -298,11 +337,11 @@
                             </div>
                             <img id="guide-image" src="" alt="Measurement Guide" style="display: none;">
                         </div>
-                        <div class="guide-text" id="guide-text">
-                            <p id="current-guide"><strong>How to use:</strong> Click on any measurement field to see detailed instructions and visual guidance.</p>
-                            <span id="measure-object"><strong></strong>object</span>
-                            <span id="measure-definition"><strong></strong>definition</span>
-                            <span id="measure-description"><strong></strong>description</span>
+                        <div class="guide-text">
+                            <!-- <p id="current-guide"><strong>How to use:</strong> Click on any measurement field to see detailed instructions and visual guidance.</p> -->
+                            <span id="measure-object"></span>
+                            <span id="measure-definition"></span>
+                            <span id="measure-description"></span>
                         </div>
                     </div>
                 </div>
@@ -317,7 +356,7 @@
                         </div>
                         <div id="summary-content">
                             <div class="empty-summary">
-                                <i class="fas fa-ruler"></i>
+                               
                                 <p class="small">Fill out the form and click "Save Measurements"</p>
                         </div>
                     </div>
@@ -325,7 +364,10 @@
 
                     <div class="name-date-section-container-middle">
                         <div class="form-group">
-                            <label for="client-name">Name: <span class="error-message" id="client-name-error"></span></label>
+                            
+                            <label for="client-name">Name: 
+                                <span class="error-message" id="client-name-error"></span>
+                            </label>
                             <input type="text" id="client-name" name="client-name" placeholder="Enter full name" maxlength="50">
                         </div>
                         <div class="form-group">
@@ -364,7 +406,6 @@
             <p class="footer-note">Measurement System v1.0 | All measurements in inches</p>
         </footer>       
     </div> 
-    
    
     <script src="/src/js/index.js"></script>
     <script type="module" src="/src/pages/measurement-pages/measurement-modules/measurement-Main.js"></script>

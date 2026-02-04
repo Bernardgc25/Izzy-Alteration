@@ -224,7 +224,6 @@ body {
         font-size: 1.5rem;
         cursor: pointer;
         padding: 0.5rem;
-        z-index: 1001;
     }
     
     .nav-menu {

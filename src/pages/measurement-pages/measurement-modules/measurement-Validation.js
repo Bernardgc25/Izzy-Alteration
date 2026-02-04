@@ -2,6 +2,7 @@
  * measurement-Validation.js
  * Handles all form validation logic with comprehensive error checking
  * Uses data attributes from HTML for dynamic validation rules
+ * REFACTORED: Improved code structure and readability
  */
 
 export class MeasurementValidator {
@@ -9,6 +10,48 @@ export class MeasurementValidator {
         this.form = formElement;
         this.gender = formElement.dataset.gender;
         this.errors = new Set();
+        this.init();
+    }
+
+    /**
+     * Initialize validator
+     */
+    init() {
+        this.setupValidationRules();
+    }
+
+    /**
+     * Setup gender-specific validation rules
+     */
+    setupValidationRules() {
+        this.rules = {
+            'client-name': {
+                required: true,
+                // message: 'Name is required'
+                message: ' '
+
+            },
+            'save-date': {
+                required: true,
+                //message: 'Date is required'
+                message: ' '
+            }
+        };
+
+        // Add gender-specific required fields
+        if (this.gender === 'male') {
+            this.rules['size-number'] = {
+                required: true,
+                //message: 'Size number is required'
+                message: ' '
+            };
+        } else {
+            this.rules['cupSize'] = {
+                required: true,
+                //message: 'Cup size is required'
+                message: ' '
+            };
+        }
     }
 
     /**
@@ -17,39 +60,24 @@ export class MeasurementValidator {
      */
     validateAll() {
         this.errors.clear();
-        let isValid = true;
-        
-        // Validate name field (required)
-        const nameField = document.getElementById('client-name');
-        if (!nameField.value.trim()) {
-            this.addError('client-name', ' ');
-            isValid = false;
-        }
+        let allValid = true;
 
-        // Validate gender-specific required field
-        if (this.gender === 'male') {
-            const sizeField = document.getElementById('size-number');
-            if (!sizeField.value) {
-                this.addError('size-number', ' ');
-                isValid = false;
+        // Validate required fields
+        Object.keys(this.rules).forEach(fieldId => {
+            if (!this.validateField(fieldId)) {
+                allValid = false;
             }
-        } else {
-            const cupSizeField = document.getElementById('cupSize');
-            if (!cupSizeField.value) {
-                this.addError('cupSize', 'Cup size is required');
-                isValid = false;
-            }
-        }
+        });
 
         // Validate all measurement inputs
         const measurementInputs = this.form.querySelectorAll('.measurement-input');
         measurementInputs.forEach(input => {
             if (!this.validateMeasurementInput(input)) {
-                isValid = false;
+                allValid = false;
             }
         });
 
-        return isValid;
+        return allValid;
     }
 
     /**
@@ -61,47 +89,90 @@ export class MeasurementValidator {
         const value = parseFloat(input.value);
         const min = parseFloat(input.dataset.min);
         const max = parseFloat(input.dataset.max);
-        const measurement = input.dataset.measurement;
-        const errorElement = document.getElementById(`${measurement}-error`);
+        const measurementId = input.id;
+        const errorElement = document.getElementById(`${measurementId}-error`);
 
-        // Clear previous error
-        if (errorElement) {
-            errorElement.textContent = '';
-        }
-        input.classList.remove('error', 'valid');
+        // Clear previous error state
+        this.clearInputErrorState(input, errorElement);
 
         // Check if empty
         if (input.value === '' || isNaN(value)) {
-            this.addError(measurement, ' ');
+            this.addFieldError(measurementId, ' ');
             return false;
         }
 
         // Check range
         if (value < min || value > max) {
-            this.addError(measurement, `${min}-${max}`);
+            this.addFieldError(measurementId, `${min}-${max}`);
             return false;
         }
 
         // Check decimal places
         const decimalCount = (input.value.split('.')[1] || '').length;
         if (decimalCount > 1) {
-            this.addError(measurement, 'Only one decimal place allowed');
+            this.addFieldError(measurementId, 'Only one decimal place allowed');
             return false;
         }
 
-        // Valid - clear any error immediately
+        // Mark as valid
+        this.markInputAsValid(input);
+        return true;
+    }
+
+    /**
+     * Validates a single field on the fly
+     * @param {string} fieldId - Field ID to validate
+     * @returns {boolean} True if valid
+     */
+    validateField(fieldId) {
+        const input = document.getElementById(fieldId);
+        if (!input) return true;
+
+        // Clear previous error
+        this.clearSingleError(fieldId);
+
+        // Check if field is required
+        if (this.rules[fieldId] && this.rules[fieldId].required) {
+            if (!input.value || input.value.trim() === '') {
+                this.addFieldError(fieldId, this.rules[fieldId].message);
+                return false;
+            }
+        }
+
+        // Handle different input types
+        if (input.classList.contains('measurement-input')) {
+            return this.validateMeasurementInput(input);
+        }
+
+        // Mark valid fields
         input.classList.add('valid');
-        input.classList.remove('error');
+        return true;
+    }
+
+    /**
+     * Adds error to field
+     * @param {string} fieldId - The ID of the field with error
+     * @param {string} message - Error message to display
+     */
+    addFieldError(fieldId, message) {
+        this.errors.add(fieldId);
         
-        // Ensure error message is cleared
+        const errorElement = document.getElementById(`${fieldId}-error`);
+        const inputElement = document.getElementById(fieldId);
+        
         if (errorElement) {
-            errorElement.textContent = '';
+            errorElement.textContent = message;
         }
         
-        // Remove from errors set
-        this.errors.delete(measurement);
-        
-        return true;
+        if (inputElement) {
+            inputElement.classList.add('error');
+            inputElement.classList.remove('valid');
+            
+            // Handle select wrapper styling
+            if (inputElement.tagName === 'SELECT' && inputElement.parentElement) {
+                inputElement.parentElement.classList.add('error');
+            }
+        }
     }
 
     /**
@@ -110,11 +181,12 @@ export class MeasurementValidator {
      */
     clearSingleError(fieldId) {
         const errorElement = document.getElementById(`${fieldId}-error`);
+        const inputElement = document.getElementById(fieldId);
+        
         if (errorElement) {
             errorElement.textContent = '';
         }
         
-        const inputElement = document.getElementById(fieldId);
         if (inputElement) {
             inputElement.classList.remove('error');
         }
@@ -129,118 +201,46 @@ export class MeasurementValidator {
         this.errors.clear();
         
         // Clear error messages
-        const errorElements = this.form.querySelectorAll('.error-message');
-        errorElements.forEach(el => el.textContent = '');
+        this.form.querySelectorAll('.error-message').forEach(el => {
+            el.textContent = '';
+        });
         
-        // Clear error classes from inputs and select wrappers
-        const inputs = this.form.querySelectorAll('input, select');
-        inputs.forEach(input => {
+        // Clear error classes
+        this.form.querySelectorAll('input, select').forEach(input => {
             input.classList.remove('error', 'valid');
             if (input.parentElement) {
                 input.parentElement.classList.remove('error');
             }
         });
     }
-    
+
     /**
-     * Validates a single field on the fly (for real-time validation)
-     * @param {string} fieldId - Field ID to validate
-     * @returns {boolean} True if valid
+     * Clear input error state
+     * @param {HTMLInputElement} input - Input element
+     * @param {HTMLElement} errorElement - Error message element
      */
-    validateField(fieldId) {
-        const input = document.getElementById(fieldId);
-        if (!input) return true;
-        
-        // Handle measurement inputs
-        if (input.classList.contains('measurement-input')) {
-            return this.validateMeasurementInput(input);
-        } 
-        
-        // Handle client name field
-        else if (fieldId === 'client-name') {
-            const errorElement = document.getElementById(`${fieldId}-error`);
+    clearInputErrorState(input, errorElement) {
+        if (errorElement) {
             errorElement.textContent = '';
-            input.classList.remove('error', 'valid');
-            
-            if (!input.value.trim()) {
-                this.addError(fieldId, ' ');
-                return false;
-            } else {
-                input.classList.add('valid');
-                return true;
-            }
         }
-        
-        // Handle male size number field
-        else if (fieldId === 'size-number' && this.gender === 'male') {
-            const errorElement = document.getElementById(`${fieldId}-error`);
-            errorElement.textContent = '';
-            input.classList.remove('error', 'valid');
-            
-            if (!input.value) {
-                this.addError(fieldId, 'Size number is required');
-                return false;
-            } else {
-                input.classList.add('valid');
-                return true;
-            }
-        }
-        
-        // Handle female cup size field
-        else if (fieldId === 'cupSize' && this.gender === 'female') {
-            const errorElement = document.getElementById(`${fieldId}-error`);
-            errorElement.textContent = '';
-            input.classList.remove('error', 'valid');
-            
-            if (!input.value) {
-                this.addError(fieldId, 'Cup size is required');
-                return false;
-            } else {
-                input.classList.add('valid');
-                return true;
-            }
-        }
-        
-        // Handle date field
-        else if (fieldId === 'save-date') {
-            const errorElement = document.getElementById(`${fieldId}-error`);
-            errorElement.textContent = '';
-            input.classList.remove('error', 'valid');
-            
-            if (!input.value) {
-                this.addError(fieldId, 'Date is required');
-                return false;
-            } else {
-                input.classList.add('valid');
-                return true;
-            }
-        }
-        
-        return true;
+        input.classList.remove('error', 'valid');
     }
 
     /**
-     * Adds error to field and displays error message
-     * @param {string} fieldId - The ID of the field with error
-     * @param {string} message - Error message to display
+     * Mark input as valid
+     * @param {HTMLInputElement} input - Input element
      */
-    addError(fieldId, message) {
-        this.errors.add(fieldId);
+    markInputAsValid(input) {
+        input.classList.add('valid');
+        input.classList.remove('error');
         
-        const errorElement = document.getElementById(`${fieldId}-error`);
+        // Ensure error message is cleared
+        const errorElement = document.getElementById(`${input.id}-error`);
         if (errorElement) {
-            errorElement.textContent = message;
+            errorElement.textContent = '';
         }
         
-        const inputElement = document.getElementById(fieldId);
-        if (inputElement) {
-            inputElement.classList.add('error');
-            inputElement.classList.remove('valid');
-            
-            // Also handle select elements if they have a wrapper or need special styling
-            if (inputElement.tagName === 'SELECT') {
-                inputElement.parentElement.classList.add('error');
-            }
-        }
+        // Remove from errors set
+        this.errors.delete(input.id);
     }
 }

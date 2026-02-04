@@ -1,4 +1,6 @@
 /* measurements-compact.css - Optimized Compact Design */
+/* original design */
+/* with floating window for measurement guide on mobile/tablet */
 .container {
     max-width: 1200px;
     margin: 20px auto;
@@ -6,6 +8,7 @@
     background: white;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    position: relative;
 }
 
 h1 {
@@ -87,7 +90,7 @@ h2, h3 {
 
 .label-letter {
     font-weight: 700;
-    color: #3498db;
+    color: #e74c3c;
     font-size: 0.85rem;
     min-width: 20px;
 }
@@ -95,6 +98,12 @@ h2, h3 {
 .label-text {
     flex: 1;
     font-size: 0.82rem;
+}
+
+/* HIDE EYE ICON ON DESKTOP/LAPTOP */
+.measurement-label .fa-eye,
+.measurement-label .fa-regular.fa-eye {
+    display: none !important;
 }
 
 input[type="number"],
@@ -188,7 +197,7 @@ input:focus, select:focus {
     border: 1px solid #e0e0e0;
     border-radius: 5px;
     padding: 10px;
-    background-color: #f9f9f9;
+    background-color: white;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -232,12 +241,12 @@ input:focus, select:focus {
     object-fit: contain;
 }
 
+/* ENHANCED: Compact guide-text for desktop/laptop */
 .guide-text {
-    flex: 1;
     font-size: 0.78rem;
-    line-height: 1.3;
+    line-height: 1.2;
     min-height: 25%;
-    overflow-y: auto;
+    padding: 4px 2px;
 }
 
 #current-guide {
@@ -249,7 +258,13 @@ input:focus, select:focus {
 #measure-definition,
 #measure-description {
     display: block;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
+}
+
+.measurement-guide-container-right #measure-object{
+    color: #e74c3c;
+    margin-right: 4px;
+    font-size: 0.8rem;
 }
 
 #measure-object strong,
@@ -353,6 +368,196 @@ footer {
 }
 
 /* =========================================== */
+/* FLOATING GUIDE STYLES - ENHANCED & DEVICE-RESPONSIVE */
+/* =========================================== */
+
+.measurement-guide-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+}
+
+/* Base floating guide styles - Desktop default */
+.measurement-guide-floating {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Desktop/Laptop specific floating guide (992px and above) */
+@media (min-width: 993px) {
+    .measurement-guide-floating {
+        width: 600px; /* Smaller window for desktop */
+        height: 500px; /* Moderate height for desktop */
+        max-width: 80%; /* Percentage based on screen */
+        max-height: 80vh;
+    }
+    
+    .measurement-guide-floating .floating-guide-images {
+        height: 300px; /* Moderate image height for desktop */
+        max-height: 60%;
+    }
+    
+    .measurement-guide-floating .floating-guide-text {
+        padding: 10px 15px 15px; /* Reduced padding */
+        font-size: 0.78rem; /* Same as desktop guide */
+        max-height: 40%;
+        line-height: 1.2; /* Match desktop line height */
+    }
+}
+
+/* Tablet (768px - 992px) */
+@media (max-width: 992px) and (min-width: 769px) {
+    .measurement-guide-floating {
+        width: 90%; /* Larger percentage for tablets */
+        height: 70vh; /* Taller for tablets */
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    .measurement-guide-floating .floating-guide-images {
+        height: 350px;
+        max-height: 60vh;
+    }
+}
+
+/* Mobile (below 768px) */
+@media (max-width: 768px) {
+    .measurement-guide-floating {
+        width: 95%; /* Almost full width for mobile */
+        height: 85vh; /* Very tall for mobile */
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    .measurement-guide-floating .floating-guide-images {
+        height: 400px;
+        max-height: 70vh;
+    }
+}
+
+/* Common floating guide elements */
+.measurement-guide-floating .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    padding: 0;
+}
+
+.measurement-guide-floating .close-btn:hover {
+    background: #c0392b;
+}
+
+.measurement-guide-floating h2 {
+    margin-top: 0;
+    margin-bottom: 8px; /* Reduced margin */
+    padding-right: 40px;
+    font-size: 1.2rem; /* Slightly smaller */
+    color: #2c3e50;
+    padding: 12px 15px 0 15px; /* Adjusted padding */
+}
+
+/* Add to the floating guide styles section */
+.measurement-guide-floating .floating-guide-images {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: white;
+    border-radius: 5px;
+    margin: 0 15px;
+    min-height: 200px;
+    width: calc(100% - 30px);
+}
+
+.measurement-guide-floating .floating-guide-images img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: none;
+}
+
+.measurement-guide-floating .floating-guide-images img.active {
+    display: block;
+}
+
+.measurement-guide-floating .floating-guide-text {
+    font-size: 0.78rem; /* Match desktop size */
+    line-height: 1.2; /* Match desktop line height */
+    overflow-y: auto;
+    border-top: 1px solid #e9ecef;
+    margin: 8px 15px 0; /* Reduced margin */
+    padding: 6px 0; /* Reduced padding */
+}
+
+.measurement-guide-floating #current-guide {
+    margin-bottom: 4px; /* Reduced margin */
+    font-size: 0.8rem;
+    color: #2c3e50;
+}
+
+/* FIXED: Removed line gaps in floating guide - made compact like desktop */
+.measurement-guide-floating #floating-measure-object,
+.measurement-guide-floating #floating-measure-definition,
+.measurement-guide-floating #floating-measure-description {
+    display: block;
+    margin-bottom: 2px; /* Reduced from 8px to match desktop */
+    color: #495057;
+    padding: 1px 0; /* Reduced padding */
+    font-size: 0.78rem; /* Match desktop font size */
+    line-height: 1.2; /* Match desktop line height */
+}
+
+.measurement-guide-floating #floating-measure-object {
+    color: #e74c3c; /* Match desktop color */
+    margin-bottom: 2px; /* Reduced margin */
+}
+
+.measurement-guide-floating #floating-measure-object strong,
+.measurement-guide-floating #floating-measure-definition strong,
+.measurement-guide-floating #floating-measure-description strong {
+    color: #2c3e50;
+    margin-right: 4px; /* Match desktop spacing */
+    font-size: 0.8rem; /* Match desktop font size */
+    font-weight: 600;
+}
+
+.measurement-guide-floating .floating-guide-text span {
+    display: block;
+    margin-bottom: 2px; /* Reduced from 6px to match desktop */
+}
+
+/* =========================================== */
 /* RESPONSIVE DESIGN FOR DIFFERENT SCREEN SIZES */
 /* =========================================== */
 
@@ -417,9 +622,7 @@ footer {
     }
     
     #measurement-guide {
-        grid-column: span 2;
-        grid-row: 2;
-        margin-top: 10px;
+        display: none;
     }
     
     .guide-image-container {
@@ -451,6 +654,43 @@ footer {
     .label-text {
         font-size: 0.8rem;
     }
+    
+    /* SHOW EYE ICON ON TABLET/MOBILE */
+    .measurement-label .fa-eye,
+    .measurement-label .fa-regular.fa-eye {
+        display: inline-flex !important;
+        font-size: 0.75rem;
+        color: #3498db;
+        cursor: pointer;
+        margin-left: 4px;
+    }
+    
+    /* Tablet floating guide adjustments */
+    .measurement-guide-floating {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        height: 70vh;
+    }
+    
+    .measurement-guide-floating .floating-guide-images {
+        min-height: 280px;
+        max-height: 60vh;
+    }
+    
+    .measurement-guide-floating .floating-guide-text {
+        padding: 8px 12px 12px; /* Adjusted padding */
+        margin: 6px 12px 0; /* Adjusted margin */
+        font-size: 0.78rem; /* Match desktop size */
+    }
+    
+    .measurement-guide-floating #floating-measure-object,
+    .measurement-guide-floating #floating-measure-definition,
+    .measurement-guide-floating #floating-measure-description {
+        margin-bottom: 2px; /* Match desktop spacing */
+        font-size: 0.78rem; /* Match desktop size */
+    }
 }
 
 /* Large Mobile (576px - 768px) */
@@ -472,8 +712,7 @@ footer {
     }
     
     #measurement-guide {
-        grid-column: 1;
-        grid-row: 3;
+        display: none;
     }
     
     .guide-image-container {
@@ -523,6 +762,52 @@ footer {
     .btn-primary, .btn-secondary {
         height: 38px;
         font-size: 0.85rem;
+    }
+    
+    /* SHOW EYE ICON ON MOBILE */
+    .measurement-label .fa-eye,
+    .measurement-label .fa-regular.fa-eye {
+        display: inline-flex !important;
+        font-size: 0.8rem;
+        color: #3498db;
+        cursor: pointer;
+        margin-left: 4px;
+    }
+    
+    /* Mobile floating guide adjustments */
+    .measurement-guide-floating {
+        width: 95%;
+        height: 85vh;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    .measurement-guide-floating .floating-guide-images {
+        min-height: 300px;
+        max-height: 65vh;
+        margin: 0 10px;
+        width: calc(100% - 20px);
+    }
+    
+    .measurement-guide-floating .floating-guide-text {
+        padding: 6px 8px 8px; /* Adjusted padding */
+        margin: 4px 10px 0; /* Adjusted margin */
+        font-size: 0.78rem; /* Match desktop size */
+        line-height: 1.2; /* Match desktop line height */
+    }
+    
+    .measurement-guide-floating h2 {
+        font-size: 1.2rem;
+        padding: 10px 12px 0 12px; /* Adjusted padding */
+        margin-bottom: 6px; /* Reduced margin */
+    }
+    
+    .measurement-guide-floating #floating-measure-object,
+    .measurement-guide-floating #floating-measure-definition,
+    .measurement-guide-floating #floating-measure-description {
+        margin-bottom: 2px; /* Match desktop spacing */
+        font-size: 0.78rem; /* Match desktop size */
     }
 }
 
@@ -583,6 +868,7 @@ footer {
     .measurement-input {
         font-size: 0.88rem;
         height: 36px;
+        padding: 5px 7px;
     }
     
     .btn-primary, .btn-secondary {
@@ -596,6 +882,50 @@ footer {
     
     .summary-item {
         font-size: 0.85rem;
+    }
+    
+    /* SHOW EYE ICON ON SMALL MOBILE */
+    .measurement-label .fa-eye,
+    .measurement-label .fa-regular.fa-eye {
+        display: inline-flex !important;
+        font-size: 0.85rem;
+        color: #3498db;
+        cursor: pointer;
+        margin-left: 4px;
+    }
+    
+    /* Small mobile floating guide adjustments */
+    .measurement-guide-floating {
+        width: 98%;
+        height: 90vh;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 8px;
+    }
+    
+    .measurement-guide-floating .floating-guide-images {
+        min-height: 320px;
+        max-height: 70vh;
+    }
+    
+    .measurement-guide-floating .floating-guide-text {
+        padding: 4px 6px 6px; /* Adjusted padding */
+        margin: 3px 8px 0; /* Adjusted margin */
+        font-size: 0.78rem; /* Match desktop size */
+    }
+    
+    .measurement-guide-floating h2 {
+        font-size: 1.1rem;
+        padding: 8px 10px 0 10px; /* Adjusted padding */
+        margin-bottom: 4px; /* Reduced margin */
+    }
+    
+    .measurement-guide-floating #floating-measure-object,
+    .measurement-guide-floating #floating-measure-definition,
+    .measurement-guide-floating #floating-measure-description {
+        font-size: 0.78rem; /* Match desktop size */
+        margin-bottom: 2px; /* Match desktop spacing */
     }
 }
 
@@ -654,65 +984,57 @@ footer {
         gap: 8px;
     }
     
-    /* Adjust measurement form layout for very small screens */
-    .form-group {
-        display: flex;
-        flex-direction: column;
+    /* SHOW EYE ICON ON EXTRA SMALL MOBILE */
+    .measurement-label .fa-eye,
+    .measurement-label .fa-regular.fa-eye {
+        display: inline-flex !important;
+        font-size: 0.9rem;
+        color: #3498db;
+        cursor: pointer;
+        margin-left: 4px;
+        flex-shrink: 0;
     }
     
-    .measurement-label {
-        margin-bottom: 2px;
+    /* Extra small mobile floating guide adjustments */
+    .measurement-guide-floating {
+        width: 100%;
+        height: 95vh;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 6px;
     }
     
-    /* Ensure proper spacing in name/date section */
-    .name-date-section-container-middle .form-group {
-        margin-bottom: 8px;
+    .measurement-guide-floating .floating-guide-images {
+        min-height: 340px;
+        max-height: 75vh;
+        margin: 0 5px;
+        width: calc(100% - 10px);
+    }
+    
+    .measurement-guide-floating .floating-guide-text {
+        padding: 3px 5px 5px; /* Adjusted padding */
+        margin: 2px 5px 0; /* Adjusted margin */
+        font-size: 0.76rem;
+        line-height: 1.2;
+    }
+    
+    .measurement-guide-floating h2 {
+        font-size: 1rem;
+        padding: 6px 8px 0 8px; /* Adjusted padding */
+        margin-bottom: 3px; /* Reduced margin */
+    }
+    
+    .measurement-guide-floating #floating-measure-object,
+    .measurement-guide-floating #floating-measure-definition,
+    .measurement-guide-floating #floating-measure-description {
+        margin-bottom: 2px; /* Match desktop spacing */
+        font-size: 0.76rem;
     }
     
     /* Improve touch targets */
     .measurement-input, select, input[type="date"], input[type="text"] {
         min-height: 36px;
-    }
-}
-
-/* Portrait Orientation Specific Adjustments */
-@media (max-width: 768px) and (orientation: portrait) {
-    .guide-image-container {
-        height: 35vh;
-    }
-    
-    .top {
-        gap: 12px;
-    }
-}
-
-/* Landscape Orientation Specific Adjustments */
-@media (max-width: 992px) and (orientation: landscape) {
-    .guide-image-container {
-        height: 55vh;
-    }
-    
-    .top {
-        grid-template-columns: 1fr 1fr;
-    }
-    
-    #measurement-guide {
-        grid-column: span 2;
-    }
-}
-
-/* High DPI Screens */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .container {
-        box-shadow: 0 1px 2px rgba(0,0,0,0.08);
-    }
-    
-    input[type="number"],
-    input[type="text"],
-    input[type="date"],
-    select,
-    .measurement-input {
-        border-width: 0.5px;
     }
 }
 
@@ -735,8 +1057,10 @@ footer {
         grid-template-columns: 1fr 1fr;
     }
     
-    #measurement-guide {
-        display: none;
+    #measurement-guide,
+    .measurement-guide-floating,
+    .measurement-guide-overlay {
+        display: none !important;
     }
     
     .bottom {
@@ -746,5 +1070,11 @@ footer {
     input, select {
         border: 1px solid #ccc;
         background: transparent;
+    }
+    
+    /* Hide eye icon in print */
+    .measurement-label .fa-eye,
+    .measurement-label .fa-regular.fa-eye {
+        display: none !important;
     }
 }
