@@ -1,8 +1,0 @@
-run all test: 
-    npm test
-    
-run specific test: 
-    npx mocha test/unit/measurement-modules-tests/measurement-Manager.test.js
-    npx mocha test/unit/measurement-modules-tests/measurement-Validation.test.js
-    npx mocha test/unit/measurement-modules-tests/measurement-DataMaps.test.js
-    npx mocha test/unit/measurement-modules-tests/measurement-Main.test.js
