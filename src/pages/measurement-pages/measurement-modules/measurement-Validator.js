@@ -1,10 +1,7 @@
 /**
- * measurement-Validation.js
- * Handles all form validation logic with comprehensive error checking
- * Uses data attributes from HTML for dynamic validation rules
- * REFACTORED: Improved code structure and readability
+ * Measurement Validator - Handles form validation logic
+ * Separated from UI concerns for better testability
  */
-
 export class MeasurementValidator {
     constructor(formElement) {
         this.form = formElement;
@@ -27,13 +24,10 @@ export class MeasurementValidator {
         this.rules = {
             'client-name': {
                 required: true,
-                // message: 'Name is required'
                 message: ' '
-
             },
             'save-date': {
                 required: true,
-                //message: 'Date is required'
                 message: ' '
             }
         };
@@ -42,13 +36,11 @@ export class MeasurementValidator {
         if (this.gender === 'male') {
             this.rules['size-number'] = {
                 required: true,
-                //message: 'Size number is required'
                 message: ' '
             };
         } else {
             this.rules['cupSize'] = {
                 required: true,
-                //message: 'Cup size is required'
                 message: ' '
             };
         }
@@ -90,10 +82,6 @@ export class MeasurementValidator {
         const min = parseFloat(input.dataset.min);
         const max = parseFloat(input.dataset.max);
         const measurementId = input.id;
-        const errorElement = document.getElementById(`${measurementId}-error`);
-
-        // Clear previous error state
-        this.clearInputErrorState(input, errorElement);
 
         // Check if empty
         if (input.value === '' || isNaN(value)) {
@@ -114,8 +102,6 @@ export class MeasurementValidator {
             return false;
         }
 
-        // Mark as valid
-        this.markInputAsValid(input);
         return true;
     }
 
@@ -139,13 +125,11 @@ export class MeasurementValidator {
             }
         }
 
-        // Handle different input types
+        // Handle measurement inputs
         if (input.classList.contains('measurement-input')) {
             return this.validateMeasurementInput(input);
         }
 
-        // Mark valid fields
-        input.classList.add('valid');
         return true;
     }
 
@@ -167,11 +151,6 @@ export class MeasurementValidator {
         if (inputElement) {
             inputElement.classList.add('error');
             inputElement.classList.remove('valid');
-            
-            // Handle select wrapper styling
-            if (inputElement.tagName === 'SELECT' && inputElement.parentElement) {
-                inputElement.parentElement.classList.add('error');
-            }
         }
     }
 
@@ -208,39 +187,15 @@ export class MeasurementValidator {
         // Clear error classes
         this.form.querySelectorAll('input, select').forEach(input => {
             input.classList.remove('error', 'valid');
-            if (input.parentElement) {
-                input.parentElement.classList.remove('error');
-            }
         });
     }
 
     /**
-     * Clear input error state
-     * @param {HTMLInputElement} input - Input element
-     * @param {HTMLElement} errorElement - Error message element
+     * Get first error field for focus
+     * @returns {HTMLElement|null} First error element
      */
-    clearInputErrorState(input, errorElement) {
-        if (errorElement) {
-            errorElement.textContent = '';
-        }
-        input.classList.remove('error', 'valid');
-    }
-
-    /**
-     * Mark input as valid
-     * @param {HTMLInputElement} input - Input element
-     */
-    markInputAsValid(input) {
-        input.classList.add('valid');
-        input.classList.remove('error');
-        
-        // Ensure error message is cleared
-        const errorElement = document.getElementById(`${input.id}-error`);
-        if (errorElement) {
-            errorElement.textContent = '';
-        }
-        
-        // Remove from errors set
-        this.errors.delete(input.id);
+    getFirstErrorField() {
+        const firstError = this.form.querySelector('.error');
+        return firstError;
     }
 }
