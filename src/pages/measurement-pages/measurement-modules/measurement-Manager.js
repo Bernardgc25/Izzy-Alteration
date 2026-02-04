@@ -1,211 +1,21 @@
 /**
- * measurement-Manager.js
- * Manages measurement data, state, and operations
- * Handles image interactions, summary updates, and data management
- * REFACTORED: Improved organization and separation of concerns
+ * Measurement Manager - Handles business logic and data management
+ * Focuses on data operations, not UI
  */
-
-import { measurementDataMap, getMeasurement } from './measurement-DataMaps.js';
-
 export class MeasurementManager {
     constructor() {
         this.measurements = new Map();
         this.gender = null;
-        this.isMobileView = false;
-        this.config = {
-            defaultZoom: 1.0,
-            minZoom: 0.5,
-            maxZoom: 3.0
-        };
-        this.zoomState = {
-            scale: this.config.defaultZoom,
-            x: 0,
-            y: 0,
-            isDragging: false,
-            startX: 0,
-            startY: 0
-        };
+        this.formData = {};
     }
 
     /**
-     * Initializes the manager
+     * Initialize manager
      * @param {string} gender - 'male' or 'female'
-     * @param {boolean} isMobileView - Whether current view is mobile/tablet
-     * @returns {MeasurementManager} this
      */
-    initialize(gender, isMobileView) {
+    initialize(gender) {
         this.gender = gender;
-        this.isMobileView = isMobileView;
-        
-        this.setupGuideImages();
-        this.setupDateField();
-        this.setupEventListeners();
-        
         return this;
-    }
-
-    /**
-     * Setup guide images based on view type
-     */
-    setupGuideImages() {
-        if (!this.isMobileView) {
-            this.setupDesktopGuideImage();
-        }
-    }
-
-    /**
-     * Sets up the desktop measurement guide image
-     */
-    setupDesktopGuideImage() {
-        const guideImage = document.getElementById('guide-image');
-        const defaultGuide = document.getElementById('default-guide');
-        
-        if (!guideImage || !defaultGuide) return;
-        
-        const imageData = measurementDataMap.gender[this.gender];
-        if (imageData && imageData.imageDesktop) {
-            guideImage.src = imageData.imageDesktop;
-            guideImage.style.display = 'block';
-            defaultGuide.style.display = 'none';
-            this.setupImageInteractions(guideImage);
-        }
-    }
-
-    /**
-     * Setup image interactions (zoom/pan)
-     * @param {HTMLImageElement} image - Guide image element
-     */
-    setupImageInteractions(image) {
-        const container = image.parentElement;
-        if (!container) return;
-
-        // Setup zoom and pan events
-        this.setupZoomEvents(container, image);
-        this.setupPanEvents(container, image);
-        
-        // Setup reset on input focus
-        this.setupZoomResetOnFocus(image);
-    }
-
-    /**
-     * Setup zoom events
-     */
-    setupZoomEvents(container, image) {
-        container.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            this.handleZoom(e, image);
-        });
-    }
-
-    /**
-     * Setup pan events
-     */
-    setupPanEvents(container, image) {
-        container.addEventListener('mousedown', (e) => {
-            this.startPan(e);
-            container.style.cursor = 'grabbing';
-        });
-
-        container.addEventListener('mousemove', (e) => {
-            if (!this.zoomState.isDragging) return;
-            this.updatePanPosition(e);
-            this.updateImageTransform(image);
-        });
-
-        container.addEventListener('mouseup', () => {
-            this.stopPan();
-            container.style.cursor = 'grab';
-        });
-
-        container.addEventListener('mouseleave', () => {
-            this.stopPan();
-            container.style.cursor = 'default';
-        });
-    }
-
-    /**
-     * Setup zoom reset when inputs are focused
-     */
-    setupZoomResetOnFocus(image) {
-        document.querySelectorAll('input, select').forEach(input => {
-            input.addEventListener('focus', () => {
-                this.resetZoom(image);
-            });
-        });
-    }
-
-    /**
-     * Handle zoom event
-     */
-    handleZoom(event, image) {
-        const rect = image.parentElement.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-        const delta = event.deltaY > 0 ? -0.1 : 0.1;
-        
-        this.applyZoom(delta, x, y, image);
-    }
-
-    /**
-     * Apply zoom transformation
-     */
-    applyZoom(delta, originX, originY, image) {
-        const newScale = Math.max(
-            this.config.minZoom,
-            Math.min(this.config.maxZoom, this.zoomState.scale + delta)
-        );
-        
-        const scaleChange = newScale - this.zoomState.scale;
-        this.zoomState.x -= originX * scaleChange;
-        this.zoomState.y -= originY * scaleChange;
-        this.zoomState.scale = newScale;
-        
-        this.updateImageTransform(image);
-    }
-
-    /**
-     * Start panning
-     */
-    startPan(event) {
-        this.zoomState.isDragging = true;
-        this.zoomState.startX = event.clientX - this.zoomState.x;
-        this.zoomState.startY = event.clientY - this.zoomState.y;
-    }
-
-    /**
-     * Update pan position
-     */
-    updatePanPosition(event) {
-        this.zoomState.x = event.clientX - this.zoomState.startX;
-        this.zoomState.y = event.clientY - this.zoomState.startY;
-    }
-
-    /**
-     * Stop panning
-     */
-    stopPan() {
-        this.zoomState.isDragging = false;
-    }
-
-    /**
-     * Update image transform
-     */
-    updateImageTransform(image) {
-        image.style.transform = `
-            translate(${this.zoomState.x}px, ${this.zoomState.y}px) 
-            scale(${this.zoomState.scale})
-        `;
-        image.style.transformOrigin = '0 0';
-    }
-
-    /**
-     * Reset zoom and pan
-     */
-    resetZoom(image) {
-        this.zoomState.scale = this.config.defaultZoom;
-        this.zoomState.x = 0;
-        this.zoomState.y = 0;
-        this.updateImageTransform(image);
     }
 
     /**
@@ -218,24 +28,6 @@ export class MeasurementManager {
         const today = new Date().toISOString().split('T')[0];
         dateField.value = today;
         dateField.max = today;
-    }
-
-    /**
-     * Sets up global event listeners
-     */
-    setupEventListeners() {
-        // Removed auto-fill listeners - this was causing the auto-population issue
-        this.setupPrintButton();
-    }
-
-    /**
-     * Setup print button listener
-     */
-    setupPrintButton() {
-        const printBtn = document.getElementById('print-summary');
-        if (printBtn) {
-            printBtn.addEventListener('click', () => this.printSummary());
-        }
     }
 
     /**
@@ -255,25 +47,32 @@ export class MeasurementManager {
     }
 
     /**
-     * Prints the measurement summary
+     * Collects all form data
+     * @returns {Object} Form data object
      */
-    printSummary() {
-        const printWindow = window.open('', '_blank', 'width=800,height=600');
-        if (!printWindow) {
-            alert('Popup blocked. Please allow popups for this site to print.');
-            return;
+    getFormData() {
+        this.formData = {
+            name: document.getElementById('client-name')?.value || '',
+            date: document.getElementById('save-date')?.value || '',
+            gender: this.gender,
+            measurements: Object.fromEntries(this.measurements)
+        };
+
+        // Add gender-specific data
+        if (this.gender === 'male') {
+            this.formData.sizeNumber = document.getElementById('size-number')?.value || '';
+        } else {
+            this.formData.cupSize = document.getElementById('cupSize')?.value || '';
         }
-        
-        const printContent = this.generatePrintContent();
-        printWindow.document.write(printContent);
-        printWindow.document.close();
+
+        return this.formData;
     }
 
     /**
-     * Generate print content HTML
+     * Generates HTML content for printing
+     * @returns {string} HTML string for print
      */
     generatePrintContent() {
-        const formData = this.getFormData();
         const measurementItems = Array.from(this.measurements.entries())
             .map(([id, data]) => `
                 <div class="measurement-item">
@@ -285,7 +84,7 @@ export class MeasurementManager {
             <!DOCTYPE html>
             <html>
                 <head>
-                    <title>Measurement Summary - ${formData.name || 'Client'}</title>
+                    <title>Measurement Summary - ${this.formData.name || 'Client'}</title>
                     <style>
                         body { 
                             font-family: Arial, sans-serif; 
@@ -340,11 +139,11 @@ export class MeasurementManager {
                     </div>
                     
                     <div class="client-info">
-                        <p><strong>Client Name:</strong> ${formData.name || 'Not provided'}</p>
+                        <p><strong>Client Name:</strong> ${this.formData.name || 'Not provided'}</p>
                         <p><strong>Gender:</strong> ${this.gender}</p>
-                        <p><strong>Date Taken:</strong> ${formData.date || 'Not provided'}</p>
-                        ${formData.sizeNumber ? `<p><strong>Size Number:</strong> ${formData.sizeNumber}</p>` : ''}
-                        ${formData.cupSize ? `<p><strong>Cup Size:</strong> ${formData.cupSize}</p>` : ''}
+                        <p><strong>Date Taken:</strong> ${this.formData.date || 'Not provided'}</p>
+                        ${this.formData.sizeNumber ? `<p><strong>Size Number:</strong> ${this.formData.sizeNumber}</p>` : ''}
+                        ${this.formData.cupSize ? `<p><strong>Cup Size:</strong> ${this.formData.cupSize}</p>` : ''}
                     </div>
                     
                     <h2>Measurements (in inches)</h2>
@@ -363,47 +162,24 @@ export class MeasurementManager {
     }
 
     /**
-     * Collects all form data
-     * @returns {Object} Form data object
+     * Prints the measurement summary
      */
-    getFormData() {
-        const formData = {
-            name: document.getElementById('client-name')?.value || '',
-            date: document.getElementById('save-date')?.value || '',
-            gender: this.gender,
-            measurements: Object.fromEntries(this.measurements)
-        };
-
-        // Add gender-specific data
-        if (this.gender === 'male') {
-            formData.sizeNumber = document.getElementById('size-number')?.value || '';
-        } else {
-            formData.cupSize = document.getElementById('cupSize')?.value || '';
+    printSummary() {
+        const printWindow = window.open('', '_blank', 'width=800,height=600');
+        if (!printWindow) {
+            throw new Error('Popup blocked. Please allow popups for this site to print.');
         }
-
-        return formData;
+        
+        const printContent = this.generatePrintContent();
+        printWindow.document.write(printContent);
+        printWindow.document.close();
     }
 
     /**
-     * Resets all form fields and data
+     * Resets all form data
      */
-    resetAll() {
-        // Clear form
-        const form = document.getElementById('measurement-form');
-        if (form) form.reset();
-        
-        // Clear measurements
+    resetFormData() {
         this.measurements.clear();
-        
-        // Reset date
-        this.setupDateField();
-        
-        // Reset zoom if desktop
-        if (!this.isMobileView) {
-            const guideImage = document.getElementById('guide-image');
-            if (guideImage) {
-                this.resetZoom(guideImage);
-            }
-        }
+        this.formData = {};
     }
 }

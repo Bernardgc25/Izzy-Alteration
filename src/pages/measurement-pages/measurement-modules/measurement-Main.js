@@ -1,22 +1,16 @@
 /**
- * measurement-Main.js
- * Entry point - coordinates all modules and handles user interactions
- * Only this file should be linked in HTML files
- * REFACTORED: Better separation of concerns and event handling
+ * Main Application Coordinator
+ * Orchestrates interactions between modules
  */
-
-import { measurementDataMap, getMeasurement } from './measurement-DataMaps.js';
-import { MeasurementValidator } from './measurement-Validation.js';
+import { MeasurementValidator } from './measurement-Validator.js';
 import { MeasurementManager } from './measurement-Manager.js';
-
-// Global app instance
-let measurementApp = null;
+import { ViewHandler } from './measurement-ViewHandler.js';
 
 class MeasurementApp {
     constructor() {
         this.manager = null;
         this.validator = null;
-        this.isMobileView = this.checkMobileView();
+        this.viewHandler = null;
         this.debounceTimers = new Map();
         this.init();
     }
@@ -25,15 +19,6 @@ class MeasurementApp {
      * Initialize application
      */
     init() {
-        this.setupApp();
-        this.bindEventListeners();
-        this.logInitialization();
-    }
-
-    /**
-     * Setup application components
-     */
-    setupApp() {
         const form = document.getElementById('measurement-form');
         if (!form) {
             console.error('Measurement form not found');
@@ -41,42 +26,87 @@ class MeasurementApp {
         }
 
         const gender = form.dataset.gender;
+        const isMobileView = this.checkMobileView();
         
-        // Initialize manager and validator
-        this.manager = new MeasurementManager().initialize(gender, this.isMobileView);
+        // Initialize modules
+        this.manager = new MeasurementManager().initialize(gender);
         this.validator = new MeasurementValidator(form);
+        this.viewHandler = new ViewHandler(gender, isMobileView);
+        
+        // Setup initial state
+        this.setupInitialState();
         
         // Setup event listeners
         this.setupEventListeners();
+        
+        // Bind global functions
+        this.bindGlobalFunctions();
+        
+        this.logInitialization();
     }
 
     /**
      * Check if current view is mobile
      */
     checkMobileView() {
-        return window.innerWidth <= 992; // Tablet breakpoint
+        return window.innerWidth <= 992;
+    }
+
+    /**
+     * Setup initial application state
+     */
+    setupInitialState() {
+        this.manager.setupDateField();
+        
+        // Force initial image load for desktop view
+        if (!this.viewHandler.isMobileView) {
+            setTimeout(() => {
+                this.viewHandler.setupDesktopGuideImage();
+            }, 100);
+        }
     }
 
     /**
      * Setup all event listeners
      */
     setupEventListeners() {
-        this.setupGenderFieldListeners();
-        this.setupMeasurementInputListeners();
-        this.setupClientNameValidation();
-        this.setupFloatingGuideListeners();
-        this.setupWindowResizeListener();
+        this.setupFormInputListeners();
+        this.setupButtonListeners();
+        this.setupGuideListeners();
     }
 
     /**
-     * Setup gender-specific field listeners
+     * Setup form input listeners
      */
-    setupGenderFieldListeners() {
+    setupFormInputListeners() {
+        // Client name validation
+        const nameField = document.getElementById('client-name');
+        if (nameField) {
+            nameField.addEventListener('input', () => {
+                this.debounceValidation('client-name');
+            });
+            nameField.addEventListener('blur', () => {
+                this.validator.validateField('client-name');
+            });
+        }
+
+        // Date field validation
+        const dateField = document.getElementById('save-date');
+        if (dateField) {
+            dateField.addEventListener('change', () => {
+                this.validator.validateField('save-date');
+            });
+        }
+
+        // Gender-specific fields
         if (this.manager.gender === 'male') {
             this.setupFieldListener('size-number');
         } else {
             this.setupFieldListener('cupSize');
         }
+
+        // Measurement inputs
+        this.setupMeasurementInputListeners();
     }
 
     /**
@@ -98,29 +128,83 @@ class MeasurementApp {
         const inputs = document.querySelectorAll('.measurement-input');
         
         inputs.forEach(input => {
-            this.setupInputEvents(input);
+            // Debounced input event
+            input.addEventListener('input', (e) => {
+                this.debouncedInputHandler(e);
+            });
+            
+            // Focus event for showing guide
+            input.addEventListener('focus', (e) => {
+                this.handleInputFocus(e);
+            });
+            
+            // Blur event for validation
+            input.addEventListener('blur', (e) => {
+                this.validator.validateField(e.target.id);
+            });
         });
-        
-        this.setupEyeIconListeners();
     }
 
     /**
-     * Setup input event listeners
+     * Setup button listeners
      */
-    setupInputEvents(input) {
-        // Debounced input event
-        input.addEventListener('input', (e) => {
-            this.debouncedInputHandler(e);
+    setupButtonListeners() {
+        // Save button
+        const saveBtn = document.getElementById('save-measurements');
+        if (saveBtn) {
+            saveBtn.addEventListener('click', () => {
+                this.handleSaveMeasurements();
+            });
+        }
+
+        // Reset button
+        const resetBtn = document.getElementById('reset-form');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => {
+                this.handleResetForm();
+            });
+        }
+
+        // Print button (handled by viewHandler)
+        this.viewHandler.setupPrintButtonListener(() => {
+            this.manager.printSummary();
         });
-        
-        // Focus event for showing guide
-        input.addEventListener('focus', (e) => {
-            this.handleInputFocus(e);
+    }
+
+    /**
+     * Setup guide-related listeners
+     */
+    setupGuideListeners() {
+        // Eye icon listeners
+        this.viewHandler.setupEyeIconListeners((measurementKey) => {
+            this.viewHandler.showFloatingGuide(measurementKey);
         });
+
+        // Guide close listeners
+        const closeBtn = document.getElementById('close-floating-guide');
+        const overlay = document.getElementById('floating-guide-overlay');
         
-        // Blur event for validation
-        input.addEventListener('blur', (e) => {
-            this.handleInputBlur(e);
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                this.viewHandler.hideFloatingGuide();
+            });
+        }
+        
+        if (overlay) {
+            overlay.addEventListener('click', () => {
+                this.viewHandler.hideFloatingGuide();
+            });
+        }
+
+        // Escape key listener
+        this.viewHandler.setupEscapeKeyListener(() => {
+            this.viewHandler.hideFloatingGuide();
+        });
+
+        // Window resize listener
+        this.viewHandler.setupWindowResizeListener((isMobileView) => {
+            // Handle view change if needed
+            console.log(`View changed to: ${isMobileView ? 'Mobile' : 'Desktop'}`);
         });
     }
 
@@ -147,73 +231,19 @@ class MeasurementApp {
      */
     handleInputFocus(event) {
         const input = event.target;
-        this.showMeasurementGuide(input.dataset.measurement);
-        this.validator.clearSingleError(input.id);
-    }
-
-    /**
-     * Handle input blur
-     */
-    handleInputBlur(event) {
-        this.validator.validateField(event.target.id);
-    }
-
-    /**
-     * Setup eye icon listeners for mobile guide
-     */
-    setupEyeIconListeners() {
-        const eyeIcons = document.querySelectorAll('.measurement-label .fa-eye, .measurement-label .fa-regular.fa-eye');
+        const measurementKey = input.dataset.measurement;
         
-        eyeIcons.forEach(icon => {
-            icon.addEventListener('click', (e) => {
-                this.handleEyeIconClick(e);
-            });
-        });
-    }
-
-    /**
-     * Handle eye icon click
-     */
-    handleEyeIconClick(event) {
-        event.stopPropagation();
-        
-        const labelElement = event.target.closest('.measurement-label');
-        if (!labelElement) return;
-        
-        const formGroup = labelElement.closest('.form-group');
-        if (!formGroup) return;
-        
-        const inputElement = formGroup.querySelector('.measurement-input');
-        if (!inputElement) return;
-        
-        const measurementKey = inputElement.dataset.measurement;
-        if (measurementKey && this.isMobileView) {
-            this.showFloatingGuide(measurementKey);
+        if (measurementKey) {
+            this.viewHandler.showMeasurementGuide(measurementKey);
         }
-    }
-
-    /**
-     * Setup client name validation
-     */
-    setupClientNameValidation() {
-        const nameField = document.getElementById('client-name');
-        if (!nameField) return;
-
-        // Debounced input validation
-        nameField.addEventListener('input', (e) => {
-            this.debouncedValidation('client-name');
-        });
         
-        // Validate on blur
-        nameField.addEventListener('blur', () => {
-            this.validator.validateField('client-name');
-        });
+        this.validator.clearSingleError(input.id);
     }
 
     /**
      * Debounced field validation
      */
-    debouncedValidation(fieldId) {
+    debounceValidation(fieldId) {
         clearTimeout(this.debounceTimers.get(fieldId));
         
         const timer = setTimeout(() => {
@@ -224,218 +254,20 @@ class MeasurementApp {
     }
 
     /**
-     * Setup floating guide listeners
-     */
-    setupFloatingGuideListeners() {
-        this.setupGuideCloseListeners();
-        this.setupEscapeKeyListener();
-    }
-
-    /**
-     * Setup guide close listeners
-     */
-    setupGuideCloseListeners() {
-        const closeBtn = document.getElementById('close-floating-guide');
-        const overlay = document.getElementById('floating-guide-overlay');
-        
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => this.hideFloatingGuide());
-        }
-        
-        if (overlay) {
-            overlay.addEventListener('click', () => this.hideFloatingGuide());
-        }
-    }
-
-    /**
-     * Setup escape key listener
-     */
-    setupEscapeKeyListener() {
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                this.hideFloatingGuide();
-            }
-        });
-    }
-
-    /**
-     * Setup window resize listener
-     */
-    setupWindowResizeListener() {
-        window.addEventListener('resize', () => {
-            this.isMobileView = this.checkMobileView();
-        });
-    }
-
-    /**
-     * Bind event listeners for window functions
-     */
-    bindEventListeners() {
-        window.handleSaveMeasurements = () => this.handleSaveMeasurements();
-        window.handleResetForm = () => this.handleResetForm();
-    }
-
-    /**
-     * Display measurement guide
-     */
-    showMeasurementGuide(measurementKey) {
-        const measurement = getMeasurement(this.manager.gender, measurementKey);
-        if (!measurement) return;
-
-        // Update guide text
-        this.updateGuideText(measurement);
-        
-        // Update desktop guide image if needed
-        if (!this.isMobileView && this.manager) {
-            this.manager.updateDesktopGuideImage?.(measurementKey);
-        }
-    }
-
-    /**
-     * Update guide text elements for both desktop and mobile
-     */
-    updateGuideText(measurement) {
-        const elements = {
-            'measure-object': measurement.object,
-            'measure-definition': measurement.definition,
-            'measure-description': measurement.description,
-            // ADD THESE FOR FLOATING GUIDE
-            'floating-measure-object': measurement.object,
-            'floating-measure-definition': measurement.definition,
-            'floating-measure-description': measurement.description
-        };
-
-        Object.entries(elements).forEach(([id, content]) => {
-            const element = document.getElementById(id);
-            if (element) {
-                const label = id.includes('object') ? 'Object' : 
-                            id.includes('definition') ? 'Definition' : 'Description';
-                element.innerHTML = `<strong>${label}:</strong> ${content}`;
-            }
-        });
-    }
-
-    /**
-     * Show floating guide for mobile
-     */
-    showFloatingGuide(measurementKey) {
-        const measurement = getMeasurement(this.manager.gender, measurementKey);
-        if (!measurement) return;
-        
-        // Update guide text
-        this.showMeasurementGuide(measurementKey);
-        
-        // Show overlay and guide
-        this.showFloatingGuideElements();
-        
-        // Update mobile guide image
-        this.updateMobileGuideImage(measurementKey);
-    }
-
-    /**
-     * Show floating guide elements
-     */
-    showFloatingGuideElements() {
-        const overlay = document.getElementById('floating-guide-overlay');
-        const floatingGuide = document.getElementById('floating-measurement-guide');
-        
-        if (overlay) overlay.style.display = 'block';
-        if (floatingGuide) floatingGuide.style.display = 'flex';
-    }
-
-    /**
-     * Hide floating guide
-     */
-    hideFloatingGuide() {
-        const overlay = document.getElementById('floating-guide-overlay');
-        const floatingGuide = document.getElementById('floating-measurement-guide');
-        
-        if (overlay) overlay.style.display = 'none';
-        if (floatingGuide) floatingGuide.style.display = 'none';
-    }
-
-    /**
-     * Update mobile guide image
-     */
-    updateMobileGuideImage(measurementKey) {
-        const measurement = getMeasurement(this.manager.gender, measurementKey);
-        if (!measurement || !measurement.imageMobile) return;
-        
-        const floatingGuideImages = document.querySelector('.measurement-guide-floating .floating-guide-images');
-        if (!floatingGuideImages) return;
-        
-        // Clear existing images
-        floatingGuideImages.innerHTML = '';
-        
-        // Create and add the new image
-        const img = document.createElement('img');
-        img.src = measurement.imageMobile;
-        img.alt = measurement.object || 'Measurement Guide';
-        img.className = 'active';
-        img.style.maxWidth = '100%';
-        img.style.maxHeight = '100%';
-        img.style.objectFit = 'contain';
-        
-        floatingGuideImages.appendChild(img);
-    }
-
-    /**
-     * Show floating guide for mobile
-     */
-    showFloatingGuide(measurementKey) {
-        const measurement = getMeasurement(this.manager.gender, measurementKey);
-        if (!measurement) return;
-        
-        // Update guide text
-        this.showMeasurementGuide(measurementKey);
-        
-        // Update mobile guide image BEFORE showing
-        this.updateMobileGuideImage(measurementKey);
-        
-        // Show overlay and guide
-        this.showFloatingGuideElements();
-    }
-
-    /**
      * Handle save measurements
      */
     handleSaveMeasurements() {
         if (!this.validator.validateAll()) {
-            this.showValidationError();
+            this.viewHandler.focusFirstErrorField();
+            this.viewHandler.showValidationErrorAlert();
             return;
         }
 
         const formData = this.manager.getFormData();
-        this.showSuccessMessage(formData);
+        this.viewHandler.showSuccessMessage(formData);
         
         // Log data (in production, send to server)
         console.log('Measurement data:', JSON.stringify(formData, null, 2));
-    }
-
-    /**
-     * Show validation error
-     */
-    showValidationError() {
-        const firstError = document.querySelector('.error');
-        if (firstError) {
-            firstError.focus();
-        }
-        alert('Please fill in all required fields correctly. Invalid fields are highlighted in red.');
-    }
-
-    /**
-     * Show success message
-     */
-    showSuccessMessage(formData) {
-        const message = `
-            Measurements saved successfully!
-            
-            Client: ${formData.name}
-            Date: ${formData.date}
-            Total Measurements: ${Object.keys(formData.measurements).length}
-        `;
-        
-        alert(message);
     }
 
     /**
@@ -443,21 +275,41 @@ class MeasurementApp {
      */
     handleResetForm() {
         if (confirm('Are you sure you want to reset all measurements? This action cannot be undone.')) {
-            this.manager.resetAll();
+            // Clear form
+            const form = document.getElementById('measurement-form');
+            if (form) form.reset();
+            
+            // Reset manager data
+            this.manager.resetFormData();
+            
+            // Reset date field
+            this.manager.setupDateField();
+            
+            // Clear validation errors
             this.validator.clearErrors();
-            this.hideFloatingGuide();
+            
+            // Hide floating guide
+            this.viewHandler.hideFloatingGuide();
         }
+    }
+
+    /**
+     * Bind global functions for HTML onclick handlers
+     */
+    bindGlobalFunctions() {
+        window.handleSaveMeasurements = () => this.handleSaveMeasurements();
+        window.handleResetForm = () => this.handleResetForm();
     }
 
     /**
      * Log initialization message
      */
     logInitialization() {
-        console.log(`Measurement App initialized for ${this.manager.gender} (${this.isMobileView ? 'Mobile/Tablet' : 'Desktop'} view)`);
+        console.log(`Measurement App initialized for ${this.manager.gender}`);
     }
 }
 
 // Initialize application when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    measurementApp = new MeasurementApp();
+    new MeasurementApp();
 });
