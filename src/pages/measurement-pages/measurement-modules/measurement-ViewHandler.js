@@ -46,10 +46,34 @@ export class ViewHandler {
         
         if (!guideImage || !defaultGuide) return;
         
-        // Image data would come from DataMaps in a real implementation
-        // For now, we'll keep the image setup but remove business logic
-        guideImage.style.display = 'block';
-        defaultGuide.style.display = 'none';
+        // Get the appropriate gender image from measurementDataMap
+        // You need to import getGenderImage from DataMaps or similar
+        const genderImage = this.getGenderImage();
+        
+        if (genderImage) {
+            guideImage.src = genderImage;
+            guideImage.style.display = 'block';
+            defaultGuide.style.display = 'none';
+        } else {
+            // If no gender image found, show default placeholder
+            guideImage.style.display = 'none';
+            defaultGuide.style.display = 'flex';
+        }
+    }
+
+    /**
+     * Get the appropriate gender image for desktop view
+     * @returns {string} Image URL for the gender
+     */
+    getGenderImage() {
+        // This should reference your data map or configuration
+        // Based on CODE 2, the images are in measurementDataMap.gender
+        const genderImages = {
+            male: "/src/images/male-desktop.png",
+            female: "/src/images/female-desktop.png"
+        };
+        
+        return genderImages[this.gender] || null;
     }
 
     /**

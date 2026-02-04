@@ -57,6 +57,13 @@ class MeasurementApp {
      */
     setupInitialState() {
         this.manager.setupDateField();
+        
+        // Force initial image load for desktop view
+        if (!this.viewHandler.isMobileView) {
+            setTimeout(() => {
+                this.viewHandler.setupDesktopGuideImage();
+            }, 100);
+        }
     }
 
     /**
