@@ -1,22 +1,16 @@
 /**
- * measurement-Validation.js
+ * measurement-validation.js
  * Handles all form validation logic with comprehensive error checking
  * Uses data attributes from HTML for dynamic validation rules
- * REFACTORED: Improved code structure and readability
  */
+
+import { MEASUREMENT_CONFIG, CSS_CLASSES } from './measurement-Constants.js';
 
 export class MeasurementValidator {
     constructor(formElement) {
         this.form = formElement;
         this.gender = formElement.dataset.gender;
         this.errors = new Set();
-        this.init();
-    }
-
-    /**
-     * Initialize validator
-     */
-    init() {
         this.setupValidationRules();
     }
 
@@ -27,14 +21,11 @@ export class MeasurementValidator {
         this.rules = {
             'client-name': {
                 required: true,
-                // message: 'Name is required'
-                message: ' '
-
+                message: MEASUREMENT_CONFIG.messages.requiredField
             },
             'save-date': {
                 required: true,
-                //message: 'Date is required'
-                message: ' '
+                message: MEASUREMENT_CONFIG.messages.requiredField
             }
         };
 
@@ -42,14 +33,12 @@ export class MeasurementValidator {
         if (this.gender === 'male') {
             this.rules['size-number'] = {
                 required: true,
-                //message: 'Size number is required'
-                message: ' '
+                message: MEASUREMENT_CONFIG.messages.requiredField
             };
         } else {
             this.rules['cupSize'] = {
                 required: true,
-                //message: 'Cup size is required'
-                message: ' '
+                message: MEASUREMENT_CONFIG.messages.requiredField
             };
         }
     }
@@ -70,7 +59,7 @@ export class MeasurementValidator {
         });
 
         // Validate all measurement inputs
-        const measurementInputs = this.form.querySelectorAll('.measurement-input');
+        const measurementInputs = this.form.querySelectorAll(`.${CSS_CLASSES.measurementInput}`);
         measurementInputs.forEach(input => {
             if (!this.validateMeasurementInput(input)) {
                 allValid = false;
@@ -97,20 +86,20 @@ export class MeasurementValidator {
 
         // Check if empty
         if (input.value === '' || isNaN(value)) {
-            this.addFieldError(measurementId, ' ');
+            this.addFieldError(measurementId, MEASUREMENT_CONFIG.messages.requiredField);
             return false;
         }
 
         // Check range
         if (value < min || value > max) {
-            this.addFieldError(measurementId, `${min}-${max}`);
+            this.addFieldError(measurementId, `${MEASUREMENT_CONFIG.messages.invalidRange}: ${min}-${max}`);
             return false;
         }
 
         // Check decimal places
         const decimalCount = (input.value.split('.')[1] || '').length;
         if (decimalCount > 1) {
-            this.addFieldError(measurementId, 'Only one decimal place allowed');
+            this.addFieldError(measurementId, MEASUREMENT_CONFIG.messages.decimalPlaces);
             return false;
         }
 
@@ -140,12 +129,12 @@ export class MeasurementValidator {
         }
 
         // Handle different input types
-        if (input.classList.contains('measurement-input')) {
+        if (input.classList.contains(CSS_CLASSES.measurementInput)) {
             return this.validateMeasurementInput(input);
         }
 
         // Mark valid fields
-        input.classList.add('valid');
+        input.classList.add(CSS_CLASSES.valid);
         return true;
     }
 
@@ -165,12 +154,12 @@ export class MeasurementValidator {
         }
         
         if (inputElement) {
-            inputElement.classList.add('error');
-            inputElement.classList.remove('valid');
+            inputElement.classList.add(CSS_CLASSES.error);
+            inputElement.classList.remove(CSS_CLASSES.valid);
             
             // Handle select wrapper styling
             if (inputElement.tagName === 'SELECT' && inputElement.parentElement) {
-                inputElement.parentElement.classList.add('error');
+                inputElement.parentElement.classList.add(CSS_CLASSES.error);
             }
         }
     }
@@ -188,7 +177,7 @@ export class MeasurementValidator {
         }
         
         if (inputElement) {
-            inputElement.classList.remove('error');
+            inputElement.classList.remove(CSS_CLASSES.error);
         }
         
         this.errors.delete(fieldId);
@@ -207,9 +196,9 @@ export class MeasurementValidator {
         
         // Clear error classes
         this.form.querySelectorAll('input, select').forEach(input => {
-            input.classList.remove('error', 'valid');
+            input.classList.remove(CSS_CLASSES.error, CSS_CLASSES.valid);
             if (input.parentElement) {
-                input.parentElement.classList.remove('error');
+                input.parentElement.classList.remove(CSS_CLASSES.error);
             }
         });
     }
@@ -223,7 +212,7 @@ export class MeasurementValidator {
         if (errorElement) {
             errorElement.textContent = '';
         }
-        input.classList.remove('error', 'valid');
+        input.classList.remove(CSS_CLASSES.error, CSS_CLASSES.valid);
     }
 
     /**
@@ -231,8 +220,8 @@ export class MeasurementValidator {
      * @param {HTMLInputElement} input - Input element
      */
     markInputAsValid(input) {
-        input.classList.add('valid');
-        input.classList.remove('error');
+        input.classList.add(CSS_CLASSES.valid);
+        input.classList.remove(CSS_CLASSES.error);
         
         // Ensure error message is cleared
         const errorElement = document.getElementById(`${input.id}-error`);
