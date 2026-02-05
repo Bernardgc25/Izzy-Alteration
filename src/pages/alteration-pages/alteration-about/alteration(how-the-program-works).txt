@@ -1,92 +1,82 @@
-How the Program Works - Flow Explanation (alteration pages)
-1. Module Structure
-    *data-maps.js: Contains all pricing data in a structured format. This is the single source of truth for prices and details.
+┌─────────────────────────────────────────────────────────┐
+│                    alteration-Main.js                    │
+│   (Orchestrator - Initializes and coordinates all)      │
+└─────────────┬───────────────────────────────────────────┘
+              │
+              ▼
+┌─────────────────────────────────────────────────────────┐
+│                 alteration-StateManager.js               │
+│      (Single source of truth - manages application state)│
+└─────────────┬───────────────────────────────────────────┘
+              │
+    ┌─────────┴─────────┐
+    ▼                   ▼
+┌─────────────────┐ ┌─────────────────┐
+│ alteration-     │ │ alteration-     │
+│ PriceCalculator │ │ DOMRenderer.js  │
+│ (Pure functions)│ │ (DOM updates)   │
+└─────────┬───────┘ └────────┬────────┘
+          │                   │
+          └─────────┬─────────┘
+                    │
+                    ▼
+┌─────────────────────────────────────────────────────────┐
+│                alteration-EventManager.js                │
+│       (Handles user interactions and DOM events)         │
+└─────────────────────────────────────────────────────────┘
+                    │
+                    ▼
+┌─────────────────────────────────────────────────────────┐
+│                alteration-CartManager.js                 │
+│            (Handles shopping cart logic)                │
+└─────────────────────────────────────────────────────────┘
 
-    *alteration-manager.js: Contains the core business logic for price calculation, event handling, and display updates. This is reusable across all HTML files.
 
-    *main.js: The entry point that initializes the system and sets up global functions. Links the HTML to the modules.
+Program Flow
+1.Initialization (alteration-Main.js):
+    *DOMContentLoaded event triggers app creation
+    *All modules are instantiated with proper dependencies
+    *Event listeners are attached
 
-2. Initialization Flow
-    1.When the DOM loads, main.js imports the data maps and alteration manager.
+2.User Interaction:
+    *User selects an alteration → EventManager.handleAlterationChange()
+    *User selects difficulty → EventManager.handleDifficultyChange()
 
-    2.initializeAlterationManager() is called with the data maps.
+3.State Update Flow:
+    (flow of program)
+    User Action → EventManager → StateManager.setState() → 
+    Notify Listeners → DOMRenderer.render()
 
-    3.The manager finds all select elements in the current HTML page.
+4.Price Calculation:
+    (flow of program)``
+    EventManager → PriceCalculator.calculatePrice() → 
+    Update State → DOMRenderer
 
-    4.Event listeners are attached to the select elements.
+5.Cart Operations:
+    (flow of program)
+    *Add" button → CartManager.addItem()
+    *Clear" button → StateManager.reset()
 
-3. User Interaction Flow
-    1.User selects an alteration type:
 
-        *The system immediately clears any other alteration selects (ensuring only one selection).
+Key Benefits of This Architecture
+1.Single Responsibility Principle: Each module has one clear purpose
+2.Testability: Pure functions in PriceCalculator, mockable dependencies
+3.Maintainability: Changes isolated to specific modules
+4.Upgradability: New features can be added as separate modules
+5.Reusability: Modules can be used independently
+6.State Management: Centralized state prevents scattered logic
+7.Dependency Injection: Easy to mock for testing
 
-        *Stores the selected alteration value.
+Testing Strategy
+    *Each module can be tested independently:
+    *PriceCalculator: Unit tests for calculation logic
+    *StateManager: Unit tests for state transitions
+    *DOMRenderer: Integration tests for DOM updates
+    *EventManager: Mock tests for event handling
 
-        *If a difficulty is already selected, calculates and displays the price.
-
-        *Updates the display elements according to the rules.
-
-    2.User selects a difficulty level:
-
-        *Stores the selected difficulty.
-
-        *If an alteration is already selected, calculates and displays the price.
-
-        *Updates display elements according to the level-specific rules.
-
-4. Price Calculation Flow
-    1.When both alteration and difficulty are selected:
-
-        *Extracts the main category from the alteration value (e.g., "female-bottom" from "female-bottom-hem-skirt...").
-
-        *Looks up the price in the alterationMaps object.
-
-        *Returns the price if found, or 0 if not found.
-
-5. Display Update Logic
-    1.Price > 0:
-
-        *Shows the price formatted as "$XX"
-
-        *Shows the note about pricing complexity
-
-        *Shows the alteration detail from data-maps
-
-        *For intermediate/difficult levels, adds customer request notes
-
-        *Shows the order summary with type and level
-
-    2.Price = 0 or not found:
-
-        *Shows "n.a" for price
-
-        *Clears all other display fields
-
-6. Button Functions
-    *Add Button: For now, shows an alert. In the future, this will integrate with a shopping cart system.
-
-    *Clear Button: Resets all selects and clears all display fields.
-
-7. Key Design Principles
-    *Separation of Concerns: Data, logic, and presentation are separated.
-
-    *Scalability: New alteration types can be added to data-maps without changing the logic.
-
-    *Reusability: The same code works across all 7 HTML files.
-
-    *Maintainability: Clear, commented code with single responsibility functions.
-
-8. Future Updates
-    To add new alteration types:
-
-        1.Add HTML options in the appropriate file.
-
-        2.Add corresponding entries in data-maps.js.
-
-        3.No changes needed to JavaScript logic files.
-
-    To modify pricing logic:
-
-        1.Update only the alteration-manager.js file.
-
-        2.All HTML files automatically get the updated logic.
+This architecture makes the codebase more maintainable, testable, and ready for future enhancements like:
+    *Adding new alteration categories
+    *Implementing a shopping cart UI
+    *Adding user authentication
+    *Saving calculation history
+    *Exporting price quotes
