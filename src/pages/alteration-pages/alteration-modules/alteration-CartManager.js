@@ -5,12 +5,13 @@
 class CartManager {
     constructor() {
         this.cart = [];
+        this.nextId = 1; // Add counter
     }
 
     // Add item to cart
     addItem(description, price) {
         const item = {
-            id: Date.now(),
+            id: this.nextId++, // Use and increment counter
             description,
             price,
             timestamp: new Date().toISOString()

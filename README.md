@@ -20,10 +20,14 @@ Izzy-Alteration
 │  │  ├─ services.css
 │  │  └─ signup.css
 │  ├─ images
-│  │  ├─ female-chart.jpg
-│  │  ├─ female.png
-│  │  ├─ male-chart.jpg
-│  │  └─ male.png
+│  │  ├─ female-(chart)-tablet-mobile.png
+│  │  ├─ female-back-tablet-mobile.png
+│  │  ├─ female-desktop.png
+│  │  ├─ female-front-tablet-mobile.png
+│  │  ├─ male-(chart)-tablet-mobile.png
+│  │  ├─ male-back-tablet-mobile.png
+│  │  ├─ male-desktop.png
+│  │  └─ male-front-tablet-mobile.png
 │  ├─ js
 │  │  ├─ account.js
 │  │  ├─ add-service.js
@@ -39,8 +43,10 @@ Izzy-Alteration
 │     ├─ add-service.html
 │     ├─ alteration-pages
 │     │  ├─ alteration-about
+│     │  │  ├─ (debug)alteration-modules.txt
 │     │  │  ├─ alteration(how-the-program-works).txt
 │     │  │  ├─ alteration-functionality-prompt.txt
+│     │  │  ├─ alteration-modules.txt
 │     │  │  └─ alteration-responsive-page.txt
 │     │  ├─ alteration-female-bottom.html
 │     │  ├─ alteration-female-dress.html
@@ -50,22 +56,29 @@ Izzy-Alteration
 │     │  ├─ alteration-male-suits.html
 │     │  ├─ alteration-male-top.html
 │     │  ├─ alteration-modules
+│     │  │  ├─ alteration-CartManager.js
+│     │  │  ├─ alteration-DOMRenderer.js
 │     │  │  ├─ alteration-DataMaps.js
+│     │  │  ├─ alteration-EventManager.js
 │     │  │  ├─ alteration-Main.js
-│     │  │  └─ alteration-Manager.js
+│     │  │  ├─ alteration-PriceCalculator.js
+│     │  │  └─ alteration-StateManager.js
 │     │  └─ alteration-repair.html
 │     ├─ index.html
 │     ├─ login.html
 │     ├─ measurement-pages
 │     │  ├─ measurement-about
-│     │  │  ├─ measurement(how to debug prompt).txt
+│     │  │  ├─ (debug)floating-window-measurement.txt
+│     │  │  ├─ (debug)measurement-split-modules.txt
 │     │  │  ├─ measurement(how-the-program-works).txt
-│     │  │  └─ measurement-functionality-prompt.txt
+│     │  │  ├─ measurement-functionality-prompt.txt
+│     │  │  └─ measurement-modules.txt
 │     │  ├─ measurement-modules
 │     │  │  ├─ measurement-DataMaps.js
 │     │  │  ├─ measurement-Main.js
 │     │  │  ├─ measurement-Manager.js
-│     │  │  └─ measurement-Validation.js
+│     │  │  ├─ measurement-Validator.js
+│     │  │  └─ measurement-ViewHandler.js
 │     │  ├─ measurements-female.html
 │     │  ├─ measurements-male.html
 │     │  └─ sample.html
@@ -73,16 +86,7 @@ Izzy-Alteration
 │     ├─ services.html
 │     └─ signup.html
 └─ test
-   └─ unit
-      ├─ .babelrc
-      ├─ alteration-modules-tests
-      │  ├─ alteration-DataMaps.test.js
-      │  ├─ alteration-Main.test.js
-      │  ├─ alteration-Manager.test.js
-      │  ├─ alteration-Test-Debugging.txt
-      │  └─ alteration-Test-Instruction.txt
-      ├─ measurement-modules-tests
-      ├─ mocha-setup.js
-      └─ setup.js
+   ├─ alteration-module-tests
+   └─ measurement-module-tests
 
 ```
