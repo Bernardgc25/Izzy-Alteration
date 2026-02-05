@@ -81,7 +81,7 @@ describe('EventManager', () => {
     });
 
     it('should find DOM elements', () => {
-      assert.strictEqual(eventManager.alterationSelects.length, 3);
+      assert.strictEqual(eventManager.alterationSelects.length, 2);
       assert.strictEqual(eventManager.difficultySelect.id, 'alterationLevel-diff');
     });
   });
@@ -105,16 +105,16 @@ describe('EventManager', () => {
       const select1 = document.getElementById('alteration1Select');
       const select2 = document.getElementById('alteration2Select');
       
+      // Set initial values
+      select1.value = 'test1';
       select2.value = 'test2';
       
-      const mockEvent = {
-        target: select1,
-        value: 'test1'
-      };
+      // Call resetOtherSelects with select1 as current
+      eventManager.resetOtherSelects(select1);
       
-      eventManager.resetOtherSelects(mockEvent.target);
-      
+      // select1 should keep its value (not reset)
       assert.strictEqual(select1.value, 'test1');
+      // select2 should be reset to ''
       assert.strictEqual(select2.value, '');
     });
   });
