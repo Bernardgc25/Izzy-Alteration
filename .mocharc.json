@@ -1,0 +1,10 @@
+{
+  "extension": ["js"],
+  "spec": "test/**/*.test.js",
+  "reporter": "spec",
+  "timeout": 5000,
+  "node-option": [
+    "experimental-vm-modules",
+    "loader=testdouble"
+  ]
+}
