@@ -2,13 +2,13 @@
 **CODE 1 - File: **  
 
 [               
-<label for="alterationLevel">Level of difficulty:</label>
+       <label for="alterationLevel">Level of difficulty:</label>
                     <select id="alterationLevel-diff" class="alteration-select">
                         <option value="" data-link="" hidden></option>
                         <option value="simple" data-link="">simple</option>
                         <option value="intermediate" data-link="">intermediate</option>
                         <option value="difficult" data-link="">difficult</option>
-                    </select>
+                    </select>         
 ]
 
 
