@@ -6,7 +6,7 @@ import { MeasurementValidator } from './measurement-Validator.js';
 import { MeasurementManager } from './measurement-Manager.js';
 import { ViewHandler } from './measurement-ViewHandler.js';
 
-class MeasurementApp {
+export class MeasurementApp {
     constructor() {
         this.manager = null;
         this.validator = null;
