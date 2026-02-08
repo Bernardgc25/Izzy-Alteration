@@ -87,6 +87,18 @@ Izzy-Alteration
 │     └─ signup.html
 └─ test
    ├─ alteration-module-tests
+   │  ├─ .mocharc.json
+   │  ├─ AlterationApp.test.js
+   │  ├─ CartManager.test.js
+   │  ├─ DOMRenderer.test.js
+   │  ├─ EventManager.test.js
+   │  ├─ PriceCalculator.test.js
+   │  ├─ StateManager.test.js
+   │  ├─ alteration-Test(about)
+   │  │  ├─ (debug)alteration-test-unit.txt
+   │  │  ├─ (how to use)alteration-unit-test.txt
+   │  │  └─ alteration-unit-tests-prompt.txt
+   │  └─ package.json
    └─ measurement-module-tests
 
 ```
