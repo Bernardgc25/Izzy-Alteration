@@ -1,5 +1,6 @@
-# from root directory, go to specific test directory: 
-cd test/measurement-module-tests
+# from root directory: 
+Izzy-Alteration
 
 #run alteration module tests: 
-npm test
+npm run test:measurement
+    
