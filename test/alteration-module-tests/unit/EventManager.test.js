@@ -1,7 +1,8 @@
 // test/alteration-module-tests/EventManager.test.js
 import assert from 'assert';
 import { JSDOM } from 'jsdom';
-import EventManager from '../../src/pages/alteration-pages/alteration-modules/alteration-EventManager.js';
+import { describe, it, beforeEach } from 'mocha';
+import EventManager from '../../../src/pages/alteration-pages/alteration-modules/alteration-EventManager.js';
 
 // Mock dependencies
 class MockStateManager {

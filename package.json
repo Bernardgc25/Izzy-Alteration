@@ -1,9 +1,10 @@
 {
   "scripts": {
     "test": "mocha",
-    "test:alteration": "cd test/alteration-module-tests && npm test",
-    "test:measurement": "cd test/measurement-module-tests && npm test",
-    "test:watch": "mocha --watch test/alteration-module-tests/*.test.js"
+    "test:alteration": "mocha test/alteration-module-tests/unit/*.test.js --config test/alteration-module-tests/.mocharc.json",
+    "test:alteration:watch": "mocha --watch test/alteration-module-tests/unit/*.test.js --config test/alteration-module-tests/.mocharc.json",
+    "test:measurement": "mocha test/measurement-module-tests/unit/*.test.js --config test/measurement-module-tests/.mocharc.json",
+    "test:all": "npm run test:alteration && npm run test:measurement"
   },
   "type": "module",
   "devDependencies": {

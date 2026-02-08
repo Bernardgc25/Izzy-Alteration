@@ -1,10 +1,10 @@
 {
   "extension": ["js"],
-  "spec": "*.test.js",
+  "spec": "unit/*.test.js",
   "reporter": "spec",
   "timeout": 5000,
   "node-option": [
     "experimental-vm-modules"
   ],
-  "require": ["testdouble"]
+  "loader": "testdouble"
 }

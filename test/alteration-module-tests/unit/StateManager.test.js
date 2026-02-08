@@ -1,6 +1,7 @@
 // test/alteration-module-tests/StateManager.test.js
 import assert from 'assert';
-import StateManager from '../../src/pages/alteration-pages/alteration-modules/alteration-StateManager.js';
+import { describe, it, beforeEach } from 'mocha';
+import StateManager from '../../../src/pages/alteration-pages/alteration-modules/alteration-StateManager.js';
 
 const mockAlterationMaps = {
   'test-category': {
