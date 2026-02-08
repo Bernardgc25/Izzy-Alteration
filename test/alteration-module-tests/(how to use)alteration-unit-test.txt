@@ -1,8 +1,0 @@
-# Run all tests
-npm test
-
-# Run only alteration module tests
-npm run test:alteration
-
-# Run tests in watch mode
-npm run test:watch
