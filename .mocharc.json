@@ -4,7 +4,7 @@
   "reporter": "spec",
   "timeout": 5000,
   "node-option": [
-    "experimental-vm-modules",
-    "loader=testdouble"
-  ]
+    "experimental-vm-modules"
+  ],
+  "require": ["testdouble"]
 }
