@@ -1,13 +1,11 @@
 {
-  "name": "izzy-alteration",
-  "version": "1.0.0",
   "scripts": {
-    "test": "echo \"No default tests configured. Use specific test commands.\" && exit 0",
-    "test:alteration": "cd test/alteration-module-tests && npm test",
-    "test:alteration:watch": "cd test/alteration-module-tests && npm run test:watch"
+    "test": "mocha",
+    "test:alteration": "mocha test/alteration-module-tests/*.test.js",
+    "test:watch": "mocha --watch test/alteration-module-tests/*.test.js"
   },
+  "type": "module",
   "devDependencies": {
-    "mocha": "^10.0.0",
     "testdouble": "^3.20.2"
   }
 }
