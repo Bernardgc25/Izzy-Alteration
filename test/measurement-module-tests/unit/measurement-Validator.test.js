@@ -28,7 +28,7 @@ global.window = dom.window;
 global.document = dom.window.document;
 
 // Load the module
-const { MeasurementValidator } = require('../../../../src/pages/measurement-pages/measurement-modules/measurement-Validator.js');
+const { MeasurementValidator } = require('../../../src/pages/measurement-pages/measurement-modules/measurement-Validator.js');
 
 describe('measurement-Validator.js', () => {
   let validator;

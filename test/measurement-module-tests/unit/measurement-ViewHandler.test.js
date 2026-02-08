@@ -59,13 +59,13 @@ const mockGetMeasurement = (gender, key) => {
 };
 
 // Load the module with mock
-require.cache[require.resolve('../../../../src/pages/measurement-pages/measurement-modules/measurement-DataMaps.js')] = {
+require.cache[require.resolve('../../../src/pages/measurement-pages/measurement-modules/measurement-DataMaps.js')] = {
   exports: {
     getMeasurement: mockGetMeasurement
   }
 };
 
-const { ViewHandler } = require('../../../../src/pages/measurement-pages/measurement-modules/measurement-ViewHandler.js');
+const { ViewHandler } = require('../../../src/pages/measurement-pages/measurement-modules/measurement-ViewHandler.js');
 
 describe('measurement-ViewHandler.js', () => {
   let viewHandler;

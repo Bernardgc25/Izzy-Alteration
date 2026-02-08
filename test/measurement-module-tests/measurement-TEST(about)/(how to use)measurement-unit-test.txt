@@ -1,0 +1,5 @@
+# from root directory, go to specific test directory: 
+cd test/measurement-module-tests
+
+#run alteration module tests: 
+npm test
