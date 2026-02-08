@@ -1,0 +1,2 @@
+# Run only alteration module tests
+npm run test:alteration
