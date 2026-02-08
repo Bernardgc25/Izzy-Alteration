@@ -1,6 +1,7 @@
 // test/alteration-module-tests/CartManager.test.js
 import assert from 'assert';
-import CartManager from '../../src/pages/alteration-pages/alteration-modules/alteration-CartManager.js';
+import { describe, it, beforeEach } from 'mocha';
+import CartManager from '../../../src/pages/alteration-pages/alteration-modules/alteration-CartManager.js';
 
 describe('CartManager', () => {
   let cartManager;

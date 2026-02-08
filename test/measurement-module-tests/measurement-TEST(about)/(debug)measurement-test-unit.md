@@ -1,4 +1,31 @@
-import { expect } from 'chai';
+1. fix this error:
+[
+	bernard@ubuntu:~/Documents/Izzy-Alteration$ npm run test:measurement
+
+	> test:measurement
+	> cd test && mocha measurement-module-tests/unit/**/*.test.js
+
+
+	 Exception during run: TypeError: Cannot set property navigator of #<Object> which has only a getter
+	    at file:///home/bernard/Documents/Izzy-Alteration/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:51:18
+	    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+	    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:655:26)
+	    at async formattedImport (/home/bernard/Documents/Izzy-Alteration/node_modules/mocha/lib/nodejs/esm-utils.js:9:14)
+	    at async exports.requireOrImport (/home/bernard/Documents/Izzy-Alteration/node_modules/mocha/lib/nodejs/esm-utils.js:42:28)
+	    at async exports.loadFilesAsync (/home/bernard/Documents/Izzy-Alteration/node_modules/mocha/lib/nodejs/esm-utils.js:100:20)
+	    at async singleRun (/home/bernard/Documents/Izzy-Alteration/node_modules/mocha/lib/cli/run-helpers.js:162:3)
+	    at async exports.handler (/home/bernard/Documents/Izzy-Alteration/node_modules/mocha/lib/cli/run.js:375:5)
+	bernard@ubuntu:~/Documents/Izzy-Alteration$ 
+]
+
+2. make these commands run the test in root without changing directories: 
+[
+	npm run test:measurement and npm run test:alteration
+]
+
+3. this is the measurement-ViewHandler.test.js. write and updated version: 
+[
+	import { expect } from 'chai';
 import { stub, restore, spy } from 'sinon';
 import { JSDOM } from 'jsdom';
 
@@ -47,34 +74,13 @@ global.Event = window.Event;
 global.KeyboardEvent = window.KeyboardEvent;
 global.MouseEvent = window.MouseEvent;
 
-// Properly handle navigator - don't reassign, just update properties
-// Store original global.navigator if it exists
-const originalNavigator = global.navigator;
-
-// Create navigator with proper descriptors
-if (originalNavigator) {
-  // If navigator already exists, add/update properties
-  Object.defineProperty(global, 'navigator', {
-    value: Object.create(originalNavigator),
-    writable: true,
-    configurable: true
-  });
-  
-  // Update userAgent
-  Object.defineProperty(global.navigator, 'userAgent', {
+// Set navigator by merging with existing global.navigator properties
+global.navigator = Object.create(window.navigator, {
+  userAgent: {
     value: window.navigator.userAgent,
-    writable: true,
-    configurable: true
-  });
-} else {
-  // If navigator doesn't exist, create it
-  global.navigator = Object.create(window.navigator);
-  Object.defineProperty(global.navigator, 'userAgent', {
-    value: window.navigator.userAgent,
-    writable: true,
-    configurable: true
-  });
-}
+    writable: true
+  }
+});
 
 // Mock getMeasurement function
 const mockGetMeasurement = (gender, key) => {
@@ -100,28 +106,44 @@ const mockGetMeasurement = (gender, key) => {
 };
 
 // Mock the measurement-DataMaps module
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+
+// Create a proper mock for the ES module
 const mockDataMaps = {
   getMeasurement: mockGetMeasurement
 };
 
-// Import ViewHandler directly
-import { ViewHandler } from '../../../src/pages/measurement-pages/measurement-modules/measurement-ViewHandler.js';
+// Use import assertions or dynamic import to avoid caching issues
+let ViewHandler;
+
+// Load the module
+import('../../../src/pages/measurement-pages/measurement-modules/measurement-ViewHandler.js')
+  .then(module => {
+    ViewHandler = module.ViewHandler;
+  })
+  .catch(err => {
+    console.error('Failed to import ViewHandler:', err);
+  });
 
 describe('measurement-ViewHandler.js', () => {
   let viewHandler;
   let consoleWarnStub;
   let alertStub;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    // Ensure ViewHandler is loaded
+    if (!ViewHandler) {
+      const module = await import('../../../src/pages/measurement-pages/measurement-modules/measurement-ViewHandler.js');
+      ViewHandler = module.ViewHandler;
+    }
+    
     // Stub console.warn and alert
     consoleWarnStub = stub(console, 'warn');
     alertStub = stub(window, 'alert');
     
-    // Create new instance for each test
-    viewHandler = new ViewHandler('male', true);
-    
-    // Mock the DataMaps dependency
-    viewHandler.DataMaps = mockDataMaps;
+    // Reset DOM by reassigning elements
+    global.document = dom.window.document;
   });
 
   afterEach(() => {
@@ -132,15 +154,18 @@ describe('measurement-ViewHandler.js', () => {
 
   describe('constructor and initialization', () => {
     it('should set gender and isMobileView properties', () => {
+      viewHandler = new ViewHandler('male', true);
       expect(viewHandler.gender).to.equal('male');
       expect(viewHandler.isMobileView).to.be.true;
     });
 
     it('should initialize debounceTimers map', () => {
+      viewHandler = new ViewHandler('male', false);
       expect(viewHandler.debounceTimers).to.be.instanceOf(Map);
     });
 
     it('should initialize zoomState object', () => {
+      viewHandler = new ViewHandler('male', false);
       expect(viewHandler.zoomState).to.deep.equal({
         scale: 1.0,
         x: 0,
@@ -153,6 +178,10 @@ describe('measurement-ViewHandler.js', () => {
   });
 
   describe('getGenderImage', () => {
+    beforeEach(() => {
+      viewHandler = new ViewHandler('male', false);
+    });
+
     it('should return correct image for male', () => {
       const image = viewHandler.getGenderImage();
       expect(image).to.equal('/src/images/male-desktop.png');
@@ -172,7 +201,14 @@ describe('measurement-ViewHandler.js', () => {
   });
 
   describe('showMeasurementGuide', () => {
+    beforeEach(() => {
+      viewHandler = new ViewHandler('male', false);
+    });
+
     it('should update guide text for valid measurement', () => {
+      // Mock the DataMaps module
+      viewHandler.DataMaps = { getMeasurement: mockGetMeasurement };
+      
       viewHandler.showMeasurementGuide('neck');
       
       const objectElement = document.getElementById('measure-object');
@@ -185,12 +221,18 @@ describe('measurement-ViewHandler.js', () => {
     });
 
     it('should handle invalid measurement gracefully', () => {
+      viewHandler.DataMaps = { getMeasurement: mockGetMeasurement };
+      viewHandler.showMeasurementGuide('invalid-measurement');
       // Should not throw error
-      expect(() => viewHandler.showMeasurementGuide('invalid-measurement')).not.to.throw();
     });
   });
 
   describe('showFloatingGuide', () => {
+    beforeEach(() => {
+      viewHandler = new ViewHandler('male', true); // Mobile view
+      viewHandler.DataMaps = { getMeasurement: mockGetMeasurement };
+    });
+
     it('should show floating guide for mobile view', () => {
       viewHandler.showFloatingGuide('neck');
       
@@ -225,6 +267,10 @@ describe('measurement-ViewHandler.js', () => {
   });
 
   describe('hideFloatingGuide', () => {
+    beforeEach(() => {
+      viewHandler = new ViewHandler('male', true);
+    });
+
     it('should hide floating guide elements', () => {
       // First show the guide
       document.getElementById('floating-guide-overlay').style.display = 'block';
@@ -242,6 +288,10 @@ describe('measurement-ViewHandler.js', () => {
   });
 
   describe('setupEyeIconListeners', () => {
+    beforeEach(() => {
+      viewHandler = new ViewHandler('male', true);
+    });
+
     it('should setup click listeners on eye icons', () => {
       const callback = stub();
       viewHandler.setupEyeIconListeners(callback);
@@ -271,16 +321,16 @@ describe('measurement-ViewHandler.js', () => {
   });
 
   describe('setupWindowResizeListener', () => {
+    beforeEach(() => {
+      viewHandler = new ViewHandler('male', false);
+    });
+
     it('should trigger callback when view changes', (done) => {
       const callback = stub();
       viewHandler.setupWindowResizeListener(callback);
       
-      // Simulate mobile view by changing window size
-      Object.defineProperty(window, 'innerWidth', {
-        writable: true,
-        configurable: true,
-        value: 400
-      });
+      // Simulate mobile view
+      Object.defineProperty(window, 'innerWidth', { value: 800, writable: true });
       
       window.dispatchEvent(new Event('resize'));
       
@@ -294,6 +344,10 @@ describe('measurement-ViewHandler.js', () => {
   });
 
   describe('setupEscapeKeyListener', () => {
+    beforeEach(() => {
+      viewHandler = new ViewHandler('male', false);
+    });
+
     it('should call callback on escape key press', () => {
       const callback = stub();
       viewHandler.setupEscapeKeyListener(callback);
@@ -316,6 +370,10 @@ describe('measurement-ViewHandler.js', () => {
   });
 
   describe('setupPrintButtonListener', () => {
+    beforeEach(() => {
+      viewHandler = new ViewHandler('male', false);
+    });
+
     it('should setup print button listener', () => {
       const callback = stub();
       viewHandler.setupPrintButtonListener(callback);
@@ -336,22 +394,25 @@ describe('measurement-ViewHandler.js', () => {
       printButton.click();
       
       expect(alertStub.calledOnce).to.be.true;
-      expect(alertStub.firstCall.args[0]).to.equal('Popup blocked');
+      expect(alertStub.calledWith('Popup blocked')).to.be.true;
     });
   });
 
   describe('alert and message methods', () => {
+    beforeEach(() => {
+      viewHandler = new ViewHandler('male', false);
+    });
+
     it('should show alert message', () => {
       viewHandler.showAlert('Test message');
       expect(alertStub.calledOnce).to.be.true;
-      expect(alertStub.firstCall.args[0]).to.equal('Test message');
+      expect(alertStub.calledWith('Test message')).to.be.true;
     });
 
     it('should show validation error alert', () => {
       viewHandler.showValidationErrorAlert();
       expect(alertStub.calledOnce).to.be.true;
-      const expectedMessage = 'Please fill in all required fields correctly. Invalid fields are highlighted in red.';
-      expect(alertStub.firstCall.args[0]).to.equal(expectedMessage);
+      expect(alertStub.calledWith('Please fill in all required fields correctly. Invalid fields are highlighted in red.')).to.be.true;
     });
 
     it('should show success message', () => {
@@ -373,17 +434,18 @@ describe('measurement-ViewHandler.js', () => {
   });
 
   describe('focusFirstErrorField', () => {
+    beforeEach(() => {
+      viewHandler = new ViewHandler('male', false);
+    });
+
     it('should focus on first error field', () => {
-      // Create test elements
-      const container = document.createElement('div');
       const input1 = document.createElement('input');
-      input1.className = 'measurement-input error';
+      input1.className = 'error';
       const input2 = document.createElement('input');
-      input2.className = 'measurement-input error';
+      input2.className = 'error';
       
-      container.appendChild(input1);
-      container.appendChild(input2);
-      document.body.appendChild(container);
+      document.body.appendChild(input1);
+      document.body.appendChild(input2);
       
       const focusSpy = spy(input1, 'focus');
       
@@ -392,7 +454,8 @@ describe('measurement-ViewHandler.js', () => {
       expect(focusSpy.calledOnce).to.be.true;
       
       // Cleanup
-      document.body.removeChild(container);
+      document.body.removeChild(input1);
+      document.body.removeChild(input2);
     });
 
     it('should handle no error fields gracefully', () => {
@@ -400,3 +463,143 @@ describe('measurement-ViewHandler.js', () => {
     });
   });
 });
+]
+
+
+4. here is the location of root package.json file: /Izzy-Alteration/package.json:
+[
+{
+  "scripts": {
+    "test": "mocha",
+    "test:alteration": "cd test && mocha alteration-module-tests/unit/**/*.test.js",
+    "test:alteration:watch": "cd test && mocha --watch alteration-module-tests/unit/**/*.test.js",
+    "test:measurement": "cd test && mocha measurement-module-tests/unit/**/*.test.js",
+    "test:measurement:watch": "cd test && mocha --watch measurement-module-tests/unit/**/*.test.js",
+    "test:all": "npm run test:alteration && npm run test:measurement"
+  },
+  "type": "module",
+  "devDependencies": {
+    "chai": "^4.5.0",
+    "jsdom": "^22.1.0",
+    "jsdom-global": "^3.0.2",
+    "mocha": "^10.8.2",
+    "sinon": "^15.2.0",
+    "testdouble": "^3.20.2"
+  }
+}
+]
+
+
+5. this is the folder structure of the project:
+[
+Izzy-Alteration
+├─ Izzy-Alteration
+│  └─ test
+├─ about
+│  ├─ deepseek
+│  │  └─ alteration-female.txt
+│  └─ measurements-about.txt
+├─ package-lock.json
+├─ package.json
+├─ src
+│  ├─ css
+│  │  ├─ account-menu.css
+│  │  ├─ add-service.css
+│  │  ├─ alteration-female.css
+│  │  ├─ alteration.css
+│  │  ├─ index.css
+│  │  ├─ login.css
+│  │  ├─ measurements.css
+│  │  ├─ order-history.css
+│  │  ├─ services.css
+│  │  └─ signup.css
+│  ├─ images
+│  │  ├─ female-(chart)-tablet-mobile.png
+│  │  ├─ female-back-tablet-mobile.png
+│  │  ├─ female-desktop.png
+│  │  ├─ female-front-tablet-mobile.png
+│  │  ├─ male-(chart)-tablet-mobile.png
+│  │  ├─ male-back-tablet-mobile.png
+│  │  ├─ male-desktop.png
+│  │  └─ male-front-tablet-mobile.png
+│  ├─ js
+│  │  ├─ account.js
+│  │  ├─ add-service.js
+│  │  ├─ alteration-female.js
+│  │  ├─ alteration-price-calculator.js
+│  │  ├─ index.js
+│  │  ├─ login.js
+│  │  ├─ order-history.js
+│  │  ├─ services.js
+│  │  └─ signup.js
+│  └─ pages
+│     ├─ account-menu.html
+│     ├─ add-service.html
+│     ├─ alteration-pages
+│     │  ├─ alteration-about
+│     │  │  ├─ (debug)alteration-modules.txt
+│     │  │  ├─ alteration(how-the-program-works).txt
+│     │  │  ├─ alteration-functionality-prompt.txt
+│     │  │  ├─ alteration-modules.txt
+│     │  │  └─ alteration-responsive-page.txt
+│     │  ├─ alteration-female-bottom.html
+│     │  ├─ alteration-female-dress.html
+│     │  ├─ alteration-female-jacket.html
+│     │  ├─ alteration-female-top.html
+│     │  ├─ alteration-male-bottom.html
+│     │  ├─ alteration-male-suits.html
+│     │  ├─ alteration-male-top.html
+│     │  ├─ alteration-modules
+│     │  │  ├─ alteration-CartManager.js
+│     │  │  ├─ alteration-DOMRenderer.js
+│     │  │  ├─ alteration-DataMaps.js
+│     │  │  ├─ alteration-EventManager.js
+│     │  │  ├─ alteration-Main.js
+│     │  │  ├─ alteration-PriceCalculator.js
+│     │  │  └─ alteration-StateManager.js
+│     │  └─ alteration-repair.html
+│     ├─ index.html
+│     ├─ login.html
+│     ├─ measurement-pages
+│     │  ├─ measurement-about
+│     │  │  ├─ (debug)floating-window-measurement.txt
+│     │  │  ├─ (debug)measurement-split-modules.txt
+│     │  │  ├─ measurement(how-the-program-works).txt
+│     │  │  ├─ measurement-functionality-prompt.txt
+│     │  │  └─ measurement-modules.txt
+│     │  ├─ measurement-modules
+│     │  │  ├─ measurement-DataMaps.js
+│     │  │  ├─ measurement-Main.js
+│     │  │  ├─ measurement-Manager.js
+│     │  │  ├─ measurement-Validator.js
+│     │  │  └─ measurement-ViewHandler.js
+│     │  ├─ measurements-female.html
+│     │  ├─ measurements-male.html
+│     │  └─ sample.html
+│     ├─ order-history.html
+│     ├─ services.html
+│     └─ signup.html
+└─ test
+   ├─ alteration-module-tests
+   │  ├─ alteration-TEST(about)
+   │  │  ├─ (debug)alteration-test-unit.txt
+   │  │  ├─ (how to use)alteration-unit-test.txt
+   │  │  └─ alteration-unit-tests-prompt.txt
+   │  └─ unit
+   │     ├─ AlterationApp.test.js
+   │     ├─ CartManager.test.js
+   │     ├─ DOMRenderer.test.js
+   │     ├─ EventManager.test.js
+   │     ├─ PriceCalculator.test.js
+   │     └─ StateManager.test.js
+   └─ measurement-module-tests
+      ├─ measurement-TEST(about)
+      │  ├─ (debug)measurement-test-unit.txt
+      │  ├─ (how to use)measurement-unit-test.txt
+      │  └─ measurement-unit-tests-prompt.txt
+      └─ unit
+         ├─ measurement-DataMaps.test.js
+         ├─ measurement-Manager.test.js
+         ├─ measurement-Validator.test.js
+         └─ measurement-ViewHandler.test.js
+]

@@ -1,5 +1,5 @@
-const { expect } = require('chai');
-const { JSDOM } = require('jsdom');
+import { expect } from 'chai';
+import { JSDOM } from 'jsdom';
 
 // Mock DOM for testing
 const dom = new JSDOM(`<!DOCTYPE html>
@@ -28,7 +28,7 @@ global.window = dom.window;
 global.document = dom.window.document;
 
 // Load the module
-const { MeasurementValidator } = require('../../../src/pages/measurement-pages/measurement-modules/measurement-Validator.js');
+import { MeasurementValidator } from '../../../src/pages/measurement-pages/measurement-modules/measurement-Validator.js';
 
 describe('measurement-Validator.js', () => {
   let validator;

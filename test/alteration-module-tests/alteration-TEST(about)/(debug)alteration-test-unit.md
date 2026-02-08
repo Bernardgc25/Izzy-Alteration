@@ -1,79 +1,71 @@
-1. how to fix this error: 
+1. the alteration unit tests has been moved to the following location:
 [
-bernard@ubuntu:~/Documents/Izzy-Alteration/test/measurement-module-tests$ npm test
-
-> measurement-module-tests@1.0.0 test
-> mocha
-
-
- Exception during run: Error: Cannot find module '../../../../src/pages/measurement-pages/measurement-modules/measurement-Validator.js'
-Require stack:
-- /home/bernard/Documents/Izzy-Alteration/test/measurement-module-tests/unit/measurement-Validator.test.js
-    at Module._resolveFilename (node:internal/modules/cjs/loader:1453:15)
-    at defaultResolveImpl (node:internal/modules/cjs/loader:1064:19)
-    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1069:22)
-    at Module._load (node:internal/modules/cjs/loader:1239:25)
-    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
-    at Module.require (node:internal/modules/cjs/loader:1553:12)
-    at require (node:internal/modules/helpers:152:16)
-    at Object.<anonymous> (/home/bernard/Documents/Izzy-Alteration/test/measurement-module-tests/unit/measurement-Validator.test.js:31:34)
-    at Module._compile (node:internal/modules/cjs/loader:1809:14)
-    at Object..js (node:internal/modules/cjs/loader:1940:10)
-    at Module.load (node:internal/modules/cjs/loader:1530:32)
-    at Module._load (node:internal/modules/cjs/loader:1332:12)
-    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
-    at loadCJSModuleWithModuleLoad (node:internal/modules/esm/translators:338:3)
-    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:241:7)
-    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
-    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:655:26)
-    at async formattedImport (/home/bernard/Documents/Izzy-Alteration/test/measurement-module-tests/node_modules/mocha/lib/nodejs/esm-utils.js:9:14)
-    at async exports.requireOrImport (/home/bernard/Documents/Izzy-Alteration/test/measurement-module-tests/node_modules/mocha/lib/nodejs/esm-utils.js:42:28)
-    at async exports.loadFilesAsync (/home/bernard/Documents/Izzy-Alteration/test/measurement-module-tests/node_modules/mocha/lib/nodejs/esm-utils.js:100:20)
-    at async singleRun (/home/bernard/Documents/Izzy-Alteration/test/measurement-module-tests/node_modules/mocha/lib/cli/run-helpers.js:162:3)
-    at async exports.handler (/home/bernard/Documents/Izzy-Alteration/test/measurement-module-tests/node_modules/mocha/lib/cli/run.js:375:5) {
-  code: 'MODULE_NOT_FOUND',
-  requireStack: [
-    '/home/bernard/Documents/Izzy-Alteration/test/measurement-module-tests/unit/measurement-Validator.test.js'
-  ]
-}
+  /Izzy-Alteration/test/alteration-module-tests/unit:
 ]
 
-2. here is the location of .mocharc.json file: /Izzy-Alteration/test/measurement-module-tests/.mocharc.json:
+2. reconfigure the test scripts in the root package.json to point to the new location of the alteration unit tests, 
+   and make sure it will run on the command: 
+[
+  "npm run test:alteration"
+]
+
+3. here is the location of .mocharc.json file: test/alteration-module-tests/.mocharc.json
 [
   {
     "extension": ["js"],
-    "spec": "unit/**/*.test.js",
+    "spec": "*.test.js",
     "reporter": "spec",
     "timeout": 5000,
-    "require": "jsdom-global/register",
-    "exit": true
+    "node-option": [
+      "experimental-vm-modules"
+    ],
+    "require": ["testdouble"]
   }
 ]
 
 
-3. here is the location of package.json file: /Izzy-Alteration/test/measurement-module-tests/package.json:
+4. here is the location of package.json file: test/alteration-module-tests/package.json
 [
   {
-    "name": "measurement-module-tests",
-    "version": "1.0.0",
-    "description": "Unit tests for measurement modules",
+    "name": "alteration-module-tests",
+    "type": "module",
     "scripts": {
       "test": "mocha",
       "test:watch": "mocha --watch"
     },
     "devDependencies": {
       "mocha": "^10.0.0",
-      "chai": "^4.3.7",
-      "sinon": "^15.0.3",
-      "jsdom": "^22.0.0",
-      "jsdom-global": "^3.0.2"
+      "testdouble": "^3.20.2"
+    },
+    "version": "1.0.0",
+    "description": "",
+    "main": "AlterationApp.test.js",
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+  }
+]
+
+5. here is the location of root package.json file: /Izzy-Alteration/package.json:
+[
+    {
+    "scripts": {
+      "test": "mocha",
+      "test:alteration": "cd test/alteration-module-tests && npm test",
+      "test:measurement": "cd test/measurement-module-tests && npm test",
+      "test:watch": "mocha --watch test/alteration-module-tests/*.test.js"
+    },
+    "type": "module",
+    "devDependencies": {
+      "mocha": "^10.0.0",
+      "testdouble": "^3.20.2"
     }
   }
 ]
 
-4. this is the folder structure of the project:
+6. this is the folder structure of the project:
 [
-  
+
 Izzy-Alteration
 ├─ about
 │  ├─ deepseek
@@ -162,21 +154,25 @@ Izzy-Alteration
 └─ test
    ├─ alteration-module-tests
    │  ├─ .mocharc.json
-   │  ├─ AlterationApp.test.js
-   │  ├─ CartManager.test.js
-   │  ├─ DOMRenderer.test.js
-   │  ├─ EventManager.test.js
-   │  ├─ PriceCalculator.test.js
-   │  ├─ StateManager.test.js
    │  ├─ alteration-TEST(about)
    │  │  ├─ (debug)alteration-test-unit.txt
    │  │  ├─ (how to use)alteration-unit-test.txt
    │  │  └─ alteration-unit-tests-prompt.txt
    │  ├─ package-lock.json
-   │  └─ package.json
+   │  ├─ package.json
+   │  └─ unit
+   │     ├─ AlterationApp.test.js
+   │     ├─ CartManager.test.js
+   │     ├─ DOMRenderer.test.js
+   │     ├─ EventManager.test.js
+   │     ├─ PriceCalculator.test.js
+   │     └─ StateManager.test.js
    └─ measurement-module-tests
       ├─ .mocharc.json
       ├─ measurement-TEST(about)
+      │  ├─ (debug)measurement-test-unit.txt
+      │  ├─ (how to use)measurement-unit-test.txt
+      │  └─ measurement-unit-tests-prompt.txt
       ├─ package-lock.json
       ├─ package.json
       └─ unit
@@ -184,5 +180,4 @@ Izzy-Alteration
          ├─ measurement-Manager.test.js
          ├─ measurement-Validator.test.js
          └─ measurement-ViewHandler.test.js
-
 ]

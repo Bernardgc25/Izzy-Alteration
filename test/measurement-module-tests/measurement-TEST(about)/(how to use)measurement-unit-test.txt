@@ -1,6 +1,0 @@
-# from root directory: 
-Izzy-Alteration
-
-#run alteration module tests: 
-npm run test:measurement
-    

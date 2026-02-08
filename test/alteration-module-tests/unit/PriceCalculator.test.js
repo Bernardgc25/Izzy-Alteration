@@ -1,6 +1,7 @@
 // test/alteration-module-tests/PriceCalculator.test.js
 import assert from 'assert';
-import PriceCalculator from '../../src/pages/alteration-pages/alteration-modules/alteration-PriceCalculator.js';
+import { describe, it, beforeEach } from 'mocha';
+import PriceCalculator from '../../../src/pages/alteration-pages/alteration-modules/alteration-PriceCalculator.js';
 
 const mockAlterationMaps = {
   'female-bottom': {
