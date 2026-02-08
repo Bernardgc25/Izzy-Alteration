@@ -1,6 +1,6 @@
-const { expect } = require('chai');
-const sinon = require('sinon');
-const { JSDOM } = require('jsdom');
+import { expect } from 'chai';
+import { stub, restore, spy } from 'sinon';
+import { JSDOM } from 'jsdom';
 
 // Mock DOM for testing
 const html = `<!DOCTYPE html>
@@ -65,7 +65,7 @@ require.cache[require.resolve('../../../src/pages/measurement-pages/measurement-
   }
 };
 
-const { ViewHandler } = require('../../../src/pages/measurement-pages/measurement-modules/measurement-ViewHandler.js');
+import { ViewHandler } from '../../../src/pages/measurement-pages/measurement-modules/measurement-ViewHandler.js';
 
 describe('measurement-ViewHandler.js', () => {
   let viewHandler;
@@ -74,8 +74,8 @@ describe('measurement-ViewHandler.js', () => {
 
   beforeEach(() => {
     // Stub console.warn and alert
-    consoleWarnStub = sinon.stub(console, 'warn');
-    alertStub = sinon.stub(window, 'alert');
+    consoleWarnStub = stub(console, 'warn');
+    alertStub = stub(window, 'alert');
     
     // Reset DOM
     dom.window.location.reload();
@@ -84,7 +84,7 @@ describe('measurement-ViewHandler.js', () => {
   afterEach(() => {
     consoleWarnStub.restore();
     alertStub.restore();
-    sinon.restore();
+    restore();
   });
 
   describe('constructor and initialization', () => {
@@ -223,7 +223,7 @@ describe('measurement-ViewHandler.js', () => {
     });
 
     it('should setup click listeners on eye icons', () => {
-      const callback = sinon.stub();
+      const callback = stub();
       viewHandler.setupEyeIconListeners(callback);
       
       const eyeIcon = document.querySelector('.fa-eye');
@@ -234,7 +234,7 @@ describe('measurement-ViewHandler.js', () => {
     });
 
     it('should stop event propagation', () => {
-      const callback = sinon.stub();
+      const callback = stub();
       viewHandler.setupEyeIconListeners(callback);
       
       const eyeIcon = document.querySelector('.fa-eye');
@@ -256,7 +256,7 @@ describe('measurement-ViewHandler.js', () => {
     });
 
     it('should trigger callback when view changes', (done) => {
-      const callback = sinon.stub();
+      const callback = stub();
       viewHandler.setupWindowResizeListener(callback);
       
       // Simulate mobile view
@@ -279,7 +279,7 @@ describe('measurement-ViewHandler.js', () => {
     });
 
     it('should call callback on escape key press', () => {
-      const callback = sinon.stub();
+      const callback = stub();
       viewHandler.setupEscapeKeyListener(callback);
       
       const escapeEvent = new KeyboardEvent('keydown', { key: 'Escape' });
@@ -289,7 +289,7 @@ describe('measurement-ViewHandler.js', () => {
     });
 
     it('should not call callback on other key press', () => {
-      const callback = sinon.stub();
+      const callback = stub();
       viewHandler.setupEscapeKeyListener(callback);
       
       const otherEvent = new KeyboardEvent('keydown', { key: 'Enter' });
@@ -305,7 +305,7 @@ describe('measurement-ViewHandler.js', () => {
     });
 
     it('should setup print button listener', () => {
-      const callback = sinon.stub();
+      const callback = stub();
       viewHandler.setupPrintButtonListener(callback);
       
       const printButton = document.getElementById('print-summary');
@@ -316,7 +316,7 @@ describe('measurement-ViewHandler.js', () => {
 
     it('should handle print errors with alert', () => {
       const error = new Error('Popup blocked');
-      const callback = sinon.stub().throws(error);
+      const callback = stub().throws(error);
       
       viewHandler.setupPrintButtonListener(callback);
       
@@ -377,7 +377,7 @@ describe('measurement-ViewHandler.js', () => {
       document.body.appendChild(input1);
       document.body.appendChild(input2);
       
-      const focusSpy = sinon.spy(input1, 'focus');
+      const focusSpy = spy(input1, 'focus');
       
       viewHandler.focusFirstErrorField();
       

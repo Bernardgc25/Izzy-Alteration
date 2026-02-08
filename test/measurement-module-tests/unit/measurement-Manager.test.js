@@ -1,5 +1,5 @@
-const { expect } = require('chai');
-const { JSDOM } = require('jsdom');
+import { expect } from 'chai';
+import { JSDOM } from 'jsdom';
 
 // Mock DOM for testing
 const dom = new JSDOM(`<!DOCTYPE html><html><body></body></html>`);
@@ -7,7 +7,7 @@ global.window = dom.window;
 global.document = dom.window.document;
 
 // Load the module
-const { MeasurementManager } = require('../../../src/pages/measurement-pages/measurement-modules/measurement-Manager.js');
+import { MeasurementManager } from '../../../src/pages/measurement-pages/measurement-modules/measurement-Manager.js';
 
 describe('measurement-Manager.js', () => {
   let manager;
