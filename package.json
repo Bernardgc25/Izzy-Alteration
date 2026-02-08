@@ -2,7 +2,7 @@
   "scripts": {
     "test": "mocha",
     "test:alteration": "cd test/alteration-module-tests && npm test",
-    "test:measurement": "mocha test/measurement-module-tests/*.test.js",
+    "test:measurement": "cd test/measurement-module-tests && npm test",
     "test:watch": "mocha --watch test/alteration-module-tests/*.test.js"
   },
   "type": "module",

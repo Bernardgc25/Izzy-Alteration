@@ -1,7 +1,6 @@
 
 ```
 Izzy-Alteration
-├─ .mocharc.json
 ├─ about
 │  ├─ deepseek
 │  │  └─ alteration-female.txt
@@ -88,8 +87,7 @@ Izzy-Alteration
 │     └─ signup.html
 └─ test
    ├─ alteration-module-tests
-   │  ├─ (debug)alteration-test-unit.txt
-   │  ├─ (how to use)alteration-unit-test.txt
+   │  ├─ .mocharc.json
    │  ├─ AlterationApp.test.js
    │  ├─ CartManager.test.js
    │  ├─ DOMRenderer.test.js
@@ -97,8 +95,23 @@ Izzy-Alteration
    │  ├─ PriceCalculator.test.js
    │  ├─ StateManager.test.js
    │  ├─ alteration-TEST(about)
-   │  └─ alteration-unit-tests-prompt.txt
-   ├─ measurement-module-tests
-   └─ setup.js
+   │  │  ├─ (debug)alteration-test-unit.txt
+   │  │  ├─ (how to use)alteration-unit-test.txt
+   │  │  └─ alteration-unit-tests-prompt.txt
+   │  ├─ package-lock.json
+   │  └─ package.json
+   └─ measurement-module-tests
+      ├─ .mocharc.json
+      ├─ measurement-TEST(about)
+      │  ├─ (debug)measurement-test-unit.txt
+      │  ├─ (how to use)measurement-unit-test.txt
+      │  └─ measurement-unit-tests-prompt.txt
+      ├─ package-lock.json
+      ├─ package.json
+      └─ unit
+         ├─ measurement-DataMaps.test.js
+         ├─ measurement-Manager.test.js
+         ├─ measurement-Validator.test.js
+         └─ measurement-ViewHandler.test.js
 
 ```

@@ -1,0 +1,8 @@
+{
+  "extension": ["js"],
+  "spec": "unit/**/*.test.js",
+  "reporter": "spec",
+  "timeout": 5000,
+  "require": "jsdom-global/register",
+  "exit": true
+}
