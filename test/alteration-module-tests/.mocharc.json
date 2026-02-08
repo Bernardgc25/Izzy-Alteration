@@ -1,6 +1,6 @@
 {
   "extension": ["js"],
-  "spec": "test/**/*.test.js",
+  "spec": "./*.test.js",
   "reporter": "spec",
   "timeout": 5000,
   "node-option": [
