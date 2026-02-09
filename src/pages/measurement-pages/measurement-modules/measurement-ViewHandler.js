@@ -2,10 +2,9 @@
  * View Handler - Manages all UI interactions and display logic
  * Separated from business logic for better maintainability
  */
-import { getMeasurement } from './measurement-DataMaps.js';
 
 export class ViewHandler {
-    constructor(gender, isMobileView) {
+    constructor(gender, isMobileView, getMeasurementFunction = null) {
         this.gender = gender;
         this.isMobileView = isMobileView;
         this.debounceTimers = new Map();
@@ -17,6 +16,8 @@ export class ViewHandler {
             startX: 0,
             startY: 0
         };
+        // Store the getMeasurement function reference
+        this.getMeasurementFunction = getMeasurementFunction;
         this.init();
     }
 
@@ -203,10 +204,23 @@ export class ViewHandler {
     }
 
     /**
+     * Get measurement data - uses injected function or falls back to import
+     */
+    getMeasurement(gender, measurementKey) {
+        if (this.getMeasurementFunction) {
+            return this.getMeasurementFunction(gender, measurementKey);
+        }
+        // Fallback to dynamic import if no function was provided
+        return import('./measurement-DataMaps.js')
+            .then(module => module.getMeasurement(gender, measurementKey))
+            .catch(() => null);
+    }
+
+    /**
      * Display measurement guide
      */
-    showMeasurementGuide(measurementKey) {
-        const measurement = getMeasurement(this.gender, measurementKey);
+    async showMeasurementGuide(measurementKey) {
+        const measurement = await this.getMeasurement(this.gender, measurementKey);
         if (!measurement) return;
 
         this.updateGuideText(measurement);
@@ -227,7 +241,7 @@ export class ViewHandler {
 
         Object.entries(elements).forEach(([id, content]) => {
             const element = document.getElementById(id);
-            if (element && content) {
+            if (element && content !== undefined) {
                 const label = id.includes('object') ? 'Object' : 
                             id.includes('definition') ? 'Definition' : 'Description';
                 element.innerHTML = `<strong>${label}:</strong> ${content}`;
@@ -238,8 +252,8 @@ export class ViewHandler {
     /**
      * Show floating guide for mobile
      */
-    showFloatingGuide(measurementKey) {
-        const measurement = getMeasurement(this.gender, measurementKey);
+    async showFloatingGuide(measurementKey) {
+        const measurement = await this.getMeasurement(this.gender, measurementKey);
         if (!measurement) return;
         
         this.updateGuideText(measurement);
@@ -272,8 +286,8 @@ export class ViewHandler {
     /**
      * Update mobile guide image
      */
-    updateMobileGuideImage(measurementKey) {
-        const measurement = getMeasurement(this.gender, measurementKey);
+    async updateMobileGuideImage(measurementKey) {
+        const measurement = await this.getMeasurement(this.gender, measurementKey);
         if (!measurement || !measurement.imageMobile) return;
         
         const floatingGuideImages = document.querySelector('.measurement-guide-floating .floating-guide-images');
@@ -324,11 +338,19 @@ export class ViewHandler {
      */
     setupWindowResizeListener(callback) {
         window.addEventListener('resize', () => {
-            const newIsMobileView = window.innerWidth <= 992;
-            if (newIsMobileView !== this.isMobileView) {
-                this.isMobileView = newIsMobileView;
-                if (callback) callback(newIsMobileView);
+            if (this.debounceTimers.has('resize')) {
+                clearTimeout(this.debounceTimers.get('resize'));
             }
+            
+            const timerId = setTimeout(() => {
+                const newIsMobileView = window.innerWidth <= 992;
+                if (newIsMobileView !== this.isMobileView) {
+                    this.isMobileView = newIsMobileView;
+                    if (callback) callback(newIsMobileView);
+                }
+            }, 200);
+            
+            this.debounceTimers.set('resize', timerId);
         });
     }
 
