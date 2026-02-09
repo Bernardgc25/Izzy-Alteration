@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { stub, spy } from 'sinon';
 import { JSDOM } from 'jsdom';
 
-// Mock DOM for testing - UPDATED to match actual DOM structure
+// Enhanced mock DOM for testing
 const html = `<!DOCTYPE html>
 <html>
 <body>
@@ -13,7 +13,7 @@ const html = `<!DOCTYPE html>
 <div class="measurement-label">
     <span class="fa fa-eye"></span>
     <div class="form-group">
-    <input class="measurement-input" data-measurement="neck" />
+        <input class="measurement-input" data-measurement="neck" />
     </div>
 </div>
 <div id="measure-object"></div>
@@ -59,6 +59,12 @@ const mockGetMeasurement = (gender, key) => {
                 definition: 'Measure around the base of the neck...',
                 description: 'Place the tape measure around...',
                 imageMobile: '/test/images/neck-mobile.png'
+            },
+            waist: {
+                object: 'Waist',
+                definition: 'Measure around the natural waistline...',
+                description: 'Wrap tape measure around the waist...',
+                imageMobile: '/test/images/waist-mobile.png'
             }
         },
         female: {
@@ -73,28 +79,53 @@ const mockGetMeasurement = (gender, key) => {
     return measurements[gender]?.[key] || null;
 };
 
-// Create mock DataMaps object
+// Mock the DataMaps module
 const mockDataMaps = {
     getMeasurement: mockGetMeasurement
 };
 
-// Import the module
-let ViewHandler;
+// Create a dynamic import to mock the DataMaps module
+const moduleMock = {
+    'measurement-DataMaps.js': {
+        getMeasurement: mockGetMeasurement
+    }
+};
 
-// Define mock module for the ViewHandler's imports
-before(async () => {
-    // Mock the DataMaps module before importing ViewHandler
-    global.MeasurementDataMaps = mockDataMaps;
-    
-    // Now import the ViewHandler
-    const module = await import('../../../src/pages/measurement-pages/measurement-modules/measurement-ViewHandler.js');
-    ViewHandler = module.ViewHandler;
-});
+// Set up module mocking before import
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+
+// Mock the import using a dynamic import with query parameter
+const originalResolve = require.resolve;
+require.resolve = (specifier, options) => {
+    if (specifier.includes('measurement-DataMaps.js')) {
+        return specifier;
+    }
+    return originalResolve(specifier, options);
+};
 
 describe('measurement-ViewHandler.js', () => {
+    let ViewHandler;
     let viewHandler;
     let consoleWarnStub;
     let alertStub;
+
+    before(async () => {
+        // Clear any existing module cache
+        const cacheBuster = `../../../src/pages/measurement-pages/measurement-modules/measurement-ViewHandler.js?v=${Date.now()}`;
+        
+        // Mock the DataMaps module using import assertions
+        // We'll use a different approach - modify the global scope
+        global.MeasurementDataMaps = mockDataMaps;
+        
+        // Import the ViewHandler module
+        const module = await import('../../../src/pages/measurement-pages/measurement-modules/measurement-ViewHandler.js');
+        ViewHandler = module.ViewHandler;
+        
+        // Manually override the imported getMeasurement function
+        // This is a workaround for module mocking
+        module.getMeasurement = mockGetMeasurement;
+    });
 
     beforeEach(() => {
         // Stub console.warn and alert
@@ -104,9 +135,33 @@ describe('measurement-ViewHandler.js', () => {
         // Create new instance for each test
         viewHandler = new ViewHandler('male', true);
         
-        // Ensure the mock DataMaps is available to the instance
-        if (viewHandler.DataMaps === undefined) {
-            viewHandler.DataMaps = mockDataMaps;
+        // Reset DOM elements to initial state
+        const elements = [
+            'measure-object',
+            'measure-definition',
+            'measure-description',
+            'floating-measure-object',
+            'floating-measure-definition',
+            'floating-measure-description'
+        ];
+        
+        elements.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.innerHTML = '';
+            }
+        });
+        
+        // Reset floating guide visibility
+        const overlay = document.getElementById('floating-guide-overlay');
+        const floatingGuide = document.getElementById('floating-measurement-guide');
+        if (overlay) overlay.style.display = 'none';
+        if (floatingGuide) floatingGuide.style.display = 'none';
+        
+        // Clear floating guide images
+        const imagesContainer = document.querySelector('.floating-guide-images');
+        if (imagesContainer) {
+            imagesContainer.innerHTML = '';
         }
     });
 
@@ -165,6 +220,10 @@ describe('measurement-ViewHandler.js', () => {
 
     describe('showMeasurementGuide', () => {
         it('should update guide text for valid measurement', () => {
+            // Override the imported function for this test
+            const originalGetMeasurement = viewHandler.constructor.getMeasurement;
+            viewHandler.constructor.getMeasurement = mockGetMeasurement;
+            
             viewHandler.showMeasurementGuide('neck');
             
             const objectElement = document.getElementById('measure-object');
@@ -174,16 +233,23 @@ describe('measurement-ViewHandler.js', () => {
             expect(objectElement.innerHTML).to.include('Neck Circumference');
             expect(definitionElement.innerHTML).to.include('Measure around the base of the neck...');
             expect(descriptionElement.innerHTML).to.include('Place the tape measure around...');
+            
+            // Restore original function
+            if (originalGetMeasurement) {
+                viewHandler.constructor.getMeasurement = originalGetMeasurement;
+            }
         });
 
         it('should handle invalid measurement gracefully', () => {
-            // Should not throw error
             expect(() => viewHandler.showMeasurementGuide('invalid-measurement')).not.to.throw();
         });
     });
 
     describe('showFloatingGuide', () => {
         it('should show floating guide for mobile view', () => {
+            // Setup mock
+            const mockMeasurement = mockGetMeasurement('male', 'neck');
+            
             viewHandler.showFloatingGuide('neck');
             
             const overlay = document.getElementById('floating-guide-overlay');
@@ -219,14 +285,14 @@ describe('measurement-ViewHandler.js', () => {
     describe('hideFloatingGuide', () => {
         it('should hide floating guide elements', () => {
             // First show the guide
-            document.getElementById('floating-guide-overlay').style.display = 'block';
-            document.getElementById('floating-measurement-guide').style.display = 'flex';
+            const overlay = document.getElementById('floating-guide-overlay');
+            const floatingGuide = document.getElementById('floating-measurement-guide');
+            
+            if (overlay) overlay.style.display = 'block';
+            if (floatingGuide) floatingGuide.style.display = 'flex';
             
             // Then hide it
             viewHandler.hideFloatingGuide();
-            
-            const overlay = document.getElementById('floating-guide-overlay');
-            const floatingGuide = document.getElementById('floating-measurement-guide');
             
             expect(overlay.style.display).to.equal('none');
             expect(floatingGuide.style.display).to.equal('none');
@@ -382,6 +448,8 @@ describe('measurement-ViewHandler.js', () => {
         it('should focus on first error field', () => {
             // Create test elements
             const container = document.createElement('div');
+            document.body.appendChild(container); // Attach to body first
+            
             const input1 = document.createElement('input');
             input1.className = 'measurement-input error';
             const input2 = document.createElement('input');
@@ -389,7 +457,6 @@ describe('measurement-ViewHandler.js', () => {
             
             container.appendChild(input1);
             container.appendChild(input2);
-            document.body.appendChild(container);
             
             const focusSpy = spy(input1, 'focus');
             

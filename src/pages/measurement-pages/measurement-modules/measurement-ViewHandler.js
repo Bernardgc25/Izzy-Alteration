@@ -46,8 +46,6 @@ export class ViewHandler {
         
         if (!guideImage || !defaultGuide) return;
         
-        // Get the appropriate gender image from measurementDataMap
-        // You need to import getGenderImage from DataMaps or similar
         const genderImage = this.getGenderImage();
         
         if (genderImage) {
@@ -55,7 +53,6 @@ export class ViewHandler {
             guideImage.style.display = 'block';
             defaultGuide.style.display = 'none';
         } else {
-            // If no gender image found, show default placeholder
             guideImage.style.display = 'none';
             defaultGuide.style.display = 'flex';
         }
@@ -66,8 +63,6 @@ export class ViewHandler {
      * @returns {string} Image URL for the gender
      */
     getGenderImage() {
-        // This should reference your data map or configuration
-        // Based on CODE 2, the images are in measurementDataMap.gender
         const genderImages = {
             male: "/src/images/male-desktop.png",
             female: "/src/images/female-desktop.png"
@@ -232,7 +227,7 @@ export class ViewHandler {
 
         Object.entries(elements).forEach(([id, content]) => {
             const element = document.getElementById(id);
-            if (element) {
+            if (element && content) {
                 const label = id.includes('object') ? 'Object' : 
                             id.includes('definition') ? 'Definition' : 'Description';
                 element.innerHTML = `<strong>${label}:</strong> ${content}`;
@@ -284,10 +279,8 @@ export class ViewHandler {
         const floatingGuideImages = document.querySelector('.measurement-guide-floating .floating-guide-images');
         if (!floatingGuideImages) return;
         
-        // Clear existing images
         floatingGuideImages.innerHTML = '';
         
-        // Create and add the new image
         const img = document.createElement('img');
         img.src = measurement.imageMobile;
         img.alt = measurement.object || 'Measurement Guide';
