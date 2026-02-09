@@ -6,46 +6,33 @@ import { JSDOM } from 'jsdom';
 const html = `<!DOCTYPE html>
 <html>
 <body>
-<img id="guide-image" />
-<div id="default-guide"></div>
-<div id="floating-guide-overlay" style="display: none;"></div>
-<div id="floating-measurement-guide" style="display: none;"></div>
-<div class="measurement-label">
-    <span class="fa fa-eye"></span>
-    <div class="form-group">
-        <input class="measurement-input" data-measurement="neck" />
+    <div id="guide-image-container">
+        <img id="guide-image" />
+        <div id="default-guide"></div>
     </div>
-</div>
-<div id="measure-object"></div>
-<div id="measure-definition"></div>
-<div id="measure-description"></div>
-<div id="floating-measure-object"></div>
-<div id="floating-measure-definition"></div>
-<div id="floating-measure-description"></div>
-<div class="measurement-guide-floating">
-    <div class="floating-guide-images"></div>
-</div>
-<button id="print-summary">Print</button>
-<button id="close-floating-guide">Close</button>
+    <div id="floating-guide-overlay" style="display: none;"></div>
+    <div id="floating-measurement-guide" style="display: none;"></div>
+    <div class="measurement-label">
+        <span class="fa fa-eye"></span>
+        <div class="form-group">
+            <input class="measurement-input" data-measurement="neck" />
+        </div>
+    </div>
+    <div id="measure-object"></div>
+    <div id="measure-definition"></div>
+    <div id="measure-description"></div>
+    <div id="floating-measure-object"></div>
+    <div id="floating-measure-definition"></div>
+    <div id="floating-measure-description"></div>
+    <div class="measurement-guide-floating">
+        <div class="floating-guide-images"></div>
+    </div>
+    <button id="print-summary">Print</button>
 </body>
 </html>`;
 
 // Create a single JSDOM instance
-const dom = new JSDOM(html, {
-    runScripts: 'dangerously',
-    url: 'http://localhost',
-    resources: 'usable'
-});
-
-// Set global properties properly
-global.window = dom.window;
-global.document = window.document;
-global.HTMLElement = window.HTMLElement;
-global.HTMLInputElement = window.HTMLInputElement;
-global.Element = window.Element;
-global.Event = window.Event;
-global.KeyboardEvent = window.KeyboardEvent;
-global.MouseEvent = window.MouseEvent;
+let dom;
 
 // Mock alert function
 global.alert = () => {};
@@ -76,7 +63,7 @@ const mockGetMeasurement = (gender, key) => {
             }
         }
     };
-    return measurements[gender]?.[key] || null;
+    return Promise.resolve(measurements[gender]?.[key] || null);
 };
 
 describe('measurement-ViewHandler.js', () => {
@@ -92,57 +79,48 @@ describe('measurement-ViewHandler.js', () => {
     });
 
     beforeEach(() => {
+        // Reset DOM to clean state
+        dom = new JSDOM(html, {
+            runScripts: 'dangerously',
+            url: 'http://localhost',
+            resources: 'usable'
+        });
+        
+        global.window = dom.window;
+        global.document = window.document;
+        global.HTMLElement = window.HTMLElement;
+        global.HTMLInputElement = window.HTMLInputElement;
+        global.Element = window.Element;
+        global.Event = window.Event;
+        global.KeyboardEvent = window.KeyboardEvent;
+        global.MouseEvent = window.MouseEvent;
+        
         // Stub console.warn and alert
         consoleWarnStub = stub(console, 'warn');
         alertStub = stub(global, 'alert');
         
         // Create new instance for each test with mock getMeasurement
         viewHandler = new ViewHandler('male', true, mockGetMeasurement);
-        
-        // Reset DOM elements to initial state
-        const elements = [
-            'measure-object',
-            'measure-definition',
-            'measure-description',
-            'floating-measure-object',
-            'floating-measure-definition',
-            'floating-measure-description'
-        ];
-        
-        elements.forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.innerHTML = '';
-            }
-        });
-        
-        // Reset floating guide visibility
-        const overlay = document.getElementById('floating-guide-overlay');
-        const floatingGuide = document.getElementById('floating-measurement-guide');
-        if (overlay) overlay.style.display = 'none';
-        if (floatingGuide) floatingGuide.style.display = 'none';
-        
-        // Clear floating guide images
-        const imagesContainer = document.querySelector('.floating-guide-images');
-        if (imagesContainer) {
-            imagesContainer.innerHTML = '';
-        }
     });
 
     afterEach(() => {
+        // Clean up the ViewHandler instance
+        if (viewHandler && typeof viewHandler.cleanup === 'function') {
+            viewHandler.cleanup();
+        }
+        
         // Clean up stubs
         restore();
         
-        // Reset any event listeners
-        document.querySelectorAll('*').forEach(element => {
-            const newElement = element.cloneNode(false);
-            if (element.parentNode) {
-                element.parentNode.replaceChild(newElement, element);
-            }
-        });
-        
-        // Restore original HTML
-        document.body.innerHTML = html;
+        // Clean up global references
+        delete global.window;
+        delete global.document;
+        delete global.HTMLElement;
+        delete global.HTMLInputElement;
+        delete global.Element;
+        delete global.Event;
+        delete global.KeyboardEvent;
+        delete global.MouseEvent;
     });
 
     describe('constructor and initialization', () => {
@@ -153,6 +131,10 @@ describe('measurement-ViewHandler.js', () => {
 
         it('should initialize debounceTimers map', () => {
             expect(viewHandler.debounceTimers).to.be.instanceOf(Map);
+        });
+
+        it('should initialize eventListeners map', () => {
+            expect(viewHandler.eventListeners).to.be.instanceOf(Map);
         });
 
         it('should initialize zoomState object', () => {
@@ -167,7 +149,7 @@ describe('measurement-ViewHandler.js', () => {
         });
 
         it('should accept custom getMeasurement function', () => {
-            const customFn = stub();
+            const customFn = stub().returns(Promise.resolve({}));
             const customHandler = new ViewHandler('female', false, customFn);
             expect(customHandler.getMeasurementFunction).to.equal(customFn);
         });
@@ -194,7 +176,7 @@ describe('measurement-ViewHandler.js', () => {
 
     describe('getMeasurement method', () => {
         it('should use injected function when provided', async () => {
-            const mockFn = stub().returns({ object: 'Test' });
+            const mockFn = stub().returns(Promise.resolve({ object: 'Test' }));
             const handler = new ViewHandler('male', true, mockFn);
             
             const result = await handler.getMeasurement('male', 'neck');
@@ -218,9 +200,11 @@ describe('measurement-ViewHandler.js', () => {
             const definitionElement = document.getElementById('measure-definition');
             const descriptionElement = document.getElementById('measure-description');
             
-            expect(objectElement.innerHTML).to.include('Object: Neck Circumference');
-            expect(definitionElement.innerHTML).to.include('Definition: Measure around the base of the neck...');
-            expect(descriptionElement.innerHTML).to.include('Description: Place the tape measure around...');
+            // Check both innerHTML and textContent
+            expect(objectElement.innerHTML).to.include('<strong>Object:</strong> Neck Circumference');
+            expect(objectElement.textContent).to.include('Object: Neck Circumference');
+            expect(definitionElement.innerHTML).to.include('<strong>Definition:</strong> Measure around the base of the neck...');
+            expect(descriptionElement.innerHTML).to.include('<strong>Description:</strong> Place the tape measure around...');
         });
 
         it('should handle invalid measurement gracefully', async () => {
@@ -247,17 +231,20 @@ describe('measurement-ViewHandler.js', () => {
             const definitionElement = document.getElementById('floating-measure-definition');
             const descriptionElement = document.getElementById('floating-measure-description');
             
-            expect(objectElement.innerHTML).to.include('Object: Neck Circumference');
-            expect(definitionElement.innerHTML).to.include('Definition: Measure around the base of the neck...');
-            expect(descriptionElement.innerHTML).to.include('Description: Place the tape measure around...');
+            // Check both innerHTML and textContent
+            expect(objectElement.innerHTML).to.include('<strong>Object:</strong> Neck Circumference');
+            expect(objectElement.textContent).to.include('Object: Neck Circumference');
+            expect(definitionElement.innerHTML).to.include('<strong>Definition:</strong> Measure around the base of the neck...');
+            expect(descriptionElement.innerHTML).to.include('<strong>Description:</strong> Place the tape measure around...');
         });
 
         it('should update mobile guide image', async () => {
             await viewHandler.showFloatingGuide('neck');
             
             const imagesContainer = document.querySelector('.floating-guide-images');
-            const image = imagesContainer.querySelector('img');
+            expect(imagesContainer).to.exist;
             
+            const image = imagesContainer.querySelector('img');
             expect(image).to.exist;
             expect(image.src).to.include('/test/images/neck-mobile.png');
         });
@@ -301,7 +288,10 @@ describe('measurement-ViewHandler.js', () => {
             ];
             
             objectElements.forEach(element => {
-                expect(element.innerHTML).to.include('Object: Test Object');
+                if (element) {
+                    expect(element.innerHTML).to.include('<strong>Object:</strong> Test Object');
+                    expect(element.textContent).to.include('Object: Test Object');
+                }
             });
         });
 
@@ -318,16 +308,15 @@ describe('measurement-ViewHandler.js', () => {
             };
             
             expect(() => viewHandler.updateGuideText(measurement)).not.to.throw();
-            
-            // Restore element for other tests
-            parent.appendChild(element);
         });
     });
 
     describe('setupEyeIconListeners', () => {
         it('should setup click listeners on eye icons', () => {
             const callback = stub();
-            viewHandler.setupEyeIconListeners(callback);
+            const result = viewHandler.setupEyeIconListeners(callback);
+            
+            expect(result).to.be.true; // Should return true when listeners are set up
             
             const eyeIcon = document.querySelector('.fa-eye');
             if (eyeIcon) {
@@ -351,7 +340,8 @@ describe('measurement-ViewHandler.js', () => {
                     });
                 }
                 
-                eyeIcon.click();
+                const clickEvent = new MouseEvent('click', { bubbles: true });
+                eyeIcon.dispatchEvent(clickEvent);
                 
                 expect(parentClicked).to.be.false;
             }
@@ -362,6 +352,24 @@ describe('measurement-ViewHandler.js', () => {
             const callback = stub();
             
             handler.setupEyeIconListeners(callback);
+            
+            const eyeIcon = document.querySelector('.fa-eye');
+            if (eyeIcon) {
+                const clickEvent = new MouseEvent('click', { bubbles: true });
+                eyeIcon.dispatchEvent(clickEvent);
+                expect(callback.called).to.be.false;
+            }
+        });
+
+        it('should handle missing data-measurement attribute gracefully', () => {
+            // Remove the data-measurement attribute
+            const input = document.querySelector('.measurement-input');
+            if (input) {
+                input.removeAttribute('data-measurement');
+            }
+            
+            const callback = stub();
+            viewHandler.setupEyeIconListeners(callback);
             
             const eyeIcon = document.querySelector('.fa-eye');
             if (eyeIcon) {
@@ -516,28 +524,20 @@ describe('measurement-ViewHandler.js', () => {
 
     describe('focusFirstErrorField', () => {
         it('should focus on first error field', () => {
-            // Create test elements in a temporary container
-            const container = document.createElement('div');
-            
+            // Create test elements
             const input1 = document.createElement('input');
             input1.className = 'measurement-input error';
             const input2 = document.createElement('input');
             input2.className = 'measurement-input error';
             
-            container.appendChild(input1);
-            container.appendChild(input2);
-            
-            // Append to body
-            document.body.appendChild(container);
+            document.body.appendChild(input1);
+            document.body.appendChild(input2);
             
             const focusSpy = spy(input1, 'focus');
             
             viewHandler.focusFirstErrorField();
             
             expect(focusSpy.calledOnce).to.be.true;
-            
-            // Cleanup
-            document.body.removeChild(container);
         });
 
         it('should handle no error fields gracefully', () => {
@@ -589,6 +589,30 @@ describe('measurement-ViewHandler.js', () => {
             
             viewHandler.stopPan();
             expect(viewHandler.zoomState.isDragging).to.be.false;
+        });
+    });
+
+    describe('cleanup', () => {
+        it('should clean up event listeners and timers', () => {
+            // Setup some event listeners
+            const callback = stub();
+            viewHandler.setupWindowResizeListener(callback);
+            viewHandler.setupEscapeKeyListener(callback);
+            
+            // Add a debounce timer
+            viewHandler.debounceTimers.set('test', setTimeout(() => {}, 1000));
+            
+            // Store references before cleanup
+            const timerSizeBefore = viewHandler.debounceTimers.size;
+            const listenerSizeBefore = viewHandler.eventListeners.size;
+            
+            // Perform cleanup
+            viewHandler.cleanup();
+            
+            // Check that cleanup worked
+            expect(viewHandler.debounceTimers.size).to.equal(0);
+            expect(timerSizeBefore).to.be.greaterThan(0);
+            expect(viewHandler.eventListeners.size).to.equal(0);
         });
     });
 });
