@@ -2,13 +2,13 @@
  * View Handler - Manages all UI interactions and display logic
  * Separated from business logic for better maintainability
  */
-import { getMeasurement } from './measurement-DataMaps.js';
 
 export class ViewHandler {
-    constructor(gender, isMobileView) {
+    constructor(gender, isMobileView, getMeasurementFunction = null) {
         this.gender = gender;
         this.isMobileView = isMobileView;
         this.debounceTimers = new Map();
+        this.eventListeners = new Map();
         this.zoomState = {
             scale: 1.0,
             x: 0,
@@ -17,6 +17,8 @@ export class ViewHandler {
             startX: 0,
             startY: 0
         };
+        // Store the getMeasurement function reference
+        this.getMeasurementFunction = getMeasurementFunction;
         this.init();
     }
 
@@ -46,8 +48,6 @@ export class ViewHandler {
         
         if (!guideImage || !defaultGuide) return;
         
-        // Get the appropriate gender image from measurementDataMap
-        // You need to import getGenderImage from DataMaps or similar
         const genderImage = this.getGenderImage();
         
         if (genderImage) {
@@ -55,7 +55,6 @@ export class ViewHandler {
             guideImage.style.display = 'block';
             defaultGuide.style.display = 'none';
         } else {
-            // If no gender image found, show default placeholder
             guideImage.style.display = 'none';
             defaultGuide.style.display = 'flex';
         }
@@ -66,8 +65,6 @@ export class ViewHandler {
      * @returns {string} Image URL for the gender
      */
     getGenderImage() {
-        // This should reference your data map or configuration
-        // Based on CODE 2, the images are in measurementDataMap.gender
         const genderImages = {
             male: "/src/images/male-desktop.png",
             female: "/src/images/female-desktop.png"
@@ -93,47 +90,66 @@ export class ViewHandler {
      * Setup zoom events
      */
     setupZoomEvents(container, image) {
-        container.addEventListener('wheel', (e) => {
+        const wheelHandler = (e) => {
             e.preventDefault();
             this.handleZoom(e, image);
-        });
+        };
+        container.addEventListener('wheel', wheelHandler);
+        this.eventListeners.set('wheel', { element: container, handler: wheelHandler, type: 'wheel' });
     }
 
     /**
      * Setup pan events
      */
     setupPanEvents(container, image) {
-        container.addEventListener('mousedown', (e) => {
+        const mousedownHandler = (e) => {
             this.startPan(e);
             container.style.cursor = 'grabbing';
-        });
-
-        container.addEventListener('mousemove', (e) => {
+        };
+        
+        const mousemoveHandler = (e) => {
             if (!this.zoomState.isDragging) return;
             this.updatePanPosition(e);
             this.updateImageTransform(image);
-        });
-
-        container.addEventListener('mouseup', () => {
+        };
+        
+        const mouseupHandler = () => {
             this.stopPan();
             container.style.cursor = 'grab';
-        });
-
-        container.addEventListener('mouseleave', () => {
+        };
+        
+        const mouseleaveHandler = () => {
             this.stopPan();
             container.style.cursor = 'default';
-        });
+        };
+
+        container.addEventListener('mousedown', mousedownHandler);
+        container.addEventListener('mousemove', mousemoveHandler);
+        container.addEventListener('mouseup', mouseupHandler);
+        container.addEventListener('mouseleave', mouseleaveHandler);
+        
+        this.eventListeners.set('mousedown', { element: container, handler: mousedownHandler, type: 'mousedown' });
+        this.eventListeners.set('mousemove', { element: container, handler: mousemoveHandler, type: 'mousemove' });
+        this.eventListeners.set('mouseup', { element: container, handler: mouseupHandler, type: 'mouseup' });
+        this.eventListeners.set('mouseleave', { element: container, handler: mouseleaveHandler, type: 'mouseleave' });
     }
 
     /**
      * Setup zoom reset when inputs are focused
      */
     setupZoomResetOnFocus(image) {
-        document.querySelectorAll('input, select').forEach(input => {
-            input.addEventListener('focus', () => {
+        const inputs = document.querySelectorAll('input, select');
+        const focusHandlers = [];
+        
+        inputs.forEach(input => {
+            const focusHandler = () => {
                 this.resetZoom(image);
-            });
+            };
+            input.addEventListener('focus', focusHandler);
+            focusHandlers.push({ element: input, handler: focusHandler, type: 'focus' });
         });
+        
+        this.eventListeners.set('focus', focusHandlers);
     }
 
     /**
@@ -190,6 +206,7 @@ export class ViewHandler {
      * Update image transform
      */
     updateImageTransform(image) {
+        if (!image) return;
         image.style.transform = `
             translate(${this.zoomState.x}px, ${this.zoomState.y}px) 
             scale(${this.zoomState.scale})
@@ -208,13 +225,29 @@ export class ViewHandler {
     }
 
     /**
+     * Get measurement data - uses injected function or falls back to import
+     */
+    getMeasurement(gender, measurementKey) {
+        if (this.getMeasurementFunction) {
+            return Promise.resolve(this.getMeasurementFunction(gender, measurementKey));
+        }
+        // Fallback to dynamic import if no function was provided
+        return import('./measurement-DataMaps.js')
+            .then(module => module.getMeasurement(gender, measurementKey))
+            .catch(() => null);
+    }
+
+    /**
      * Display measurement guide
      */
-    showMeasurementGuide(measurementKey) {
-        const measurement = getMeasurement(this.gender, measurementKey);
-        if (!measurement) return;
-
-        this.updateGuideText(measurement);
+    async showMeasurementGuide(measurementKey) {
+        try {
+            const measurement = await this.getMeasurement(this.gender, measurementKey);
+            if (!measurement) return;
+            this.updateGuideText(measurement);
+        } catch (error) {
+            console.warn('Failed to show measurement guide:', error);
+        }
     }
 
     /**
@@ -232,9 +265,10 @@ export class ViewHandler {
 
         Object.entries(elements).forEach(([id, content]) => {
             const element = document.getElementById(id);
-            if (element) {
+            if (element && content !== undefined) {
                 const label = id.includes('object') ? 'Object' : 
                             id.includes('definition') ? 'Definition' : 'Description';
+                // Only set innerHTML to preserve HTML tags
                 element.innerHTML = `<strong>${label}:</strong> ${content}`;
             }
         });
@@ -243,13 +277,17 @@ export class ViewHandler {
     /**
      * Show floating guide for mobile
      */
-    showFloatingGuide(measurementKey) {
-        const measurement = getMeasurement(this.gender, measurementKey);
-        if (!measurement) return;
-        
-        this.updateGuideText(measurement);
-        this.updateMobileGuideImage(measurementKey);
-        this.showFloatingGuideElements();
+    async showFloatingGuide(measurementKey) {
+        try {
+            const measurement = await this.getMeasurement(this.gender, measurementKey);
+            if (!measurement) return;
+            
+            this.updateGuideText(measurement);
+            await this.updateMobileGuideImage(measurementKey);
+            this.showFloatingGuideElements();
+        } catch (error) {
+            console.warn('Failed to show floating guide:', error);
+        }
     }
 
     /**
@@ -277,26 +315,28 @@ export class ViewHandler {
     /**
      * Update mobile guide image
      */
-    updateMobileGuideImage(measurementKey) {
-        const measurement = getMeasurement(this.gender, measurementKey);
-        if (!measurement || !measurement.imageMobile) return;
-        
-        const floatingGuideImages = document.querySelector('.measurement-guide-floating .floating-guide-images');
-        if (!floatingGuideImages) return;
-        
-        // Clear existing images
-        floatingGuideImages.innerHTML = '';
-        
-        // Create and add the new image
-        const img = document.createElement('img');
-        img.src = measurement.imageMobile;
-        img.alt = measurement.object || 'Measurement Guide';
-        img.className = 'active';
-        img.style.maxWidth = '100%';
-        img.style.maxHeight = '100%';
-        img.style.objectFit = 'contain';
-        
-        floatingGuideImages.appendChild(img);
+    async updateMobileGuideImage(measurementKey) {
+        try {
+            const measurement = await this.getMeasurement(this.gender, measurementKey);
+            if (!measurement || !measurement.imageMobile) return;
+            
+            const floatingGuideImages = document.querySelector('.measurement-guide-floating .floating-guide-images');
+            if (!floatingGuideImages) return;
+            
+            floatingGuideImages.innerHTML = '';
+            
+            const img = document.createElement('img');
+            img.src = measurement.imageMobile;
+            img.alt = measurement.object || 'Measurement Guide';
+            img.className = 'active';
+            img.style.maxWidth = '100%';
+            img.style.maxHeight = '100%';
+            img.style.objectFit = 'contain';
+            
+            floatingGuideImages.appendChild(img);
+        } catch (error) {
+            console.warn('Failed to update mobile guide image:', error);
+        }
     }
 
     /**
@@ -304,25 +344,36 @@ export class ViewHandler {
      */
     setupEyeIconListeners(callback) {
         const eyeIcons = document.querySelectorAll('.measurement-label .fa-eye, .measurement-label .fa-regular.fa-eye');
+        const clickHandlers = [];
         
         eyeIcons.forEach(icon => {
-            icon.addEventListener('click', (e) => {
+            const clickHandler = (e) => {
                 e.stopPropagation();
                 const labelElement = e.target.closest('.measurement-label');
                 if (!labelElement) return;
                 
-                const formGroup = labelElement.closest('.form-group');
+                // Find the input element within the same form group
+                const formGroup = labelElement.closest('.form-group') || labelElement.parentElement;
                 if (!formGroup) return;
                 
-                const inputElement = formGroup.querySelector('.measurement-input');
+                const inputElement = formGroup.querySelector('.measurement-input') || 
+                                     formGroup.querySelector('input');
                 if (!inputElement) return;
                 
-                const measurementKey = inputElement.dataset.measurement;
-                if (measurementKey && this.isMobileView) {
+                const measurementKey = inputElement.dataset.measurement || 
+                                      inputElement.getAttribute('data-measurement');
+                
+                if (measurementKey && this.isMobileView && callback) {
                     callback(measurementKey);
                 }
-            });
+            };
+            
+            icon.addEventListener('click', clickHandler);
+            clickHandlers.push({ element: icon, handler: clickHandler, type: 'click' });
         });
+        
+        this.eventListeners.set('eyeIcons', clickHandlers);
+        return clickHandlers.length > 0; // Return true if listeners were set up
     }
 
     /**
@@ -330,13 +381,24 @@ export class ViewHandler {
      * @param {Function} callback - Callback when view changes
      */
     setupWindowResizeListener(callback) {
-        window.addEventListener('resize', () => {
-            const newIsMobileView = window.innerWidth <= 992;
-            if (newIsMobileView !== this.isMobileView) {
-                this.isMobileView = newIsMobileView;
-                if (callback) callback(newIsMobileView);
+        const handleResize = () => {
+            if (this.debounceTimers.has('resize')) {
+                clearTimeout(this.debounceTimers.get('resize'));
             }
-        });
+            
+            const timerId = setTimeout(() => {
+                const newIsMobileView = window.innerWidth <= 992;
+                if (newIsMobileView !== this.isMobileView) {
+                    this.isMobileView = newIsMobileView;
+                    if (callback) callback(newIsMobileView);
+                }
+            }, 200);
+            
+            this.debounceTimers.set('resize', timerId);
+        };
+
+        window.addEventListener('resize', handleResize);
+        this.eventListeners.set('resize', { element: window, handler: handleResize, type: 'resize' });
     }
 
     /**
@@ -344,11 +406,14 @@ export class ViewHandler {
      * @param {Function} callback - Callback when escape is pressed
      */
     setupEscapeKeyListener(callback) {
-        document.addEventListener('keydown', (e) => {
+        const handleEscape = (e) => {
             if (e.key === 'Escape') {
                 if (callback) callback();
             }
-        });
+        };
+        
+        document.addEventListener('keydown', handleEscape);
+        this.eventListeners.set('escape', { element: document, handler: handleEscape, type: 'keydown' });
     }
 
     /**
@@ -358,14 +423,50 @@ export class ViewHandler {
     setupPrintButtonListener(callback) {
         const printBtn = document.getElementById('print-summary');
         if (printBtn) {
-            printBtn.addEventListener('click', () => {
+            const clickHandler = () => {
                 try {
                     if (callback) callback();
                 } catch (error) {
                     this.showAlert(error.message);
                 }
-            });
+            };
+            
+            printBtn.addEventListener('click', clickHandler);
+            this.eventListeners.set('print', { element: printBtn, handler: clickHandler, type: 'click' });
         }
+    }
+
+    /**
+     * Clean up event listeners and timers
+     */
+    cleanup() {
+        // Clear all debounced timers
+        this.debounceTimers.forEach((timer, key) => {
+            if (typeof timer === 'number') {
+                clearTimeout(timer);
+            }
+            this.debounceTimers.delete(key);
+        });
+
+        // Remove all event listeners
+        this.eventListeners.forEach((listenerInfo, key) => {
+            if (Array.isArray(listenerInfo)) {
+                // Handle arrays of listeners (like eye icons)
+                listenerInfo.forEach(({ element, handler, type }) => {
+                    if (element && handler && type) {
+                        element.removeEventListener(type, handler);
+                    }
+                });
+            } else if (listenerInfo && typeof listenerInfo === 'object') {
+                // Handle single listeners
+                const { element, handler, type } = listenerInfo;
+                if (element && handler && type) {
+                    element.removeEventListener(type, handler);
+                }
+            }
+        });
+        
+        this.eventListeners.clear();
     }
 
     /**

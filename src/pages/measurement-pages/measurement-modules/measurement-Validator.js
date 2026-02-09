@@ -4,8 +4,12 @@
  */
 export class MeasurementValidator {
     constructor(formElement) {
+        if (!formElement) {
+            throw new Error('Form element is required');
+        }
+        
         this.form = formElement;
-        this.gender = formElement.dataset.gender;
+        this.gender = formElement.dataset?.gender || 'male'; // Default to male if not specified
         this.errors = new Set();
         this.init();
     }
@@ -78,9 +82,11 @@ export class MeasurementValidator {
      * @returns {boolean} True if valid
      */
     validateMeasurementInput(input) {
+        if (!input) return false;
+        
         const value = parseFloat(input.value);
-        const min = parseFloat(input.dataset.min);
-        const max = parseFloat(input.dataset.max);
+        const min = parseFloat(input.dataset?.min || 0);
+        const max = parseFloat(input.dataset?.max || 100);
         const measurementId = input.id;
 
         // Check if empty
@@ -111,6 +117,8 @@ export class MeasurementValidator {
      * @returns {boolean} True if valid
      */
     validateField(fieldId) {
+        if (!fieldId) return true;
+        
         const input = document.getElementById(fieldId);
         if (!input) return true;
 
@@ -139,6 +147,8 @@ export class MeasurementValidator {
      * @param {string} message - Error message to display
      */
     addFieldError(fieldId, message) {
+        if (!fieldId) return;
+        
         this.errors.add(fieldId);
         
         const errorElement = document.getElementById(`${fieldId}-error`);
@@ -159,6 +169,8 @@ export class MeasurementValidator {
      * @param {string} fieldId - Field ID to clear error for
      */
     clearSingleError(fieldId) {
+        if (!fieldId) return;
+        
         const errorElement = document.getElementById(`${fieldId}-error`);
         const inputElement = document.getElementById(fieldId);
         
@@ -179,13 +191,17 @@ export class MeasurementValidator {
     clearErrors() {
         this.errors.clear();
         
+        if (!this.form) return;
+        
         // Clear error messages
-        this.form.querySelectorAll('.error-message').forEach(el => {
+        const errorMessages = this.form.querySelectorAll('.error-message');
+        errorMessages.forEach(el => {
             el.textContent = '';
         });
         
-        // Clear error classes
-        this.form.querySelectorAll('input, select').forEach(input => {
+        // Clear error classes from inputs within the form
+        const inputs = this.form.querySelectorAll('input, select');
+        inputs.forEach(input => {
             input.classList.remove('error', 'valid');
         });
     }
@@ -195,7 +211,8 @@ export class MeasurementValidator {
      * @returns {HTMLElement|null} First error element
      */
     getFirstErrorField() {
-        const firstError = this.form.querySelector('.error');
-        return firstError;
+        if (!this.form) return null;
+        // Find the first input/select with error class within the form
+        return this.form.querySelector('.error');
     }
 }
