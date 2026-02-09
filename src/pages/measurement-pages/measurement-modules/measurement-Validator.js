@@ -194,12 +194,14 @@ export class MeasurementValidator {
         if (!this.form) return;
         
         // Clear error messages
-        this.form.querySelectorAll('.error-message').forEach(el => {
+        const errorMessages = this.form.querySelectorAll('.error-message');
+        errorMessages.forEach(el => {
             el.textContent = '';
         });
         
-        // Clear error classes
-        this.form.querySelectorAll('input, select').forEach(input => {
+        // Clear error classes from inputs within the form
+        const inputs = this.form.querySelectorAll('input, select');
+        inputs.forEach(input => {
             input.classList.remove('error', 'valid');
         });
     }
@@ -210,7 +212,7 @@ export class MeasurementValidator {
      */
     getFirstErrorField() {
         if (!this.form) return null;
-        const firstError = this.form.querySelector('.error');
-        return firstError;
+        // Find the first input/select with error class within the form
+        return this.form.querySelector('.error');
     }
 }

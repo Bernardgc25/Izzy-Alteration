@@ -29,7 +29,10 @@ function createTestDOM() {
                 </div>
             </form>
         </body>
-    </html>`);
+    </html>`, {
+        url: 'http://localhost', // Added to fix localStorage SecurityError
+        resources: 'usable'
+    });
 }
 
 describe('measurement-Validator.js', () => {
@@ -45,6 +48,7 @@ describe('measurement-Validator.js', () => {
         dom = createTestDOM();
         global.window = dom.window;
         global.document = dom.window.document;
+        global.localStorage = dom.window.localStorage; // Mock localStorage
         
         // Now import the module after setting up the global environment
         const module = await import('../../../src/pages/measurement-pages/measurement-modules/measurement-Validator.js');
@@ -337,9 +341,35 @@ describe('measurement-Validator.js', () => {
 
     describe('clearErrors', () => {
         beforeEach(() => {
-            // Set up multiple errors
-            validator.addFieldError('field1', 'Error 1');
-            validator.addFieldError('field2', 'Error 2');
+            // Set up multiple errors within the form
+            const error1 = document.createElement('span');
+            error1.id = 'field1-error';
+            error1.className = 'error-message';
+            error1.textContent = 'Error 1';
+            form.appendChild(error1);
+            
+            const error2 = document.createElement('span');
+            error2.id = 'field2-error';
+            error2.className = 'error-message';
+            error2.textContent = 'Error 2';
+            form.appendChild(error2);
+            
+            // Add errors to the set
+            validator.errors.add('field1');
+            validator.errors.add('field2');
+        });
+
+        afterEach(() => {
+            // Clean up test elements
+            const error1 = document.getElementById('field1-error');
+            const error2 = document.getElementById('field2-error');
+            
+            if (error1 && error1.parentNode) {
+                error1.parentNode.removeChild(error1);
+            }
+            if (error2 && error2.parentNode) {
+                error2.parentNode.removeChild(error2);
+            }
         });
 
         it('should clear all errors from set', () => {
@@ -347,19 +377,14 @@ describe('measurement-Validator.js', () => {
             expect(validator.errors.size).to.equal(0);
         });
 
-        it('should clear all error message elements', () => {
-            // Create some error elements
-            const error1 = document.createElement('div');
-            error1.className = 'error-message';
-            error1.textContent = 'Error 1';
-            document.body.appendChild(error1);
-            
+        it('should clear all error message elements within the form', () => {
             validator.clearErrors();
             
-            expect(error1.textContent).to.equal('');
+            const error1 = document.getElementById('field1-error');
+            const error2 = document.getElementById('field2-error');
             
-            // Clean up
-            document.body.removeChild(error1);
+            expect(error1.textContent).to.equal('');
+            expect(error2.textContent).to.equal('');
         });
     });
 
@@ -368,13 +393,13 @@ describe('measurement-Validator.js', () => {
             // Clean up test elements
             const testElements = document.querySelectorAll('#field1, #field2');
             testElements.forEach(el => {
-                if (el.parentNode === document.body) {
-                    document.body.removeChild(el);
+                if (el.parentNode === form || el.parentNode === document.body) {
+                    el.parentNode.removeChild(el);
                 }
             });
         });
 
-        it('should return first element with error class', () => {
+        it('should return first element with error class within the form', () => {
             const input1 = document.createElement('input');
             input1.id = 'field1';
             input1.className = 'error';
@@ -383,8 +408,9 @@ describe('measurement-Validator.js', () => {
             input2.id = 'field2';
             input2.className = 'error';
             
-            document.body.appendChild(input1);
-            document.body.appendChild(input2);
+            // Append to the form, not the body
+            form.appendChild(input1);
+            form.appendChild(input2);
             
             const result = validator.getFirstErrorField();
             expect(result).to.equal(input1);
