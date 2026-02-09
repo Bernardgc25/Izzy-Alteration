@@ -200,11 +200,15 @@ describe('measurement-ViewHandler.js', () => {
             const definitionElement = document.getElementById('measure-definition');
             const descriptionElement = document.getElementById('measure-description');
             
-            // Check both innerHTML and textContent
-            expect(objectElement.innerHTML).to.include('<strong>Object:</strong> Neck Circumference');
-            expect(objectElement.textContent).to.include('Object: Neck Circumference');
-            expect(definitionElement.innerHTML).to.include('<strong>Definition:</strong> Measure around the base of the neck...');
-            expect(descriptionElement.innerHTML).to.include('<strong>Description:</strong> Place the tape measure around...');
+            // Check innerHTML for HTML content
+            expect(objectElement.innerHTML).to.equal('<strong>Object:</strong> Neck Circumference');
+            expect(definitionElement.innerHTML).to.equal('<strong>Definition:</strong> Measure around the base of the neck...');
+            expect(descriptionElement.innerHTML).to.equal('<strong>Description:</strong> Place the tape measure around...');
+            
+            // Check textContent for plain text (should be automatically derived from innerHTML)
+            expect(objectElement.textContent).to.equal('Object: Neck Circumference');
+            expect(definitionElement.textContent).to.equal('Definition: Measure around the base of the neck...');
+            expect(descriptionElement.textContent).to.equal('Description: Place the tape measure around...');
         });
 
         it('should handle invalid measurement gracefully', async () => {
@@ -231,11 +235,15 @@ describe('measurement-ViewHandler.js', () => {
             const definitionElement = document.getElementById('floating-measure-definition');
             const descriptionElement = document.getElementById('floating-measure-description');
             
-            // Check both innerHTML and textContent
-            expect(objectElement.innerHTML).to.include('<strong>Object:</strong> Neck Circumference');
-            expect(objectElement.textContent).to.include('Object: Neck Circumference');
-            expect(definitionElement.innerHTML).to.include('<strong>Definition:</strong> Measure around the base of the neck...');
-            expect(descriptionElement.innerHTML).to.include('<strong>Description:</strong> Place the tape measure around...');
+            // Check innerHTML for HTML content
+            expect(objectElement.innerHTML).to.equal('<strong>Object:</strong> Neck Circumference');
+            expect(definitionElement.innerHTML).to.equal('<strong>Definition:</strong> Measure around the base of the neck...');
+            expect(descriptionElement.innerHTML).to.equal('<strong>Description:</strong> Place the tape measure around...');
+            
+            // Check textContent for plain text
+            expect(objectElement.textContent).to.equal('Object: Neck Circumference');
+            expect(definitionElement.textContent).to.equal('Definition: Measure around the base of the neck...');
+            expect(descriptionElement.textContent).to.equal('Description: Place the tape measure around...');
         });
 
         it('should update mobile guide image', async () => {
@@ -289,8 +297,8 @@ describe('measurement-ViewHandler.js', () => {
             
             objectElements.forEach(element => {
                 if (element) {
-                    expect(element.innerHTML).to.include('<strong>Object:</strong> Test Object');
-                    expect(element.textContent).to.include('Object: Test Object');
+                    expect(element.innerHTML).to.equal('<strong>Object:</strong> Test Object');
+                    expect(element.textContent).to.equal('Object: Test Object');
                 }
             });
         });

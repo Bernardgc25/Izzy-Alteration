@@ -268,9 +268,8 @@ export class ViewHandler {
             if (element && content !== undefined) {
                 const label = id.includes('object') ? 'Object' : 
                             id.includes('definition') ? 'Definition' : 'Description';
-                // Set both innerHTML and textContent for compatibility
+                // Only set innerHTML to preserve HTML tags
                 element.innerHTML = `<strong>${label}:</strong> ${content}`;
-                element.textContent = `${label}: ${content}`;
             }
         });
     }
