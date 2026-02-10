@@ -1,0 +1,255 @@
+//prompt for deepseek
+//logic for alteration-female.js
+
+"1. make the code more maintainable:
+const alterationMap = {
+    // Bodice 
+    "halter-neckline": { simple: 20, intermediate: 30, difficult: 40, couture: 50, detail: "Adjust halter neckline for proper fit and support" },
+    "take-in-neckline": { simple: 15, intermediate: 25, difficult: 35, couture: 45, detail: "Take in neckline to reduce gaping or improve fit" },
+    "line-bind-neckline": { simple: 15, intermediate: 20, difficult: 25, couture: 30, detail: "Line and bind neckline edges for finished look" },
+    "take-up-shoulders": { simple: 20, intermediate: 35, difficult: 50, couture: 65, detail: "Adjust shoulder seams to lift bodice" },
+    "shorten-straps": { simple: 10, intermediate: 0, difficult: 20, couture: 25, detail: "Shorten dress straps for proper length" },
+    "coordinating-straps": { simple: 20, intermediate: 0, difficult: 30, couture: 0, detail: "Coordinate multiple straps for even alignment" },
+    "adjust-slide-bust": { simple: 35, intermediate: 50, difficult: 65, couture: 80, detail: "Adjust bust area for proper fit and support" },
+    "take-in-zipper": { simple: 30, intermediate: 50, difficult: 65, couture: 80, detail: "Take in side seams including zipper adjustment" },
+    "reshape-armhole": { simple: 15, intermediate: 20, difficult: 25, couture: 30, detail: "Reshape armhole for comfort and appearance" },
+    "shorten-bodice": { simple: 40, intermediate: 50, difficult: 60, couture: 75, detail: "Shorten bodice length from shoulder or waist" },
+    "add-gusset": { simple: 40, intermediate: 50, difficult: 65, couture: 80, detail: "Add fabric gusset for additional room" },
+    "temple-fill-bodice": { simple: 30, intermediate: 40, difficult: 50, couture: 60, detail: "Add temple fill for bodice structure" },
+    "additional-coverage": { simple: 15, intermediate: 0, difficult: 0, couture: 0, detail: "Add fabric for additional coverage" },
+    "corset-back": { simple: 15, intermediate: 0, difficult: 115, couture: 0, detail: "Install corset back closure system" },
+    "corset-ties": { simple: 20, intermediate: 0, difficult: 0, couture: 0, detail: "Add or replace corset ties" },
+    "modesty-panel": { simple: 30, intermediate: 0, difficult: 0, couture: 0, detail: "Add modesty panel for back coverage" },
+
+    // Sleeve 
+    "shorten-sleeve": { simple: 35, intermediate: 45, difficult: 55, couture: 70, detail: "Shorten sleeve length" },
+    "take-in-let-out-sleeve": { simple: 15, intermediate: 25, difficult: 35, couture: 40, detail: "Adjust sleeve width through seams" },
+    "take-in-elastic": { simple: 10, intermediate: 20, difficult: 0, couture: 0, detail: "Take in sleeve using elastic" },
+    "add-lingerie": { simple: 10, intermediate: 0, difficult: 0, couture: 0, detail: "Add lingerie straps or supports" },
+    "reset-sleeve": { simple: 25, intermediate: 35, difficult: 45, couture: 60, detail: "Remove and reset sleeve for better fit" },
+    "reshape-armholes": { simple: 10, intermediate: 20, difficult: 30, couture: 40, detail: "Reshape armholes for sleeve attachment" },
+    "temple-fill-sleeves": { simple: 40, intermediate: 50, difficult: 60, couture: 75, detail: "Add temple fill to sleeves" },
+    "cap-sleeve-1": { simple: 40, intermediate: 0, difficult: 0, couture: 0, detail: "Add basic cap sleeves" },
+    "cap-sleeve-2": { simple: 40, intermediate: 0, difficult: 0, couture: 0, detail: "Add detailed cap sleeves" },
+    "flutter-sleeve": { simple: 40, intermediate: 0, difficult: 0, couture: 0, detail: "Add flutter sleeves" },
+    "short-sleeve-ss1": { simple: 50, intermediate: 0, difficult: 0, couture: 0, detail: "Add short sleeves style 1" },
+    "long-sleeve-ls1": { simple: 60, intermediate: 0, difficult: 0, couture: 0, detail: "Add long sleeves style 1" },
+
+    // Skirt 
+    "hem": { simple: 75, intermediate: 95, difficult: 120, couture: 150, detail: "Hem skirt to desired length" },
+    "waistband": { simple: 15, intermediate: 20, difficult: 25, couture: 30, detail: "Adjust or replace waistband" },
+    "side-seams": { simple: 30, intermediate: 40, difficult: 50, couture: 60, detail: "Take in or let out side seams" },
+    "slit": { simple: 10, intermediate: 15, difficult: 20, couture: 25, detail: "Add or adjust skirt slit" },
+
+    // Bustle 
+    "over-bustle": { simple: 35, intermediate: 0, difficult: 0, couture: 0, detail: "Create over bustle for train" },
+    "add-over-bustle": { simple: 5, intermediate: 0, difficult: 0, couture: 0, detail: "Add additional over bustle point" },
+    "under-bustle": { simple: 50, intermediate: 0, difficult: 0, couture: 0, detail: "Create under bustle for train" },
+    "add-under-bustle": { simple: 7, intermediate: 0, difficult: 0, couture: 0, detail: "Add additional under bustle point" },
+    "royal-bustle": { simple: 50, intermediate: 0, difficult: 0, couture: 0, detail: "Create royal bustle style" },
+    "each-additional-royal": { simple: 15, intermediate: 0, difficult: 0, couture: 0, detail: "Each additional royal bustle point" },
+    "ballroom-bustle": { simple: 35, intermediate: 0, difficult: 0, couture: 0, detail: "Create ballroom bustle style" },
+    "add-ballroom-bustle": { simple: 5, intermediate: 0, difficult: 0, couture: 0, detail: "Add additional ballroom bustle point" },
+    "bustle-point-each": { simple: 5, intermediate: 0, difficult: 0, couture: 0, detail: "Each standard bustle point" },
+    "ribbon-bustle-point": { simple: 3, intermediate: 0, difficult: 0, couture: 0, detail: "Ribbon bustle point attachment" },
+    "add-wristloop": { simple: 25, intermediate: 0, difficult: 0, couture: 0, detail: "Add wrist loop for train carrying" },
+
+    // Veil 
+    "loop_comb": { simple: 5, intermediate: 0, difficult: 0, couture: 0, detail: "Add loop to comb attachment" },
+    "velcro_veil": { simple: 10, intermediate: 0, difficult: 0, couture: 0, detail: "Add velcro veil attachment" },
+    "veil_bustle": { simple: 5, intermediate: 0, difficult: 0, couture: 0, detail: "Bustle veil for reception" },
+
+    // Others 
+    "move-add-hooks-eyes": { simple: 5, intermediate: 0, difficult: 0, couture: 0, detail: "Move or add hooks and eyes" },
+    "add-bra-cups": { simple: 20, intermediate: 0, difficult: 0, couture: 0, detail: "Add bra cups for support" },
+    "rush-fee": { simple: 25, intermediate: 0, difficult: 0, couture: 0, detail: "Rush service fee" },
+    "additional-press-bridal": { simple: 40, intermediate: 0, difficult: 0, couture: 0, detail: "Additional pressing for bridal gown" },
+    "additional-press-veil": { simple: 10, intermediate: 0, difficult: 0, couture: 0, detail: "Additional pressing for veil" },
+    "hem-single-layer-": { simple: 15, intermediate: 0, difficult: 0, couture: 0, detail: "Hem single layer garment" },
+    "hem-slip": { simple: 30, intermediate: 25, difficult: 35, couture: 50, detail: "Hem slip or undergarment" }
+};
+
+// Global variables to track current selection
+let currentAlteration = null;
+let currentLevel = null;
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    initializeEventListeners();
+});
+
+function initializeEventListeners() {
+    // Get all alteration select elements
+    const alterationSelects = [
+        'alteration-bodice-Select',
+        'alteration-sleeve-Select', 
+        'alteration-skirt-Select',
+        'alteration-bustle-Select',
+        'alteration-veil-Select',
+        'alteration-others-Select'
+    ];
+
+    // Add event listeners to all alteration selects
+    alterationSelects.forEach(selectId => {
+        const select = document.getElementById(selectId);
+        if (select) {
+            select.addEventListener('change', handleAlterationChange);
+        }
+    });
+
+    // Add event listener to level select
+    const levelSelect = document.getElementById('alterationLevel-diff');
+    if (levelSelect) {
+        levelSelect.addEventListener('change', handleLevelChange);
+    }
+}
+
+function handleAlterationChange(event) {
+    const selectedValue = event.target.value;
+    
+    // Reset other selects if one is chosen (only one alteration allowed)
+    if (selectedValue) {
+        resetOtherSelects(event.target.id);
+        currentAlteration = selectedValue;
+        updateDisplay();
+    } else {
+        currentAlteration = null;
+        clearDisplay();
+    }
+}
+
+function handleLevelChange(event) {
+    currentLevel = event.target.value;
+    updateDisplay();
+}
+
+function resetOtherSelects(currentSelectId) {
+    const allSelects = [
+        'alteration-bodice-Select',
+        'alteration-sleeve-Select', 
+        'alteration-skirt-Select',
+        'alteration-bustle-Select',
+        'alteration-veil-Select',
+        'alteration-others-Select'
+    ];
+
+    allSelects.forEach(selectId => {
+        if (selectId !== currentSelectId) {
+            const select = document.getElementById(selectId);
+            if (select) {
+                select.value = '';
+            }
+        }
+    });
+}
+
+function updateDisplay() {
+    if (!currentAlteration || !currentLevel) return;
+
+    const alteration = alterationMap[currentAlteration];
+    if (!alteration) return;
+
+    // Update description
+    const descriptionElement = document.getElementById('alteration-description');
+    if (descriptionElement) {
+        descriptionElement.textContent = alteration.detail;
+    }
+
+    // Update alteration type in order summary
+    const typeOrderElement = document.getElementById('alteration-type-order');
+    if (typeOrderElement) {
+        typeOrderElement.textContent = `Alteration: ${currentAlteration}`;
+    }
+
+    // Update level in order summary
+    const levelOrderElement = document.getElementById('alteration-level-order');
+        if (levelOrderElement) {
+        const price = alteration[currentLevel];
+        if (price === 0) {
+            levelOrderElement.textContent = '';
+        } else {
+            levelOrderElement.textContent = `Level: ${currentLevel}`;
+        }
+    }
+
+    // Update price calculation
+    const priceElement = document.getElementById('priceCalculation');
+    if (priceElement) {
+        const price = alteration[currentLevel];
+        priceElement.textContent = price === 0 ? 'n.a' : `$${price}`;
+    }
+}
+
+function clearDisplay() {
+    const elementsToClear = [
+        'alteration-description',
+        'alteration-type-order', 
+        'alteration-level-order',
+        'priceCalculation'
+    ];
+
+    elementsToClear.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.textContent = id === 'priceCalculation' ? '' : `${id.replace('-', ' ')} on this portion`;
+        }
+    });
+}
+
+// Form button handlers
+function handleAdd() {
+    if (!currentAlteration || !currentLevel) {
+        alert('Please select both an alteration type and difficulty level');
+        return;
+    }
+    
+    const alteration = alterationMap[currentAlteration];
+    const price = alteration[currentLevel];
+    
+    if (price === 0) {
+        alert('This service is not available at the selected difficulty level');
+        return;
+    }
+    
+    // Here you would typically add to cart or process the order
+    alert(`Added: ${currentAlteration} (${currentLevel}) - $${price}`);
+}
+
+function handleClear() {
+    // Reset all selects
+    const allSelects = [
+        'alteration-bodice-Select',
+        'alteration-sleeve-Select', 
+        'alteration-skirt-Select',
+        'alteration-bustle-Select',
+        'alteration-veil-Select',
+        'alteration-others-Select',
+        'alterationLevel-diff'
+    ];
+
+    allSelects.forEach(selectId => {
+        const select = document.getElementById(selectId);
+        if (select) {
+            select.value = '';
+        }
+    });
+
+    // Reset global variables
+    currentAlteration = null;
+    currentLevel = null;
+    
+    // Clear display
+    clearDisplay();
+}
+
+function cancelForm() {
+    // Simple back functionality
+    window.history.back();
+}
+	"
+   
+"2. preserve the logic"
+"3. preserve the function names"
+"4. preserve the variable names"
+"5. preserve the constant names"
+"6. preserve the structure"
