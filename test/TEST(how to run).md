@@ -1,14 +1,16 @@
-# Step 1: 
-# from root directory: 
+# Step 1: from root directory
 Izzy-Alteration
 
-# Step 2: (select) 
-# run all test: 
+# Step 2: install dependencies
+npm install
+
+# Step 3: (select a test) 
+# a. run all test
 npm run test:all
 
-# run only alteration module tests:
+# b. run only alteration module tests
 npm run test:alteration
 
-# run only measurement module tests: 
+# c. run only measurement module tests
 npm run test:measurement
     
