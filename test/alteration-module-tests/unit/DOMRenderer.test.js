@@ -21,7 +21,7 @@ const dom = new JSDOM(`
 
 global.document = dom.window.document;
 
-describe('DOMRenderer', () => {
+describe('alteration-DOMRenderer.js', () => {
   let domRenderer;
 
   beforeEach(() => {

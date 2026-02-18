@@ -30,7 +30,7 @@ const mockAlterationMaps = {
   }
 };
 
-describe('PriceCalculator', () => {
+describe('alteration-PriceCalculator.js', () => {
   let priceCalculator;
 
   beforeEach(() => {

@@ -3,7 +3,7 @@ import assert from 'assert';
 import { describe, it, beforeEach } from 'mocha';
 import CartManager from '../../../src/pages/alteration-pages/alteration-modules/alteration-CartManager.js';
 
-describe('CartManager', () => {
+describe('alteration-CartManager.js', () => {
   let cartManager;
 
   beforeEach(() => {
