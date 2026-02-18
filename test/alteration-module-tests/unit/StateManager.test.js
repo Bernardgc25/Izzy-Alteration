@@ -12,7 +12,7 @@ const mockAlterationMaps = {
   }
 };
 
-describe('StateManager', () => {
+describe('alteration-StateManager.js', () => {
   let stateManager;
 
   beforeEach(() => {

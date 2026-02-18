@@ -31,7 +31,7 @@ class MockDOMRenderer {
   resetSelects() {}
 }
 
-describe('EventManager', () => {
+describe('alteration-EventManager.js', () => {
   let eventManager;
   let mockStateManager;
   let mockPriceCalculator;

@@ -5,7 +5,7 @@ import { alterationMaps } from '../../../src/pages/alteration-pages/alteration-m
 
 // Note: This is a simplified integration test. In a real setup, you might need to mock more.
 
-describe('Integration Tests', () => {
+describe('alteration-DataMaps.js', () => {
   describe('Module Integration', () => {
     it('should calculate correct price for real alteration data', () => {
       // Test with actual alteration data
