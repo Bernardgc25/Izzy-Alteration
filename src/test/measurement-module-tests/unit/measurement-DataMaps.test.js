@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { measurementDataMap, getMeasurement, getAllMeasurementsForGender } from '../../../src/pages/measurement-pages/measurement-modules/measurement-DataMaps.js';
+import { measurementDataMap, getMeasurement, getAllMeasurementsForGender } from '../../../pages/measurement-pages/measurement-modules/measurement-DataMaps.js';
 
 describe('measurement-DataMaps.js', () => {
   describe('measurementDataMap structure', () => {

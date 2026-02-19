@@ -7,7 +7,7 @@ global.window = dom.window;
 global.document = dom.window.document;
 
 // Load the module
-import { MeasurementManager } from '../../../src/pages/measurement-pages/measurement-modules/measurement-Manager.js';
+import { MeasurementManager } from '../../../pages/measurement-pages/measurement-modules/measurement-Manager.js';
 
 describe('measurement-Manager.js', () => {
   let manager;

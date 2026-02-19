@@ -2,7 +2,7 @@
 import assert from 'assert';
 import { JSDOM } from 'jsdom';
 import { describe, it, beforeEach } from 'mocha';
-import DOMRenderer from '../../../src/pages/alteration-pages/alteration-modules/alteration-DOMRenderer.js';
+import DOMRenderer from '../../../pages/alteration-pages/alteration-modules/alteration-DOMRenderer.js';
 
 // Create a mock DOM environment
 const dom = new JSDOM(`
