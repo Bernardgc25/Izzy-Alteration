@@ -74,7 +74,7 @@ describe('measurement-ViewHandler.js', () => {
 
     before(async () => {
         // Import the ViewHandler module
-        const module = await import('../../../src/pages/measurement-pages/measurement-modules/measurement-ViewHandler.js');
+        const module = await import('../../../pages/measurement-pages/measurement-modules/measurement-ViewHandler.js');
         ViewHandler = module.ViewHandler;
     });
 

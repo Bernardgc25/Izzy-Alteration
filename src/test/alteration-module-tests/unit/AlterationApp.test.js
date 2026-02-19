@@ -1,7 +1,7 @@
 // test/alteration-module-tests/Integration.test.js
 import assert from 'assert';
 import { describe, it } from 'mocha';
-import { alterationMaps } from '../../../src/pages/alteration-pages/alteration-modules/alteration-DataMaps.js';
+import { alterationMaps } from '../../../pages/alteration-pages/alteration-modules/alteration-DataMaps.js';
 
 // Note: This is a simplified integration test. In a real setup, you might need to mock more.
 

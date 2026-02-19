@@ -1,6 +1,6 @@
 # Step 1: 
-# from root directory: 
-Izzy-Alteration
+# go to src folder: 
+Izzy-Alteration/src
 
 # Step 2: (select) 
 # run all test: 

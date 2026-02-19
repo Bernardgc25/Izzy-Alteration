@@ -51,7 +51,7 @@ describe('measurement-Validator.js', () => {
         global.localStorage = dom.window.localStorage; // Mock localStorage
         
         // Now import the module after setting up the global environment
-        const module = await import('../../../src/pages/measurement-pages/measurement-modules/measurement-Validator.js');
+        const module = await import('../../../pages/measurement-pages/measurement-modules/measurement-Validator.js');
         MeasurementValidator = module.MeasurementValidator;
     });
 
