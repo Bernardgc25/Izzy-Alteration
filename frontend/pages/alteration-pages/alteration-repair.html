@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Izzy Alteration</title>
     <!--relative path-->
-    <link rel="stylesheet" href="/src/css/index.css">
+    <link rel="stylesheet" href="/frontend/css/index.css">
     <!-- <link rel="stylesheet" href="/css/alteration-female.css"> -->
-    <link rel="stylesheet" href="/src/css/alteration.css">
-
+    <link rel="stylesheet" href="/frontend/css/alteration.css">
 </head>
 <body>
     <!--Header Section-->
@@ -16,7 +15,7 @@
         <nav class="navbar">
             <div class="nav-container">
                 <div class="nav-logo">
-                    <a href="/src/pages/index.html">Izzy Alteration</a>
+                    <a href="/frontend/pages/index.html">Izzy Alteration</a>
                 </div>
                 
                 <button class="menu-toggle" aria-label="Toggle menu">☰</button>
@@ -30,18 +29,18 @@
                             Account ⌄ 
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="/src/pages/signup.html" class="dropdown-link">Create</a></li>
-                            <li><a href="/src/pages/login.html" class="dropdown-link">Log In</a></li>
+                            <li><a href="/frontend/pages/signup.html" class="dropdown-link">Create</a></li>
+                            <li><a href="/frontend/pages/login.html" class="dropdown-link">Log In</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a href="/src/pages/services.html" class="nav-link">Services</a>
+                        <a href="/frontend/pages/services.html" class="nav-link">Services</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">Pricing</a>
+                        <a href="/frontend/pages/pricing.html" class="nav-link">Pricing</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">About</a>
+                        <a href="/frontend/pages/about.html" class="nav-link">About</a>
                     </li>
                     
                 
@@ -54,19 +53,24 @@
     <div class="container">
         <form id="myForm" action="/submit" method="POST">
             <div class="alteration-container">
-                <!--alterations jacket female list of services-->
+                <!--Repair list of services-->
                 <!--first column-->
                 <h2 id="price-list">Price list</h2>      
                 <div class="alteration-list">
-                    <label for="alteration-top-Select">Jacket (female):</label>
+                    <label for="alteration-top-Select">repair (unisex):</label>
                     <select id="alteration-top-Select">
+                        <!--Zippers-->
                         <option id="alteration-type-default" value="" data-link="" hidden></option>
-                        <option value="female-jacket-hem-sleeves-unlined" data-link="">hem sleeves unlined</option>
-                        <option value="female-jacket-hem-sleeves-lined" data-link="">hem sleeves lined</option>
-                        <option value="female-jacket-take-in-waist" data-link="">take-in waist</option>
-                        <option value="female-jacket-taper-sides-unlined" data-link="">taper sides unlined</option>
-                        <option value="female-jacket-taper-sides-lined" data-link="">taper sides lined</option>
-                        <option value="female-jacket-shorten-length" data-link="">shorten length</option>
+                        <option value="repair-zippers-on-dress" data-link="">zippers on dress</option>
+                        <option value="repair-zippers-on-pants" data-link="">zippers on pants</option>
+                        <option value="repair-zippers-on-coats-jackets" data-link="">zippers on coats/jackets</option>
+                    
+                        <!--Tears/Holes-->
+                        <option value="repair-apply-patches" data-link="">apply patches</option>
+                        <option value="repair-sew-in-rips-tears" data-link="">sew-in rips tears</option>
+                    
+                        <!-- Buttons -->
+                        <option value="repair-button-replacement" data-link="">button replacement</option>                    
                     </select>
                 </div>
 
@@ -96,7 +100,7 @@
                     <!-- depending on the level of difficulty, the price will be calculated accordingly. -->
                     <details open>
                         <summary>note</summary>
-                       <p id="alteration-note"></p>
+                        <p id="alteration-note"></p>
                     </details>
                     <!--description of alteration-->
                     <details open>
@@ -116,8 +120,8 @@
         </form>
     </div>
 
-    <script src="/src/js/index.js"></script>
-    <script type="module" src="/src/pages/alteration-pages/alteration-modules/alteration-Main.js"></script>
+    <script src="/frontend/js/index.js"></script>
+    <script type="module" src="/frontend/pages/alteration-pages/alteration-modules/alteration-Main.js"></script>
 
 
 

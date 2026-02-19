@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Izzy Alteration</title>
     <!--relative path-->
-    <link rel="stylesheet" href="/src/css/index.css">
+    <link rel="stylesheet" href="/frontend/css/index.css">
     <!-- <link rel="stylesheet" href="/css/alteration-female.css"> -->
-    <link rel="stylesheet" href="/src/css/alteration.css">
+    <link rel="stylesheet" href="/frontend/css/alteration.css">
+
 </head>
 <body>
     <!--Header Section-->
@@ -15,7 +16,7 @@
         <nav class="navbar">
             <div class="nav-container">
                 <div class="nav-logo">
-                    <a href="/src/pages/index.html">Izzy Alteration</a>
+                    <a href="/frontend/pages/index.html">Izzy Alteration</a>
                 </div>
                 
                 <button class="menu-toggle" aria-label="Toggle menu">☰</button>
@@ -29,18 +30,18 @@
                             Account ⌄ 
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="/src/pages/signup.html" class="dropdown-link">Create</a></li>
-                            <li><a href="/src/pages/login.html" class="dropdown-link">Log In</a></li>
+                            <li><a href="/frontend/pages/signup.html" class="dropdown-link">Create</a></li>
+                            <li><a href="/frontend/pages/login.html" class="dropdown-link">Log In</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a href="/src/pages/services.html" class="nav-link">Services</a>
+                        <a href="/frontend/pages/services.html" class="nav-link">Services</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">Pricing</a>
+                        <a href="/frontend/pages/pricing.html" class="nav-link">Pricing</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">About</a>
+                        <a href="/frontend/pages/about.html" class="nav-link">About</a>
                     </li>
                     
                 
@@ -53,37 +54,37 @@
     <div class="container">
         <form id="myForm" action="/submit" method="POST">
             <div class="alteration-container">
-                <!--Repair list of services-->
+                <!--alterations bottom female list of services-->
                 <!--first column-->
                 <h2 id="price-list">Price list</h2>      
                 <div class="alteration-list">
-                    <label for="alteration-top-Select">repair (unisex):</label>
-                    <select id="alteration-top-Select">
-                        <!--Zippers-->
-                        <option id="alteration-type-default" value="" data-link="" hidden></option>
-                        <option value="repair-zippers-on-dress" data-link="">zippers on dress</option>
-                        <option value="repair-zippers-on-pants" data-link="">zippers on pants</option>
-                        <option value="repair-zippers-on-coats-jackets" data-link="">zippers on coats/jackets</option>
-                    
-                        <!--Tears/Holes-->
-                        <option value="repair-apply-patches" data-link="">apply patches</option>
-                        <option value="repair-sew-in-rips-tears" data-link="">sew-in rips tears</option>
-                    
-                        <!-- Buttons -->
-                        <option value="repair-button-replacement" data-link="">button replacement</option>                    
-                    </select>
+                <label for="alteration-top-Select">Bottom (female):</label>
+                <select id="alteration-top-Select">
+                    <option id="alteration-type-default" value="" data-link="" hidden></option>
+                    <option value="female-bottom-hem-skirt-straight-slim" data-link="">hem skirt straight slim</option>
+                    <option value="female-bottom-hem-full/circle-unlined-skirt" data-link="">hem full/circle unlined skirt</option>
+                    <option value="female-bottom-hem-full/circle-lined-skirt" data-link="">hem full/circle lined skirt</option>
+                    <option value="female-bottom-hem-unlined-pants" data-link="">hem unlined pants</option>
+                    <option value="female-bottom-hem-lined-pants" data-link="">hem lined pants</option>
+                    <option value="female-bottom-take-in-side-seams-unlined-pants" data-link="">take-in side seams unlined pants</option>
+                    <option value="female-bottom-take-in-side-seams-lined-pants" data-link="">take-in side seams lined pants</option>
+                    <option value="female-bottom-taper-legs-unlined-pants" data-link="">taper legs unlined pants</option>
+                    <option value="female-bottom-taper-legs-lined-pants" data-link="">taper legs lined pants</option>
+                    <!-- for unit test only comment when done testing -->
+                    <!-- <option value="male-bottom-taper-legs-lined-pants" data-link="">taper legs lined pants</option> -->
+                </select>
                 </div>
 
                 <!--alteration level-->
                 <!--second column-->
                 <div class="alteration-level">
-                    <label for="alterationLevel-diff">Level of difficulty:</label>
-                    <select id="alterationLevel-diff" class="alteration-select">
-                        <option value="" data-link="" hidden></option>
-                        <option value="simple" data-link="">simple</option>
-                        <option value="intermediate" data-link="">intermediate</option>
-                        <option value="difficult" data-link="">difficult</option>
-                    </select>                  
+                <label for="alterationLevel-diff">Level of difficulty:</label>
+                <select id="alterationLevel-diff" class="alteration-select">
+                    <option value="" data-link="" hidden></option>
+                    <option value="simple" data-link="">simple</option>
+                    <option value="intermediate" data-link="">intermediate</option>
+                    <option value="difficult" data-link="">difficult</option>
+                </select>       
                 </div>
                 
                 <!--third column-->
@@ -100,7 +101,7 @@
                     <!-- depending on the level of difficulty, the price will be calculated accordingly. -->
                     <details open>
                         <summary>note</summary>
-                        <p id="alteration-note"></p>
+                       <p id="alteration-note"></p>
                     </details>
                     <!--description of alteration-->
                     <details open>
@@ -120,8 +121,8 @@
         </form>
     </div>
 
-    <script src="/src/js/index.js"></script>
-    <script type="module" src="/src/pages/alteration-pages/alteration-modules/alteration-Main.js"></script>
+    <script src="/frontend/js/index.js"></script>
+    <script type="module" src="/frontend/pages/alteration-pages/alteration-modules/alteration-Main.js"></script>
 
 
 
