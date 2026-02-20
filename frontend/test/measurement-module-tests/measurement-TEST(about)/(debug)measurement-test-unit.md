@@ -726,14 +726,18 @@ describe('ViewHandler', () => {
   });
 
   describe('setupEyeIconListeners', () => {
-    it('should attach click handler to eye icons', () => {
-      const callback = sinon.spy();
-      viewHandler.setupEyeIconListeners(callback);
-      const eyeIcon = document.querySelector('.fa-eye');
-      eyeIcon.click();
-      expect(callback.calledOnce).to.be.true;
-      expect(callback.args[0][0]).to.equal('neck');
-    });
+      it('should attach click handler to eye icons', () => {
+          // Force mobile view so the callback is triggered
+          viewHandler.isMobileView = true;
+
+          const callback = sinon.spy();
+          viewHandler.setupEyeIconListeners(callback);
+          const eyeIcon = document.querySelector('.fa-eye');
+          eyeIcon.click();
+
+          expect(callback.calledOnce).to.be.true;
+          expect(callback.args[0][0]).to.equal('neck');
+      });
   });
 
   describe('setupWindowResizeListener', () => {
@@ -1164,7 +1168,7 @@ export const getAllMeasurementsForGender = (gender) => {
 
 **CODE 7 - File: measurement-Main.js**
 [
-    /**
+/**
  * Main Application Coordinator
  * Orchestrates interactions between modules
  */
@@ -1358,7 +1362,7 @@ export class MeasurementApp {
     }
 
     handleResetForm() {
-        if (confirm('Are you sure you want to reset all measurements? This action cannot be undone.')) {
+        if (window.confirm('Are you sure you want to reset all measurements? This action cannot be undone.')) {
             const form = document.getElementById('measurement-form');
             if (form) form.reset();
 
@@ -1379,10 +1383,13 @@ export class MeasurementApp {
     }
 }
 
-// Initialize application when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    new MeasurementApp();
-});
+// Check if we're in a browser environment before initializing
+if (typeof document !== 'undefined' && typeof window !== 'undefined') {
+    // Initialize application when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        new MeasurementApp();
+    });
+}
 ]  
 
 **CODE 8 - File: measurement-Manager.js**  
