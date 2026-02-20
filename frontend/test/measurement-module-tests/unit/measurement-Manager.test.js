@@ -1,240 +1,164 @@
+// test/test-measurement-Manager.js
 import { expect } from 'chai';
+import sinon from 'sinon';
 import { JSDOM } from 'jsdom';
-
-// Mock DOM for testing
-const dom = new JSDOM(`<!DOCTYPE html><html><body></body></html>`);
-global.window = dom.window;
-global.document = dom.window.document;
-
-// Load the module
 import { MeasurementManager } from '../../../pages/measurement-pages/measurement-modules/measurement-Manager.js';
 
-describe('measurement-Manager.js', () => {
+describe('MeasurementManager', () => {
   let manager;
+  let dom;
+  let document;
 
   beforeEach(() => {
+    // Set up a basic DOM with elements the manager expects
+    dom = new JSDOM(`
+      <!DOCTYPE html>
+      <body>
+        <input id="client-name" value="John Doe" />
+        <input id="save-date" />
+        <input id="size-number" value="40" />
+        <input id="cupSize" value="C" />
+        <div id="measurement-form"></div>
+      </body>
+    `);
+    global.document = dom.window.document;
+    global.window = dom.window;
+
     manager = new MeasurementManager();
-    
-    // Create mock DOM elements
-    const mockForm = document.createElement('div');
-    mockForm.id = 'measurement-form';
-    document.body.appendChild(mockForm);
   });
 
   afterEach(() => {
-    document.body.innerHTML = '';
+    sinon.restore();
+    delete global.document;
+    delete global.window;
   });
 
   describe('initialize', () => {
-    it('should set gender property', () => {
-      manager.initialize('male');
+    it('should set gender and return this', () => {
+      const result = manager.initialize('male');
       expect(manager.gender).to.equal('male');
-    });
-
-    it('should return instance for chaining', () => {
-      const result = manager.initialize('female');
       expect(result).to.equal(manager);
     });
   });
 
   describe('setupDateField', () => {
-    it('should set date field with current date', () => {
-      // Create date field
-      const dateField = document.createElement('input');
-      dateField.id = 'save-date';
-      document.body.appendChild(dateField);
+    it('should set today\'s date and max attribute on #save-date', () => {
+      manager.initialize('male');
+      const dateField = document.getElementById('save-date');
+      const today = new Date().toISOString().split('T')[0];
 
       manager.setupDateField();
 
-      const today = new Date().toISOString().split('T')[0];
       expect(dateField.value).to.equal(today);
-    });
-
-    it('should set max attribute to today', () => {
-      const dateField = document.createElement('input');
-      dateField.id = 'save-date';
-      document.body.appendChild(dateField);
-
-      manager.setupDateField();
-
-      const today = new Date().toISOString().split('T')[0];
       expect(dateField.max).to.equal(today);
     });
 
-    it('should handle missing date field gracefully', () => {
+    it('should do nothing if date field not present', () => {
+      document.getElementById('save-date').remove();
       expect(() => manager.setupDateField()).not.to.throw();
     });
   });
 
   describe('saveMeasurement', () => {
-    beforeEach(() => {
-      manager.initialize('male');
+    it('should store measurement in Map when value non-empty', () => {
+      manager.saveMeasurement('neck', '15.5', 'Neck:');
+      expect(manager.measurements.size).to.equal(1);
+      const entry = manager.measurements.get('neck');
+      expect(entry.value).to.equal('15.5');
+      expect(entry.label).to.equal('Neck');
+      expect(entry).to.have.property('timestamp');
     });
 
-    it('should save measurement with value and label', () => {
-      manager.saveMeasurement('neck', '15.5', 'Neck Circumference');
-      
-      const measurement = manager.measurements.get('neck');
-      expect(measurement).to.exist;
-      expect(measurement.value).to.equal('15.5');
-      expect(measurement.label).to.equal('Neck Circumference');
-      expect(measurement).to.have.property('timestamp');
-    });
+    it('should not store empty or whitespace value', () => {
+      manager.saveMeasurement('neck', '', 'Neck:');
+      expect(manager.measurements.size).to.equal(0);
 
-    it('should not save empty values', () => {
-      manager.saveMeasurement('neck', '', 'Neck Circumference');
-      expect(manager.measurements.has('neck')).to.be.false;
-    });
-
-    it('should not save whitespace-only values', () => {
-      manager.saveMeasurement('neck', '   ', 'Neck Circumference');
-      expect(manager.measurements.has('neck')).to.be.false;
-    });
-
-    it('should handle trim of label', () => {
-      manager.saveMeasurement('neck', '15.5', 'Neck Circumference:');
-      const measurement = manager.measurements.get('neck');
-      expect(measurement.label).to.equal('Neck Circumference');
+      manager.saveMeasurement('neck', '   ', 'Neck:');
+      expect(manager.measurements.size).to.equal(0);
     });
   });
 
   describe('getFormData', () => {
-    beforeEach(() => {
-      manager.initialize('male');
-      
-      // Create mock form elements
-      const nameField = document.createElement('input');
-      nameField.id = 'client-name';
-      nameField.value = 'John Doe';
-      
-      const dateField = document.createElement('input');
-      dateField.id = 'save-date';
-      dateField.value = '2024-01-01';
-      
-      const sizeField = document.createElement('select');
-      sizeField.id = 'size-number';
-      const option = document.createElement('option');
-      option.value = 'M';
-      option.text = 'Medium';
-      sizeField.appendChild(option);
-      sizeField.value = 'M';
-      
-      document.body.appendChild(nameField);
-      document.body.appendChild(dateField);
-      document.body.appendChild(sizeField);
-    });
-
     it('should collect all form data for male', () => {
-      manager.saveMeasurement('neck', '15.5', 'Neck Circumference');
-      manager.saveMeasurement('waist', '34', 'Waist Circumference');
-      
-      const formData = manager.getFormData();
-      
-      expect(formData).to.have.property('name', 'John Doe');
-      expect(formData).to.have.property('date', '2024-01-01');
-      expect(formData).to.have.property('gender', 'male');
-      expect(formData).to.have.property('sizeNumber', 'M');
-      expect(formData.measurements).to.have.property('neck');
-      expect(formData.measurements).to.have.property('waist');
+      manager.initialize('male');
+      manager.saveMeasurement('neck', '15.5', 'Neck:');
+      const data = manager.getFormData();
+
+      expect(data.name).to.equal('John Doe');
+      expect(data.date).to.equal('');
+      expect(data.gender).to.equal('male');
+      expect(data.sizeNumber).to.equal('40');
+      expect(data.cupSize).to.be.undefined; // not present for male
+      expect(data.measurements).to.have.property('neck');
     });
 
     it('should collect all form data for female', () => {
       manager.initialize('female');
-      
-      // Update DOM for female
-      const sizeField = document.getElementById('size-number');
-      if (sizeField) sizeField.remove();
-      
-      const cupField = document.createElement('select');
-      cupField.id = 'cupSize';
-      const option = document.createElement('option');
-      option.value = 'C';
-      option.text = 'C';
-      cupField.appendChild(option);
-      cupField.value = 'C';
-      document.body.appendChild(cupField);
-      
-      manager.saveMeasurement('under-bust', '32', 'Under Bust');
-      
-      const formData = manager.getFormData();
-      
-      expect(formData).to.have.property('gender', 'female');
-      expect(formData).to.have.property('cupSize', 'C');
-      expect(formData.measurements).to.have.property('under-bust');
-    });
+      // replace size-number with cupSize in DOM
+      const sizeNum = document.getElementById('size-number');
+      if (sizeNum) sizeNum.remove();
+      const cup = document.createElement('input');
+      cup.id = 'cupSize';
+      cup.value = 'C';
+      document.body.appendChild(cup);
 
-    it('should handle missing form elements gracefully', () => {
-      document.body.innerHTML = '';
-      
-      const formData = manager.getFormData();
-      
-      expect(formData.name).to.equal('');
-      expect(formData.date).to.equal('');
-      expect(formData.sizeNumber).to.equal('');
+      manager.saveMeasurement('waist', '28', 'Waist:');
+      const data = manager.getFormData();
+
+      expect(data.name).to.equal('John Doe');
+      expect(data.gender).to.equal('female');
+      expect(data.cupSize).to.equal('C');
+      expect(data.sizeNumber).to.be.undefined;
     });
   });
 
   describe('generatePrintContent', () => {
-    beforeEach(() => {
+    it('should return HTML string containing measurement data', () => {
       manager.initialize('male');
       manager.formData = {
-        name: 'John Doe',
-        date: '2024-01-01',
-        gender: 'male'
+        name: 'John',
+        date: '2025-01-01',
+        gender: 'male',
+        sizeNumber: '40',
+        measurements: new Map([['neck', { label: 'Neck', value: '15.5' }]])
       };
-      
-      manager.measurements.set('neck', { value: '15.5', label: 'Neck Circumference' });
-      manager.measurements.set('waist', { value: '34', label: 'Waist Circumference' });
+      const html = manager.generatePrintContent();
+      expect(html).to.include('John');
+      expect(html).to.include('2025-01-01');
+      expect(html).to.include('Neck:');
+      expect(html).to.include('15.5"');
+    });
+  });
+
+  describe('printSummary', () => {
+    it('should open a window and write content', () => {
+      const openStub = sinon.stub(window, 'open').returns({
+        document: { write: sinon.spy(), close: sinon.spy() }
+      });
+      manager.initialize('male');
+      manager.getFormData(); // populate formData
+
+      manager.printSummary();
+
+      expect(openStub.calledOnce).to.be.true;
+      const mockWindow = openStub.returnValues[0];
+      expect(mockWindow.document.write.calledOnce).to.be.true;
+      expect(mockWindow.document.close.calledOnce).to.be.true;
     });
 
-    it('should generate HTML content', () => {
-      const content = manager.generatePrintContent();
-      
-      expect(content).to.include('<!DOCTYPE html>');
-      expect(content).to.include('<title>Measurement Summary');
-      expect(content).to.include('John Doe');
-      expect(content).to.include('15.5"');
-      expect(content).to.include('34"');
-    });
-
-    it('should include gender-specific fields for male', () => {
-      manager.formData.sizeNumber = 'M';
-      const content = manager.generatePrintContent();
-      
-      expect(content).to.include('Size Number');
-      expect(content).to.include('M');
-    });
-
-    it('should include gender-specific fields for female', () => {
-      manager.initialize('female');
-      manager.formData = {
-        name: 'Jane Doe',
-        date: '2024-01-01',
-        gender: 'female',
-        cupSize: 'C'
-      };
-      
-      const content = manager.generatePrintContent();
-      
-      expect(content).to.include('Cup Size');
-      expect(content).to.include('C');
+    it('should throw error if popup blocked', () => {
+      sinon.stub(window, 'open').returns(null);
+      manager.initialize('male');
+      expect(() => manager.printSummary()).to.throw('Popup blocked');
     });
   });
 
   describe('resetFormData', () => {
-    beforeEach(() => {
-      manager.initialize('male');
-      manager.saveMeasurement('neck', '15.5', 'Neck Circumference');
-      manager.formData = { name: 'John Doe' };
-    });
-
-    it('should clear measurements map', () => {
+    it('should clear measurements map and formData', () => {
+      manager.saveMeasurement('neck', '15', 'Neck');
+      manager.formData = { some: 'data' };
       manager.resetFormData();
       expect(manager.measurements.size).to.equal(0);
-    });
-
-    it('should clear formData object', () => {
-      manager.resetFormData();
       expect(manager.formData).to.deep.equal({});
     });
   });

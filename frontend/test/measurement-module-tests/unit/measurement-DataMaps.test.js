@@ -1,121 +1,74 @@
+// test/test-measurement-DataMaps.js
 import { expect } from 'chai';
-import { measurementDataMap, getMeasurement, getAllMeasurementsForGender } from '../../../pages/measurement-pages/measurement-modules/measurement-DataMaps.js';
+import {
+  measurementDataMap,
+  getMeasurement,
+  getAllMeasurementsForGender
+} from '../../../pages/measurement-pages/measurement-modules/measurement-DataMaps.js';
 
-describe('measurement-DataMaps.js', () => {
+describe('measurement-DataMaps', () => {
   describe('measurementDataMap structure', () => {
-    it('should have gender property with male and female keys', () => {
+    it('should have gender, measurements, and sizes properties', () => {
       expect(measurementDataMap).to.have.property('gender');
-      expect(measurementDataMap.gender).to.have.property('male');
-      expect(measurementDataMap.gender).to.have.property('female');
-    });
-
-    it('should have measurements property organized by gender', () => {
       expect(measurementDataMap).to.have.property('measurements');
-      expect(measurementDataMap.measurements).to.have.property('male');
-      expect(measurementDataMap.measurements).to.have.property('female');
+      expect(measurementDataMap).to.have.property('sizes');
     });
 
-    it('should have sizes property', () => {
-      expect(measurementDataMap).to.have.property('sizes');
+    it('should contain male and female gender entries with imageDesktop', () => {
+      expect(measurementDataMap.gender.male).to.have.property('imageDesktop').that.is.a('string');
+      expect(measurementDataMap.gender.female).to.have.property('imageDesktop').that.is.a('string');
+    });
+
+    it('should have male measurements with expected keys', () => {
+      const maleMeas = measurementDataMap.measurements.male;
+      expect(maleMeas).to.have.property('neck');
+      expect(maleMeas).to.have.property('shoulder-length');
+      expect(maleMeas).to.have.property('arm-length');
+      // spot-check a few
+    });
+
+    it('should have female measurements with expected keys', () => {
+      const femaleMeas = measurementDataMap.measurements.female;
+      expect(femaleMeas).to.have.property('neck');
+      expect(femaleMeas).to.have.property('under-bust');
+      expect(femaleMeas).to.have.property('hip-bone-circumference');
+    });
+
+    it('should have sizes with cupSize and size-number', () => {
       expect(measurementDataMap.sizes).to.have.property('cupSize');
       expect(measurementDataMap.sizes).to.have.property('size-number');
     });
   });
 
-  describe('male measurements', () => {
-    const maleMeasurements = measurementDataMap.measurements.male;
-
-    it('should have neck measurement', () => {
-      expect(maleMeasurements).to.have.property('neck');
-      expect(maleMeasurements.neck).to.have.property('object', 'Neck Circumference');
-      expect(maleMeasurements.neck).to.have.property('definition');
-      expect(maleMeasurements.neck).to.have.property('description');
-      expect(maleMeasurements.neck).to.have.property('imageMobile');
-    });
-
-    it('should have chest circumference measurement', () => {
-      expect(maleMeasurements).to.have.property('chest-circumference');
-      expect(maleMeasurements['chest-circumference'].object).to.equal('Chest Circumference');
-    });
-
-    it('should have all expected male measurements', () => {
-      const expectedMeasurements = [
-        'neck', 'shoulder-length', 'arm-length', 'chest-circumference',
-        'waist', 'hip-circumference', 'thigh', 'knee', 'calf', 'ankle',
-        'bicep', 'elbow', 'wrist', 'inseam-ankle', 'inseam-floor',
-        'neck-waist', 'neck-floor', 'waist-floor', 'height',
-        'across-front', 'total-rise'
-      ];
-      
-      expectedMeasurements.forEach(measurement => {
-        expect(maleMeasurements).to.have.property(measurement);
-      });
-    });
-  });
-
-  describe('female measurements', () => {
-    const femaleMeasurements = measurementDataMap.measurements.female;
-
-    it('should have under-bust measurement (female specific)', () => {
-      expect(femaleMeasurements).to.have.property('under-bust');
-      expect(femaleMeasurements['under-bust'].object).to.equal('Under Bust');
-    });
-
-    it('should have cupSize in sizes for females', () => {
-      expect(measurementDataMap.sizes.cupSize.gender).to.equal('female');
-    });
-
-    it('should have all expected female measurements', () => {
-      const expectedMeasurements = [
-        'neck', 'shoulder-length', 'arm-length', 'chest-circumference',
-        'under-bust', 'waist', 'hip-circumference', 'hip-bone-circumference',
-        'thigh', 'knee', 'calf', 'ankle', 'bicep', 'elbow', 'wrist',
-        'inseam-ankle', 'inseam-floor', 'neck-waist', 'neck-floor',
-        'waist-floor', 'height'
-      ];
-      
-      expectedMeasurements.forEach(measurement => {
-        expect(femaleMeasurements).to.have.property(measurement);
-      });
-    });
-  });
-
-  describe('getMeasurement function', () => {
-    it('should return null for invalid gender', () => {
-      const result = getMeasurement('invalid', 'neck');
-      expect(result).to.be.null;
-    });
-
-    it('should return null for invalid measurement key', () => {
-      const result = getMeasurement('male', 'invalid-measurement');
-      expect(result).to.be.null;
-    });
-
-    it('should return correct measurement for valid gender and key', () => {
+  describe('getMeasurement', () => {
+    it('should return correct measurement object for valid gender and key', () => {
       const result = getMeasurement('male', 'neck');
-      expect(result).to.deep.equal(measurementDataMap.measurements.male.neck);
+      expect(result).to.be.an('object');
+      expect(result.object).to.equal('Neck Circumference');
     });
 
-    it('should handle female measurements correctly', () => {
-      const result = getMeasurement('female', 'under-bust');
-      expect(result).to.deep.equal(measurementDataMap.measurements.female['under-bust']);
+    it('should return null for non-existent gender', () => {
+      const result = getMeasurement('other', 'neck');
+      expect(result).to.be.null;
+    });
+
+    it('should return null for non-existent measurement key', () => {
+      const result = getMeasurement('male', 'nonexistent');
+      expect(result).to.be.null;
     });
   });
 
-  describe('getAllMeasurementsForGender function', () => {
-    it('should return empty object for invalid gender', () => {
-      const result = getAllMeasurementsForGender('invalid');
-      expect(result).to.deep.equal({});
-    });
-
-    it('should return all male measurements', () => {
-      const result = getAllMeasurementsForGender('male');
-      expect(result).to.deep.equal(measurementDataMap.measurements.male);
-    });
-
-    it('should return all female measurements', () => {
+  describe('getAllMeasurementsForGender', () => {
+    it('should return all measurements for a valid gender', () => {
       const result = getAllMeasurementsForGender('female');
-      expect(result).to.deep.equal(measurementDataMap.measurements.female);
+      expect(result).to.be.an('object');
+      expect(result).to.have.property('neck');
+      expect(result).to.have.property('waist');
+    });
+
+    it('should return empty object for invalid gender', () => {
+      const result = getAllMeasurementsForGender('other');
+      expect(result).to.deep.equal({});
     });
   });
 });

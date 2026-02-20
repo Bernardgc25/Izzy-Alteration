@@ -103,9 +103,11 @@ Izzy-Alteration
       └─ measurement-module-tests
          ├─ measurement-TEST(about)
          │  ├─ (debug)measurement-test-unit.md
+         │  ├─ (refactor)measurement-test-unit.md
          │  └─ measurement-unit-tests-prompt.md
          └─ unit
             ├─ measurement-DataMaps.test.js
+            ├─ measurement-Main.test.js
             ├─ measurement-Manager.test.js
             ├─ measurement-Validator.test.js
             └─ measurement-ViewHandler.test.js
