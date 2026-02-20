@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import { JSDOM } from 'jsdom';
 import { MeasurementApp } from '../../../pages/measurement-pages/measurement-modules/measurement-Main.js';
-import * as DataMaps from '../../../pages/measurement-pages/measurement-modules/measurement-DataMaps.js';
+// No need to import DataMaps for stubbing - removed
 
 describe('MeasurementApp', () => {
   let dom;
@@ -38,8 +38,7 @@ describe('MeasurementApp', () => {
     global.console = { log: sinon.spy(), warn: sinon.spy(), error: sinon.spy() };
     form = document.getElementById('measurement-form');
 
-    // Stub DataMaps.getMeasurement to return dummy data
-    sinon.stub(DataMaps, 'getMeasurement').returns({ object: 'test', definition: '', description: '' });
+    // Removed the sinon.stub on DataMaps.getMeasurement – not needed
   });
 
   afterEach(() => {

@@ -30,17 +30,18 @@ describe('ViewHandler', () => {
         <div id="floating-guide-overlay" style="display: none;"></div>
         <button id="print-summary"></button>
 
-        <div class="measurement-label">
-          <i class="fa-eye"></i>
-        </div>
+        <!-- FIX: Nest measurement-label inside form-group -->
         <div class="form-group">
+          <div class="measurement-label">
+            <i class="fa-eye"></i>
+          </div>
           <input class="measurement-input" data-measurement="neck" />
         </div>
       </body>
     `);
     globalThis.window = dom.window;
     globalThis.document = dom.window.document;
-    globalThis.alert = dom.window.alert;
+    globalThis.alert = dom.window.alert; // keep reference
 
     getMeasurementStub = sinon.stub();
     getMeasurementStub.withArgs('neck').returns({
@@ -107,7 +108,7 @@ describe('ViewHandler', () => {
       await viewHandler.showFloatingGuide('neck');
       const objEl = document.getElementById('floating-measure-object');
       expect(objEl.innerHTML).to.include('Neck');
-      const imgContainer = document.querySelector('.floating-guide-images');
+      const imgContainer = document.querySelector('#floating-measurement-guide .floating-guide-images');
       expect(imgContainer.children.length).to.equal(1);
       expect(imgContainer.children[0].src).to.include('neck.jpg');
       expect(document.getElementById('floating-guide-overlay').style.display).to.equal('block');
@@ -170,7 +171,8 @@ describe('ViewHandler', () => {
     });
 
     it('should show alert if callback throws', () => {
-      const alertStub = sinon.stub(window, 'alert');
+      // FIX: stub globalThis.alert instead of window.alert
+      const alertStub = sinon.stub(globalThis, 'alert');
       const callback = sinon.stub().throws(new Error('fail'));
       viewHandler.setupPrintButtonListener(callback);
       document.getElementById('print-summary').click();
@@ -209,19 +211,20 @@ describe('ViewHandler', () => {
 
   describe('showAlert, showValidationErrorAlert, showSuccessMessage', () => {
     it('showAlert should call window.alert', () => {
-      const alertStub = sinon.stub(window, 'alert');
+      // FIX: stub globalThis.alert
+      const alertStub = sinon.stub(globalThis, 'alert');
       viewHandler.showAlert('test');
       expect(alertStub.calledWith('test')).to.be.true;
     });
 
     it('showValidationErrorAlert should alert specific message', () => {
-      const alertStub = sinon.stub(window, 'alert');
+      const alertStub = sinon.stub(globalThis, 'alert');
       viewHandler.showValidationErrorAlert();
       expect(alertStub.calledWith('Please fill in all required fields correctly. Invalid fields are highlighted in red.')).to.be.true;
     });
 
     it('showSuccessMessage should alert with form data', () => {
-      const alertStub = sinon.stub(window, 'alert');
+      const alertStub = sinon.stub(globalThis, 'alert');
       viewHandler.showSuccessMessage({ name: 'John', date: '2025', measurements: { a: 1 } });
       expect(alertStub.calledOnce).to.be.true;
     });

@@ -85,7 +85,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import { JSDOM } from 'jsdom';
 import { MeasurementApp } from '../../../pages/measurement-pages/measurement-modules/measurement-Main.js';
-import * as DataMaps from '../../../pages/measurement-pages/measurement-modules/measurement-DataMaps.js';
+// No need to import DataMaps for stubbing - removed
 
 describe('MeasurementApp', () => {
   let dom;
@@ -120,8 +120,7 @@ describe('MeasurementApp', () => {
     global.console = { log: sinon.spy(), warn: sinon.spy(), error: sinon.spy() };
     form = document.getElementById('measurement-form');
 
-    // Stub DataMaps.getMeasurement to return dummy data
-    sinon.stub(DataMaps, 'getMeasurement').returns({ object: 'test', definition: '', description: '' });
+    // Removed the sinon.stub on DataMaps.getMeasurement – not needed
   });
 
   afterEach(() => {
@@ -632,17 +631,18 @@ describe('ViewHandler', () => {
         <div id="floating-guide-overlay" style="display: none;"></div>
         <button id="print-summary"></button>
 
-        <div class="measurement-label">
-          <i class="fa-eye"></i>
-        </div>
+        <!-- FIX: Nest measurement-label inside form-group -->
         <div class="form-group">
+          <div class="measurement-label">
+            <i class="fa-eye"></i>
+          </div>
           <input class="measurement-input" data-measurement="neck" />
         </div>
       </body>
     `);
     globalThis.window = dom.window;
     globalThis.document = dom.window.document;
-    globalThis.alert = dom.window.alert;
+    globalThis.alert = dom.window.alert; // keep reference
 
     getMeasurementStub = sinon.stub();
     getMeasurementStub.withArgs('neck').returns({
@@ -709,7 +709,7 @@ describe('ViewHandler', () => {
       await viewHandler.showFloatingGuide('neck');
       const objEl = document.getElementById('floating-measure-object');
       expect(objEl.innerHTML).to.include('Neck');
-      const imgContainer = document.querySelector('.floating-guide-images');
+      const imgContainer = document.querySelector('#floating-measurement-guide .floating-guide-images');
       expect(imgContainer.children.length).to.equal(1);
       expect(imgContainer.children[0].src).to.include('neck.jpg');
       expect(document.getElementById('floating-guide-overlay').style.display).to.equal('block');
@@ -772,7 +772,8 @@ describe('ViewHandler', () => {
     });
 
     it('should show alert if callback throws', () => {
-      const alertStub = sinon.stub(window, 'alert');
+      // FIX: stub globalThis.alert instead of window.alert
+      const alertStub = sinon.stub(globalThis, 'alert');
       const callback = sinon.stub().throws(new Error('fail'));
       viewHandler.setupPrintButtonListener(callback);
       document.getElementById('print-summary').click();
@@ -811,19 +812,20 @@ describe('ViewHandler', () => {
 
   describe('showAlert, showValidationErrorAlert, showSuccessMessage', () => {
     it('showAlert should call window.alert', () => {
-      const alertStub = sinon.stub(window, 'alert');
+      // FIX: stub globalThis.alert
+      const alertStub = sinon.stub(globalThis, 'alert');
       viewHandler.showAlert('test');
       expect(alertStub.calledWith('test')).to.be.true;
     });
 
     it('showValidationErrorAlert should alert specific message', () => {
-      const alertStub = sinon.stub(window, 'alert');
+      const alertStub = sinon.stub(globalThis, 'alert');
       viewHandler.showValidationErrorAlert();
       expect(alertStub.calledWith('Please fill in all required fields correctly. Invalid fields are highlighted in red.')).to.be.true;
     });
 
     it('showSuccessMessage should alert with form data', () => {
-      const alertStub = sinon.stub(window, 'alert');
+      const alertStub = sinon.stub(globalThis, 'alert');
       viewHandler.showSuccessMessage({ name: 'John', date: '2025', measurements: { a: 1 } });
       expect(alertStub.calledOnce).to.be.true;
     });
@@ -1159,8 +1161,6 @@ export const getAllMeasurementsForGender = (gender) => {
     return measurementDataMap.measurements[gender];
 };
 ]
-
-
 
 **CODE 7 - File: measurement-Main.js**
 [
@@ -1891,7 +1891,8 @@ export class ViewHandler {
         const measurement = this.getMeasurement(measurementKey);
         if (!measurement || !measurement.imageMobile) return;
 
-        const container = document.querySelector('.measurement-guide-floating .floating-guide-images');
+        // FIX: Use correct selector based on actual HTML structure
+        const container = document.querySelector('#floating-measurement-guide .floating-guide-images');
         if (!container) return;
 
         container.innerHTML = '';
@@ -2280,25 +2281,21 @@ Izzy-Alteration
 
 **ERROR/ISSUE:**
 [
-    1) MeasurementApp
-       "before each" hook for "should initialize modules and set up event listeners":
-     TypeError: ES Modules cannot be stubbed
-      at Function.stub (file:///home/bernard/Documents/Izzy-Alteration/frontend/node_modules/sinon/pkg/sinon-esm.js:3752:15)
-      at Sandbox.stub (file:///home/bernard/Documents/Izzy-Alteration/frontend/node_modules/sinon/pkg/sinon-esm.js:3250:39)
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-Main.test.js:42:11)
+ 1) MeasurementApp
+       handleResetForm
+         should reset form, manager, validator, and hide guide when confirmed:
+     ReferenceError: confirm is not defined
+      at MeasurementApp.handleResetForm (file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/measurement-pages/measurement-modules/measurement-Main.js:195:9)
+      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-Main.test.js:105:11)
       at processImmediate (node:internal/timers:466:21)
 
-  2) ViewHandler
-       showFloatingGuide
-         should update text, image, and show overlay/guide:
-
-      AssertionError: expected +0 to equal 1
-      + expected - actual
-
-      -0
-      +1
-      
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:111:47)
+  2) MeasurementApp
+       handleResetForm
+         should not reset if confirm false:
+     ReferenceError: confirm is not defined
+      at MeasurementApp.handleResetForm (file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/measurement-pages/measurement-modules/measurement-Main.js:195:9)
+      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-Main.test.js:114:11)
+      at processImmediate (node:internal/timers:466:21)
 
   3) ViewHandler
        setupEyeIconListeners
@@ -2310,59 +2307,7 @@ Izzy-Alteration
       -false
       +true
       
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:132:40)
-      at processImmediate (node:internal/timers:466:21)
-
-  4) ViewHandler
-       setupPrintButtonListener
-         should show alert if callback throws:
-
-      AssertionError: expected false to be true
-      + expected - actual
-
-      -false
-      +true
-      
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:177:49)
-      at processImmediate (node:internal/timers:466:21)
-
-  5) ViewHandler
-       showAlert, showValidationErrorAlert, showSuccessMessage
-         showAlert should call window.alert:
-
-      AssertionError: expected false to be true
-      + expected - actual
-
-      -false
-      +true
-      
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:214:49)
-      at processImmediate (node:internal/timers:466:21)
-
-  6) ViewHandler
-       showAlert, showValidationErrorAlert, showSuccessMessage
-         showValidationErrorAlert should alert specific message:
-
-      AssertionError: expected false to be true
-      + expected - actual
-
-      -false
-      +true
-      
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:220:129)
-      at processImmediate (node:internal/timers:466:21)
-
-  7) ViewHandler
-       showAlert, showValidationErrorAlert, showSuccessMessage
-         showSuccessMessage should alert with form data:
-
-      AssertionError: expected false to be true
-      + expected - actual
-
-      -false
-      +true
-      
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:226:41)
+      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:133:40)
       at processImmediate (node:internal/timers:466:21)
 ]
 

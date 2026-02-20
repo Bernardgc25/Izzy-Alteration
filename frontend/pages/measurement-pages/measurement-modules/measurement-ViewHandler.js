@@ -91,7 +91,8 @@ export class ViewHandler {
         const measurement = this.getMeasurement(measurementKey);
         if (!measurement || !measurement.imageMobile) return;
 
-        const container = document.querySelector('.measurement-guide-floating .floating-guide-images');
+        // FIX: Use correct selector based on actual HTML structure
+        const container = document.querySelector('#floating-measurement-guide .floating-guide-images');
         if (!container) return;
 
         container.innerHTML = '';
