@@ -6,7 +6,7 @@ import {
   getAllMeasurementsForGender
 } from '../../../pages/measurement-pages/measurement-modules/measurement-DataMaps.js';
 
-describe('measurement-DataMaps', () => {
+describe('measurement-DataMaps.js', () => {
   describe('measurementDataMap structure', () => {
     it('should have gender, measurements, and sizes properties', () => {
       expect(measurementDataMap).to.have.property('gender');

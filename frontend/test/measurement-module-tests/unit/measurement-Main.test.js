@@ -5,7 +5,7 @@ import { JSDOM } from 'jsdom';
 import { MeasurementApp } from '../../../pages/measurement-pages/measurement-modules/measurement-Main.js';
 // No need to import DataMaps for stubbing - removed
 
-describe('MeasurementApp', () => {
+describe('measurement-Main.js', () => {
   let dom;
   let app;
   let form;

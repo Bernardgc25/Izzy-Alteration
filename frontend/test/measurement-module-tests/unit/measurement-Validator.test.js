@@ -4,7 +4,7 @@ import sinon from 'sinon';
 import { JSDOM } from 'jsdom';
 import { MeasurementValidator } from '../../../pages/measurement-pages/measurement-modules/measurement-Validator.js';
 
-describe('MeasurementValidator', () => {
+describe('measurement-Validator.js', () => {
   let dom;
   let form;
   let validator;
