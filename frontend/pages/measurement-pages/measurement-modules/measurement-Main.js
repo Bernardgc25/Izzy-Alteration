@@ -192,7 +192,7 @@ export class MeasurementApp {
     }
 
     handleResetForm() {
-        if (confirm('Are you sure you want to reset all measurements? This action cannot be undone.')) {
+        if (window.confirm('Are you sure you want to reset all measurements? This action cannot be undone.')) {
             const form = document.getElementById('measurement-form');
             if (form) form.reset();
 

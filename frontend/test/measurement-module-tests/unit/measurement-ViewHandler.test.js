@@ -125,14 +125,18 @@ describe('ViewHandler', () => {
   });
 
   describe('setupEyeIconListeners', () => {
-    it('should attach click handler to eye icons', () => {
-      const callback = sinon.spy();
-      viewHandler.setupEyeIconListeners(callback);
-      const eyeIcon = document.querySelector('.fa-eye');
-      eyeIcon.click();
-      expect(callback.calledOnce).to.be.true;
-      expect(callback.args[0][0]).to.equal('neck');
-    });
+      it('should attach click handler to eye icons', () => {
+          // Force mobile view so the callback is triggered
+          viewHandler.isMobileView = true;
+
+          const callback = sinon.spy();
+          viewHandler.setupEyeIconListeners(callback);
+          const eyeIcon = document.querySelector('.fa-eye');
+          eyeIcon.click();
+
+          expect(callback.calledOnce).to.be.true;
+          expect(callback.args[0][0]).to.equal('neck');
+      });
   });
 
   describe('setupWindowResizeListener', () => {
