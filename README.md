@@ -5,37 +5,7 @@ Izzy-Alteration
 │  ├─ deepseek
 │  │  └─ alteration-female.txt
 │  └─ measurements-about.txt
-└─ src
-   ├─ css
-   │  ├─ account-menu.css
-   │  ├─ add-service.css
-   │  ├─ alteration-female.css
-   │  ├─ alteration.css
-   │  ├─ index.css
-   │  ├─ login.css
-   │  ├─ measurements.css
-   │  ├─ order-history.css
-   │  ├─ services.css
-   │  └─ signup.css
-   ├─ images
-   │  ├─ female-(chart)-tablet-mobile.png
-   │  ├─ female-back-tablet-mobile.png
-   │  ├─ female-desktop.png
-   │  ├─ female-front-tablet-mobile.png
-   │  ├─ male-(chart)-tablet-mobile.png
-   │  ├─ male-back-tablet-mobile.png
-   │  ├─ male-desktop.png
-   │  └─ male-front-tablet-mobile.png
-   ├─ js
-   │  ├─ account.js
-   │  ├─ add-service.js
-   │  ├─ alteration-female.js
-   │  ├─ alteration-price-calculator.js
-   │  ├─ index.js
-   │  ├─ login.js
-   │  ├─ order-history.js
-   │  ├─ services.js
-   │  └─ signup.js
+└─ frontend
    ├─ package-lock.json
    ├─ package.json
    ├─ pages
@@ -70,6 +40,7 @@ Izzy-Alteration
    │  │  ├─ measurement-about
    │  │  │  ├─ (debug)floating-window-measurement.md
    │  │  │  ├─ (debug)measurement-split-modules.md
+   │  │  │  ├─ (refactor)measurement-modules.md
    │  │  │  ├─ measurement(how-the-program-works).md
    │  │  │  ├─ measurement-functionality-prompt.md
    │  │  │  └─ measurement-modules.md
@@ -85,6 +56,37 @@ Izzy-Alteration
    │  ├─ order-history.html
    │  ├─ services.html
    │  └─ signup.html
+   ├─ public
+   │  ├─ css
+   │  │  ├─ account-menu.css
+   │  │  ├─ add-service.css
+   │  │  ├─ alteration-female.css
+   │  │  ├─ alteration.css
+   │  │  ├─ index.css
+   │  │  ├─ login.css
+   │  │  ├─ measurements.css
+   │  │  ├─ order-history.css
+   │  │  ├─ services.css
+   │  │  └─ signup.css
+   │  ├─ images
+   │  │  ├─ female-(chart)-tablet-mobile.png
+   │  │  ├─ female-back-tablet-mobile.png
+   │  │  ├─ female-desktop.png
+   │  │  ├─ female-front-tablet-mobile.png
+   │  │  ├─ male-(chart)-tablet-mobile.png
+   │  │  ├─ male-back-tablet-mobile.png
+   │  │  ├─ male-desktop.png
+   │  │  └─ male-front-tablet-mobile.png
+   │  └─ js
+   │     ├─ account.js
+   │     ├─ add-service.js
+   │     ├─ alteration-female.js
+   │     ├─ alteration-price-calculator.js
+   │     ├─ index.js
+   │     ├─ login.js
+   │     ├─ order-history.js
+   │     ├─ services.js
+   │     └─ signup.js
    └─ test
       ├─ TEST(how to run).md
       ├─ alteration-module-tests
@@ -101,9 +103,11 @@ Izzy-Alteration
       └─ measurement-module-tests
          ├─ measurement-TEST(about)
          │  ├─ (debug)measurement-test-unit.md
+         │  ├─ (refactor)measurement-test-unit.md
          │  └─ measurement-unit-tests-prompt.md
          └─ unit
             ├─ measurement-DataMaps.test.js
+            ├─ measurement-Main.test.js
             ├─ measurement-Manager.test.js
             ├─ measurement-Validator.test.js
             └─ measurement-ViewHandler.test.js

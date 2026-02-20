@@ -1,6 +1,6 @@
 # Step 1: 
-# go to src folder: 
-Izzy-Alteration/src
+# from root, go to frontend folder: 
+cd Izzy-Alteration/frontend
 
 # Step 2: (select) 
 # run all test: 
