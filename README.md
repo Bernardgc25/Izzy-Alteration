@@ -40,6 +40,7 @@ Izzy-Alteration
    │  │  ├─ measurement-about
    │  │  │  ├─ (debug)floating-window-measurement.md
    │  │  │  ├─ (debug)measurement-split-modules.md
+   │  │  │  ├─ (refactor)measurement-modules.md
    │  │  │  ├─ measurement(how-the-program-works).md
    │  │  │  ├─ measurement-functionality-prompt.md
    │  │  │  └─ measurement-modules.md

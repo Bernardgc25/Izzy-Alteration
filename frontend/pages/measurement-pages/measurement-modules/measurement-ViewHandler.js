@@ -66,8 +66,8 @@ export class ViewHandler {
      */
     getGenderImage() {
         const genderImages = {
-            male: "/src/images/male-desktop.png",
-            female: "/src/images/female-desktop.png"
+            male: "/frontend/public/images/male-desktop.png",
+            female: "/frontend/public/images/female-desktop.png"
         };
         
         return genderImages[this.gender] || null;
