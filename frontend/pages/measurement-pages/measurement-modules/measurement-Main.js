@@ -213,7 +213,10 @@ export class MeasurementApp {
     }
 }
 
-// Initialize application when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    new MeasurementApp();
-});
+// Check if we're in a browser environment before initializing
+if (typeof document !== 'undefined' && typeof window !== 'undefined') {
+    // Initialize application when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        new MeasurementApp();
+    });
+}

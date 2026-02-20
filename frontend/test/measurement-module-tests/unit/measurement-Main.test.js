@@ -5,7 +5,7 @@ import { JSDOM } from 'jsdom';
 import { MeasurementApp } from '../../../pages/measurement-pages/measurement-modules/measurement-Main.js';
 import * as DataMaps from '../../../pages/measurement-pages/measurement-modules/measurement-DataMaps.js';
 
-describe('MeasurementApp', () => {
+describe('measurement-Main.test.js', () => {
   let dom;
   let document;
   let app;
