@@ -6,7 +6,6 @@ import { MeasurementValidator } from '../../../pages/measurement-pages/measureme
 
 describe('MeasurementValidator', () => {
   let dom;
-  let document;
   let form;
   let validator;
 
@@ -28,16 +27,18 @@ describe('MeasurementValidator', () => {
         </form>
       </body>
     `);
-    global.document = dom.window.document;
-    global.window = dom.window;
+    globalThis.window = dom.window;
+    globalThis.document = dom.window.document;
+    globalThis.alert = dom.window.alert;
     form = document.getElementById('measurement-form');
     validator = new MeasurementValidator(form);
   });
 
   afterEach(() => {
     sinon.restore();
-    delete global.document;
-    delete global.window;
+    delete globalThis.window;
+    delete globalThis.document;
+    delete globalThis.alert;
   });
 
   describe('constructor', () => {

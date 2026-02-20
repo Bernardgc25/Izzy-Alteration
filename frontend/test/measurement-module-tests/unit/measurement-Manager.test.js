@@ -7,10 +7,8 @@ import { MeasurementManager } from '../../../pages/measurement-pages/measurement
 describe('MeasurementManager', () => {
   let manager;
   let dom;
-  let document;
 
   beforeEach(() => {
-    // Set up a basic DOM with elements the manager expects
     dom = new JSDOM(`
       <!DOCTYPE html>
       <body>
@@ -21,16 +19,18 @@ describe('MeasurementManager', () => {
         <div id="measurement-form"></div>
       </body>
     `);
-    global.document = dom.window.document;
-    global.window = dom.window;
+    globalThis.window = dom.window;
+    globalThis.document = dom.window.document;
+    globalThis.alert = dom.window.alert;
 
     manager = new MeasurementManager();
   });
 
   afterEach(() => {
     sinon.restore();
-    delete global.document;
-    delete global.window;
+    delete globalThis.window;
+    delete globalThis.document;
+    delete globalThis.alert;
   });
 
   describe('initialize', () => {
@@ -88,7 +88,7 @@ describe('MeasurementManager', () => {
       expect(data.date).to.equal('');
       expect(data.gender).to.equal('male');
       expect(data.sizeNumber).to.equal('40');
-      expect(data.cupSize).to.be.undefined; // not present for male
+      expect(data.cupSize).to.be.undefined;
       expect(data.measurements).to.have.property('neck');
     });
 
@@ -115,12 +115,14 @@ describe('MeasurementManager', () => {
   describe('generatePrintContent', () => {
     it('should return HTML string containing measurement data', () => {
       manager.initialize('male');
+      // Populate measurements map directly (not formData)
+      manager.measurements.set('neck', { label: 'Neck', value: '15.5' });
       manager.formData = {
         name: 'John',
         date: '2025-01-01',
         gender: 'male',
         sizeNumber: '40',
-        measurements: new Map([['neck', { label: 'Neck', value: '15.5' }]])
+        measurements: {} // not used
       };
       const html = manager.generatePrintContent();
       expect(html).to.include('John');

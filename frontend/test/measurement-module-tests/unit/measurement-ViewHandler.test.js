@@ -6,7 +6,6 @@ import { ViewHandler } from '../../../pages/measurement-pages/measurement-module
 
 describe('ViewHandler', () => {
   let dom;
-  let document;
   let viewHandler;
   let getMeasurementStub;
   const genderImageUrl = 'test.jpg';
@@ -39,8 +38,9 @@ describe('ViewHandler', () => {
         </div>
       </body>
     `);
-    global.document = dom.window.document;
-    global.window = dom.window;
+    globalThis.window = dom.window;
+    globalThis.document = dom.window.document;
+    globalThis.alert = dom.window.alert;
 
     getMeasurementStub = sinon.stub();
     getMeasurementStub.withArgs('neck').returns({
@@ -61,8 +61,9 @@ describe('ViewHandler', () => {
   afterEach(() => {
     viewHandler.cleanup();
     sinon.restore();
-    delete global.document;
-    delete global.window;
+    delete globalThis.window;
+    delete globalThis.document;
+    delete globalThis.alert;
   });
 
   describe('constructor', () => {
@@ -139,7 +140,6 @@ describe('ViewHandler', () => {
       viewHandler.setupWindowResizeListener(callback);
 
       // Simulate resize to mobile width
-      sinon.stub(viewHandler, 'isMobileView').value(true);
       window.innerWidth = 800; // less than 992
       window.dispatchEvent(new dom.window.Event('resize'));
 
@@ -170,7 +170,7 @@ describe('ViewHandler', () => {
     });
 
     it('should show alert if callback throws', () => {
-      const alertStub = sinon.stub(viewHandler, 'showAlert');
+      const alertStub = sinon.stub(window, 'alert');
       const callback = sinon.stub().throws(new Error('fail'));
       viewHandler.setupPrintButtonListener(callback);
       document.getElementById('print-summary').click();

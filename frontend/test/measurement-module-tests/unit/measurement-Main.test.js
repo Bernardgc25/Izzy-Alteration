@@ -5,9 +5,8 @@ import { JSDOM } from 'jsdom';
 import { MeasurementApp } from '../../../pages/measurement-pages/measurement-modules/measurement-Main.js';
 import * as DataMaps from '../../../pages/measurement-pages/measurement-modules/measurement-DataMaps.js';
 
-describe('measurement-Main.test.js', () => {
+describe('MeasurementApp', () => {
   let dom;
-  let document;
   let app;
   let form;
 
@@ -32,8 +31,10 @@ describe('measurement-Main.test.js', () => {
         <div id="default-guide"></div>
       </body>
     `);
-    global.document = dom.window.document;
-    global.window = dom.window;
+    // Make DOM globals available
+    globalThis.window = dom.window;
+    globalThis.document = dom.window.document;
+    globalThis.alert = dom.window.alert; // JSDOM alert is a no-op
     global.console = { log: sinon.spy(), warn: sinon.spy(), error: sinon.spy() };
     form = document.getElementById('measurement-form');
 
@@ -43,8 +44,9 @@ describe('measurement-Main.test.js', () => {
 
   afterEach(() => {
     sinon.restore();
-    delete global.document;
-    delete global.window;
+    delete globalThis.window;
+    delete globalThis.document;
+    delete globalThis.alert;
     if (app && app.viewHandler) app.viewHandler.cleanup();
   });
 

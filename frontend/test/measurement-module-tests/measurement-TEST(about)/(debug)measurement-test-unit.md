@@ -89,7 +89,6 @@ import * as DataMaps from '../../../pages/measurement-pages/measurement-modules/
 
 describe('MeasurementApp', () => {
   let dom;
-  let document;
   let app;
   let form;
 
@@ -114,8 +113,10 @@ describe('MeasurementApp', () => {
         <div id="default-guide"></div>
       </body>
     `);
-    global.document = dom.window.document;
-    global.window = dom.window;
+    // Make DOM globals available
+    globalThis.window = dom.window;
+    globalThis.document = dom.window.document;
+    globalThis.alert = dom.window.alert; // JSDOM alert is a no-op
     global.console = { log: sinon.spy(), warn: sinon.spy(), error: sinon.spy() };
     form = document.getElementById('measurement-form');
 
@@ -125,8 +126,9 @@ describe('MeasurementApp', () => {
 
   afterEach(() => {
     sinon.restore();
-    delete global.document;
-    delete global.window;
+    delete globalThis.window;
+    delete globalThis.document;
+    delete globalThis.alert;
     if (app && app.viewHandler) app.viewHandler.cleanup();
   });
 
@@ -235,10 +237,8 @@ import { MeasurementManager } from '../../../pages/measurement-pages/measurement
 describe('MeasurementManager', () => {
   let manager;
   let dom;
-  let document;
 
   beforeEach(() => {
-    // Set up a basic DOM with elements the manager expects
     dom = new JSDOM(`
       <!DOCTYPE html>
       <body>
@@ -249,16 +249,18 @@ describe('MeasurementManager', () => {
         <div id="measurement-form"></div>
       </body>
     `);
-    global.document = dom.window.document;
-    global.window = dom.window;
+    globalThis.window = dom.window;
+    globalThis.document = dom.window.document;
+    globalThis.alert = dom.window.alert;
 
     manager = new MeasurementManager();
   });
 
   afterEach(() => {
     sinon.restore();
-    delete global.document;
-    delete global.window;
+    delete globalThis.window;
+    delete globalThis.document;
+    delete globalThis.alert;
   });
 
   describe('initialize', () => {
@@ -316,7 +318,7 @@ describe('MeasurementManager', () => {
       expect(data.date).to.equal('');
       expect(data.gender).to.equal('male');
       expect(data.sizeNumber).to.equal('40');
-      expect(data.cupSize).to.be.undefined; // not present for male
+      expect(data.cupSize).to.be.undefined;
       expect(data.measurements).to.have.property('neck');
     });
 
@@ -343,12 +345,14 @@ describe('MeasurementManager', () => {
   describe('generatePrintContent', () => {
     it('should return HTML string containing measurement data', () => {
       manager.initialize('male');
+      // Populate measurements map directly (not formData)
+      manager.measurements.set('neck', { label: 'Neck', value: '15.5' });
       manager.formData = {
         name: 'John',
         date: '2025-01-01',
         gender: 'male',
         sizeNumber: '40',
-        measurements: new Map([['neck', { label: 'Neck', value: '15.5' }]])
+        measurements: {} // not used
       };
       const html = manager.generatePrintContent();
       expect(html).to.include('John');
@@ -403,7 +407,6 @@ import { MeasurementValidator } from '../../../pages/measurement-pages/measureme
 
 describe('MeasurementValidator', () => {
   let dom;
-  let document;
   let form;
   let validator;
 
@@ -425,16 +428,18 @@ describe('MeasurementValidator', () => {
         </form>
       </body>
     `);
-    global.document = dom.window.document;
-    global.window = dom.window;
+    globalThis.window = dom.window;
+    globalThis.document = dom.window.document;
+    globalThis.alert = dom.window.alert;
     form = document.getElementById('measurement-form');
     validator = new MeasurementValidator(form);
   });
 
   afterEach(() => {
     sinon.restore();
-    delete global.document;
-    delete global.window;
+    delete globalThis.window;
+    delete globalThis.document;
+    delete globalThis.alert;
   });
 
   describe('constructor', () => {
@@ -603,7 +608,6 @@ import { ViewHandler } from '../../../pages/measurement-pages/measurement-module
 
 describe('ViewHandler', () => {
   let dom;
-  let document;
   let viewHandler;
   let getMeasurementStub;
   const genderImageUrl = 'test.jpg';
@@ -636,8 +640,9 @@ describe('ViewHandler', () => {
         </div>
       </body>
     `);
-    global.document = dom.window.document;
-    global.window = dom.window;
+    globalThis.window = dom.window;
+    globalThis.document = dom.window.document;
+    globalThis.alert = dom.window.alert;
 
     getMeasurementStub = sinon.stub();
     getMeasurementStub.withArgs('neck').returns({
@@ -658,8 +663,9 @@ describe('ViewHandler', () => {
   afterEach(() => {
     viewHandler.cleanup();
     sinon.restore();
-    delete global.document;
-    delete global.window;
+    delete globalThis.window;
+    delete globalThis.document;
+    delete globalThis.alert;
   });
 
   describe('constructor', () => {
@@ -736,7 +742,6 @@ describe('ViewHandler', () => {
       viewHandler.setupWindowResizeListener(callback);
 
       // Simulate resize to mobile width
-      sinon.stub(viewHandler, 'isMobileView').value(true);
       window.innerWidth = 800; // less than 992
       window.dispatchEvent(new dom.window.Event('resize'));
 
@@ -767,7 +772,7 @@ describe('ViewHandler', () => {
     });
 
     it('should show alert if callback throws', () => {
-      const alertStub = sinon.stub(viewHandler, 'showAlert');
+      const alertStub = sinon.stub(window, 'alert');
       const callback = sinon.stub().throws(new Error('fail'));
       viewHandler.setupPrintButtonListener(callback);
       document.getElementById('print-summary').click();
@@ -2275,171 +2280,95 @@ Izzy-Alteration
 
 **ERROR/ISSUE:**
 [
-  1) measurement-Main.test.js
+    1) MeasurementApp
        "before each" hook for "should initialize modules and set up event listeners":
-     TypeError: Cannot read properties of undefined (reading 'getElementById')
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-Main.test.js:38:21)
+     TypeError: ES Modules cannot be stubbed
+      at Function.stub (file:///home/bernard/Documents/Izzy-Alteration/frontend/node_modules/sinon/pkg/sinon-esm.js:3752:15)
+      at Sandbox.stub (file:///home/bernard/Documents/Izzy-Alteration/frontend/node_modules/sinon/pkg/sinon-esm.js:3250:39)
+      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-Main.test.js:42:11)
       at processImmediate (node:internal/timers:466:21)
 
-  2) MeasurementManager
-       setupDateField
-         should set today's date and max attribute on #save-date:
-     TypeError: Cannot read properties of undefined (reading 'getElementById')
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-Manager.test.js:47:34)
-      at processImmediate (node:internal/timers:466:21)
-
-  3) MeasurementManager
-       setupDateField
-         should do nothing if date field not present:
-     TypeError: Cannot read properties of undefined (reading 'getElementById')
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-Manager.test.js:57:16)
-      at processImmediate (node:internal/timers:466:21)
-
-  4) MeasurementManager
-       getFormData
-         should collect all form data for female:
-     TypeError: Cannot read properties of undefined (reading 'getElementById')
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-Manager.test.js:98:32)
-      at processImmediate (node:internal/timers:466:21)
-
-  5) MeasurementManager
-       generatePrintContent
-         should return HTML string containing measurement data:
-     AssertionError: expected '\n            <!DOCTYPE html>\n      …' to include 'Neck:'
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-Manager.test.js:128:23)
-      at processImmediate (node:internal/timers:466:21)
-
-  6) MeasurementValidator
-       "before each" hook for "should throw if form element missing":
-     TypeError: Cannot read properties of undefined (reading 'getElementById')
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-Validator.test.js:33:21)
-      at processImmediate (node:internal/timers:466:21)
-
-  7) ViewHandler
-       setupDesktopGuideImage
-         should set guide image src when genderImageUrl exists:
-     TypeError: Cannot read properties of undefined (reading 'getElementById')
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:78:35)
-      at processImmediate (node:internal/timers:466:21)
-
-  8) ViewHandler
-       setupDesktopGuideImage
-         should hide guide image and show default if no url:
-     TypeError: Cannot read properties of undefined (reading 'getElementById')
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:89:35)
-      at processImmediate (node:internal/timers:466:21)
-
-  9) ViewHandler
-       showMeasurementGuide
-         should update guide text with measurement data:
-     TypeError: Cannot read properties of undefined (reading 'getElementById')
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:99:30)
-      at processImmediate (node:internal/timers:466:21)
-
-  10) ViewHandler
+  2) ViewHandler
        showFloatingGuide
          should update text, image, and show overlay/guide:
-     TypeError: Cannot read properties of undefined (reading 'getElementById')
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:107:30)
 
-  11) ViewHandler
-       hideFloatingGuide
-         should hide overlay and guide:
-     TypeError: Cannot read properties of undefined (reading 'getElementById')
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:120:23)
-      at processImmediate (node:internal/timers:466:21)
+      AssertionError: expected +0 to equal 1
+      + expected - actual
 
-  12) ViewHandler
+      -0
+      +1
+      
+      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:111:47)
+
+  3) ViewHandler
        setupEyeIconListeners
          should attach click handler to eye icons:
-     TypeError: Cannot read properties of undefined (reading 'querySelector')
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:129:32)
-      at processImmediate (node:internal/timers:466:21)
 
-  13) ViewHandler
-       setupWindowResizeListener
-         should debounce and call callback when crossing breakpoint:
-
-      Uncaught AssertionError: expected false to be true
+      AssertionError: expected false to be true
       + expected - actual
 
       -false
       +true
       
-      at Timeout._onTimeout (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:147:42)
-      at listOnTimeout (node:internal/timers:559:17)
-      at processTimers (node:internal/timers:502:7)
-
-  14) ViewHandler
-       setupEscapeKeyListener
-         should call callback on Escape key:
-     TypeError: Cannot read properties of undefined (reading 'dispatchEvent')
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:159:16)
+      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:132:40)
       at processImmediate (node:internal/timers:466:21)
 
-  15) ViewHandler
-       setupPrintButtonListener
-         should call callback when print button clicked:
-     TypeError: Cannot read properties of undefined (reading 'getElementById')
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:168:16)
-      at processImmediate (node:internal/timers:466:21)
-
-  16) ViewHandler
+  4) ViewHandler
        setupPrintButtonListener
          should show alert if callback throws:
-     TypeError: Cannot read properties of undefined (reading 'getElementById')
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:176:16)
+
+      AssertionError: expected false to be true
+      + expected - actual
+
+      -false
+      +true
+      
+      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:177:49)
       at processImmediate (node:internal/timers:466:21)
 
-  17) ViewHandler
-       image zoom/pan
-         should handle wheel zoom:
-     TypeError: Cannot read properties of undefined (reading 'getElementById')
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:183:30)
-      at processImmediate (node:internal/timers:466:21)
-
-  18) ViewHandler
-       image zoom/pan
-         should update transform on pan:
-     TypeError: Cannot read properties of undefined (reading 'getElementById')
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:192:30)
-      at processImmediate (node:internal/timers:466:21)
-
-  19) ViewHandler
+  5) ViewHandler
        showAlert, showValidationErrorAlert, showSuccessMessage
          showAlert should call window.alert:
-     ReferenceError: alert is not defined
-      at ViewHandler.showAlert (file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/measurement-pages/measurement-modules/measurement-ViewHandler.js:321:9)
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:213:19)
+
+      AssertionError: expected false to be true
+      + expected - actual
+
+      -false
+      +true
+      
+      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:214:49)
       at processImmediate (node:internal/timers:466:21)
 
-  20) ViewHandler
+  6) ViewHandler
        showAlert, showValidationErrorAlert, showSuccessMessage
          showValidationErrorAlert should alert specific message:
-     ReferenceError: alert is not defined
-      at ViewHandler.showValidationErrorAlert (file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/measurement-pages/measurement-modules/measurement-ViewHandler.js:325:9)
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:219:19)
+
+      AssertionError: expected false to be true
+      + expected - actual
+
+      -false
+      +true
+      
+      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:220:129)
       at processImmediate (node:internal/timers:466:21)
 
-  21) ViewHandler
+  7) ViewHandler
        showAlert, showValidationErrorAlert, showSuccessMessage
          showSuccessMessage should alert with form data:
-     ReferenceError: alert is not defined
-      at ViewHandler.showSuccessMessage (file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/measurement-pages/measurement-modules/measurement-ViewHandler.js:329:9)
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:225:19)
-      at processImmediate (node:internal/timers:466:21)
 
-  22) ViewHandler
-       focusFirstErrorField
-         should focus element with error class:
-     TypeError: Cannot read properties of undefined (reading 'getElementById')
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:232:30)
+      AssertionError: expected false to be true
+      + expected - actual
+
+      -false
+      +true
+      
+      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:226:41)
       at processImmediate (node:internal/timers:466:21)
 ]
 
 **REQUEST:**
 [
-    1. fix what is causing the error
+    1. fix the error
     2. rewrite an updated version but preserve the behavior and functionality of the module
 
 ]
