@@ -3,20 +3,30 @@ import sinon from 'sinon';
 import { JSDOM } from 'jsdom';
 import AlterationApp from '../../../pages/alteration-pages/alteration-modules/alteration-Main.js';
 
-// Mock dependent modules (we only need to check that they are instantiated and wired)
 describe('AlterationApp', () => {
   let dom;
   let document;
   let app;
 
   beforeEach(() => {
-    // Basic DOM for the app to attach to (though Main doesn't directly use DOM in constructor)
-    dom = new JSDOM('<!DOCTYPE html><body></body>');
+    // Create a DOM with all elements required by DOMRenderer
+    dom = new JSDOM(`
+      <!DOCTYPE html>
+      <body>
+        <span id="priceCalculation"></span>
+        <p id="alteration-note"></p>
+        <p id="alteration-description"></p>
+        <p id="alteration-customer-request"></p>
+        <p id="alteration-type"></p>
+        <p id="alteration-level"></p>
+        <!-- Also include the selects that EventManager expects -->
+        <select id="alteration-top-Select"></select>
+        <select id="alterationLevel-diff"></select>
+      </body>
+    `);
     document = dom.window.document;
     global.document = document;
     global.window = dom.window;
-
-    // Stub global alert
     global.alert = sinon.stub();
 
     app = new AlterationApp();
@@ -51,7 +61,6 @@ describe('AlterationApp', () => {
 
   describe('global handlers', () => {
     beforeEach(() => {
-      // Mock window functions are attached in setupGlobalHandlers
       app.setupGlobalHandlers();
     });
 
