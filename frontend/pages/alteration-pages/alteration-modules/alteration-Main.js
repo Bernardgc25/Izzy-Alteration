@@ -81,11 +81,15 @@ class AlterationApp {
     }
 }
 
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    const app = new AlterationApp();
-    app.initialize();
-    
-    // Optional: Expose app for debugging or advanced usage
-    window.alterationApp = app;
-});
+// Only run the auto‑initialization in a browser environment
+if (typeof document !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', () => {
+        const app = new AlterationApp();
+        app.initialize();
+        
+        // Optional: Expose app for debugging or advanced usage
+        window.alterationApp = app;
+    });
+}
+
+export default AlterationApp;

@@ -469,14 +469,18 @@ class AlterationApp {
     }
 }
 
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    const app = new AlterationApp();
-    app.initialize();
-    
-    // Optional: Expose app for debugging or advanced usage
-    window.alterationApp = app;
-});
+// Only run the auto‑initialization in a browser environment
+if (typeof document !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', () => {
+        const app = new AlterationApp();
+        app.initialize();
+        
+        // Optional: Expose app for debugging or advanced usage
+        window.alterationApp = app;
+    });
+}
+
+export default AlterationApp;
 ]
 
 **CODE 6 - File: alteration-PriceCalculator.js**  
@@ -751,7 +755,7 @@ describe('alterationMaps', () => {
 [
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
-import DOMRenderer from '../../../pages/alteration-pages/alteration-modules/alteration-DataMaps.js';
+import DOMRenderer from '../../../pages/alteration-pages/alteration-modules/alteration-DOMRenderer.js';
 
 describe('DOMRenderer', () => {
   let dom;
@@ -1265,7 +1269,25 @@ describe('StateManager', () => {
 
 **CODE 15 - File: package.json**  
 [
-
+{
+  "scripts": {
+    "test": "mocha",
+    "test:alteration": "mocha test/alteration-module-tests/unit/**/*.test.js",
+    "test:alteration:watch": "mocha --watch test/alteration-module-tests/unit/**/*.test.js",
+    "test:measurement": "mocha test/measurement-module-tests/unit/**/*.test.js",
+    "test:measurement:watch": "mocha --watch test/measurement-module-tests/unit/**/*.test.js",
+    "test:all": "npm run test:alteration && npm run test:measurement"
+  },
+  "type": "module",
+  "devDependencies": {
+    "chai": "^4.5.0",
+    "jsdom": "^22.1.0",
+    "jsdom-global": "^3.0.2",
+    "mocha": "^10.8.2",
+    "sinon": "^15.2.0",
+    "testdouble": "^3.20.2"
+  }
+}
 ]
 
 **CODE 16 - File: readme.md(file structure)**
@@ -1388,31 +1410,84 @@ Izzy-Alteration
 
 **ERROR/ISSUE:**
 [
-bernard@ubuntu:~/Documents/Izzy-Alteration/frontend$ npm run test:alteration
+ 1) EventManager
+       should reset other selects except current and difficulty:
 
-> test:alteration
-> mocha test/alteration-module-tests/unit/**/*.test.js
+      AssertionError: expected '' to equal 'val1'
+      + expected - actual
 
+      +val1
+      
+      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/alteration-module-tests/unit/alteration-EventManager.test.js:128:30)
+      at processImmediate (node:internal/timers:466:21)
 
- Exception during run: file:///home/bernard/Documents/Izzy-Alteration/frontend/test/alteration-module-tests/unit/alteration-DOMRenderer.test.js:3
-import DOMRenderer from '../../../pages/alteration-pages/alteration-modules/alteration-DataMaps.js';
-       ^^^^^^^^^^^
-SyntaxError: The requested module '../../../pages/alteration-pages/alteration-modules/alteration-DataMaps.js' does not provide an export named 'default'
-    at ModuleJob._instantiate (node:internal/modules/esm/module_job:123:21)
-    at async ModuleJob.run (node:internal/modules/esm/module_job:189:5)
-    at async Promise.all (index 0)
-    at async ESMLoader.import (node:internal/modules/esm/loader:530:24)
-    at async importModuleDynamicallyWrapper (node:internal/vm/module:438:15)
-    at async formattedImport (/home/bernard/Documents/Izzy-Alteration/frontend/node_modules/mocha/lib/nodejs/esm-utils.js:9:14)
-    at async Object.exports.requireOrImport (/home/bernard/Documents/Izzy-Alteration/frontend/node_modules/mocha/lib/nodejs/esm-utils.js:42:28)
-    at async Object.exports.loadFilesAsync (/home/bernard/Documents/Izzy-Alteration/frontend/node_modules/mocha/lib/nodejs/esm-utils.js:100:20)
-    at async singleRun (/home/bernard/Documents/Izzy-Alteration/frontend/node_modules/mocha/lib/cli/run-helpers.js:162:3)
-    at async Object.exports.handler (/home/bernard/Documents/Izzy-Alteration/frontend/node_modules/mocha/lib/cli/run.js:375:5)
-bernard@ubuntu:~/Documents/Izzy-Alteration/frontend$ 
+  2) AlterationApp
+       should set up subscription from stateManager to domRenderer:
+     TypeError: Cannot set properties of null (setting 'textContent')
+      at DOMRenderer.render (file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/alteration-pages/alteration-modules/alteration-DOMRenderer.js:33:52)
+      at Function.invoke (file:///home/bernard/Documents/Izzy-Alteration/frontend/node_modules/sinon/pkg/sinon-esm.js:2431:47)
+      at DOMRenderer.render (file:///home/bernard/Documents/Izzy-Alteration/frontend/node_modules/sinon/pkg/sinon-esm.js:2741:26)
+      at file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/alteration-pages/alteration-modules/alteration-Main.js:35:30
+      at file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/alteration-pages/alteration-modules/alteration-StateManager.js:35:44
+      at Array.forEach (<anonymous>)
+      at StateManager.notifyListeners (file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/alteration-pages/alteration-modules/alteration-StateManager.js:35:24)
+      at StateManager.setState (file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/alteration-pages/alteration-modules/alteration-StateManager.js:30:14)
+      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/alteration-module-tests/unit/alteration-Main.test.js:42:22)
+      at processImmediate (node:internal/timers:466:21)
+
+  3) AlterationApp
+       reset should reset state and selects:
+     TypeError: Cannot set properties of null (setting 'textContent')
+      at DOMRenderer.render (file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/alteration-pages/alteration-modules/alteration-DOMRenderer.js:54:52)
+      at file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/alteration-pages/alteration-modules/alteration-Main.js:35:30
+      at file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/alteration-pages/alteration-modules/alteration-StateManager.js:35:44
+      at Array.forEach (<anonymous>)
+      at StateManager.notifyListeners (file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/alteration-pages/alteration-modules/alteration-StateManager.js:35:24)
+      at StateManager.setState (file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/alteration-pages/alteration-modules/alteration-StateManager.js:30:14)
+      at StateManager.reset (file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/alteration-pages/alteration-modules/alteration-StateManager.js:45:14)
+      at Function.invoke (file:///home/bernard/Documents/Izzy-Alteration/frontend/node_modules/sinon/pkg/sinon-esm.js:2431:47)
+      at StateManager.reset (file:///home/bernard/Documents/Izzy-Alteration/frontend/node_modules/sinon/pkg/sinon-esm.js:2736:26)
+      at AlterationApp.reset (file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/alteration-pages/alteration-modules/alteration-Main.js:70:27)
+      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/alteration-module-tests/unit/alteration-Main.test.js:95:9)
+      at processImmediate (node:internal/timers:466:21)
+
+  4) AlterationApp
+       global handlers
+         handleAdd should add item to cart when valid state:
+     TypeError: Cannot set properties of null (setting 'textContent')
+      at DOMRenderer.render (file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/alteration-pages/alteration-modules/alteration-DOMRenderer.js:33:52)
+      at file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/alteration-pages/alteration-modules/alteration-Main.js:35:30
+      at file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/alteration-pages/alteration-modules/alteration-StateManager.js:35:44
+      at Array.forEach (<anonymous>)
+      at StateManager.notifyListeners (file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/alteration-pages/alteration-modules/alteration-StateManager.js:35:24)
+      at StateManager.setState (file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/alteration-pages/alteration-modules/alteration-StateManager.js:30:14)
+      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/alteration-module-tests/unit/alteration-Main.test.js:59:24)
+      at processImmediate (node:internal/timers:466:21)
+
+  5) AlterationApp
+       global handlers
+         handleAdd should alert if no valid alteration:
+     TypeError: Cannot set properties of null (setting 'textContent')
+      at DOMRenderer.render (file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/alteration-pages/alteration-modules/alteration-DOMRenderer.js:54:52)
+      at file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/alteration-pages/alteration-modules/alteration-Main.js:35:30
+      at file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/alteration-pages/alteration-modules/alteration-StateManager.js:35:44
+      at Array.forEach (<anonymous>)
+      at StateManager.notifyListeners (file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/alteration-pages/alteration-modules/alteration-StateManager.js:35:24)
+      at StateManager.setState (file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/alteration-pages/alteration-modules/alteration-StateManager.js:30:14)
+      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/alteration-module-tests/unit/alteration-Main.test.js:73:24)
+      at processImmediate (node:internal/timers:466:21)
+
+  6) AlterationApp
+       global handlers
+         handleClear should call reset:
+     TypeError: global.handleClear is not a function
+      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/alteration-module-tests/unit/alteration-Main.test.js:84:14)
+      at processImmediate (node:internal/timers:466:21) 
 ]
 
 **REQUEST:**
 [
-    1. fix the error
+    1. fix the cause of failed tests
+    2. rewrite an updated version but preserve the behavior and functionality of the module
 
 ]

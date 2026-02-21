@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
-import DOMRenderer from '../../../pages/alteration-pages/alteration-modules/alteration-DataMaps.js';
+import DOMRenderer from '../../../pages/alteration-pages/alteration-modules/alteration-DOMRenderer.js';
 
 describe('DOMRenderer', () => {
   let dom;
