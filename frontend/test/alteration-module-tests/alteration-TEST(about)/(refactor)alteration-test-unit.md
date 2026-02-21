@@ -880,18 +880,18 @@ describe('EventManager', () => {
   let difficultySelect;
 
   beforeEach(() => {
-    // Create DOM with necessary selects
+    // Create DOM with two alteration selects (to test resetting multiple) and a difficulty select
     dom = new JSDOM(`
       <!DOCTYPE html>
       <body>
         <select id="alteration-top-Select"></select>
+        <select id="alteration-bottom-Select"></select>
         <select id="alterationLevel-diff"></select>
       </body>
     `);
     document = dom.window.document;
     global.document = document;
 
-    // Mocks
     stateManagerMock = {
       getState: sinon.stub().returns({ selectedDifficulty: null }),
       setState: sinon.spy()
@@ -902,7 +902,6 @@ describe('EventManager', () => {
     };
     domRendererMock = {};
 
-    // Create instance
     eventManager = new EventManager(stateManagerMock, priceCalculatorMock, domRendererMock);
     alterationSelects = eventManager.alterationSelects;
     difficultySelect = eventManager.difficultySelect;
@@ -913,97 +912,31 @@ describe('EventManager', () => {
     sinon.restore();
   });
 
-  it('should initialize event listeners', () => {
-    const addEventListenerSpy = sinon.spy(document.querySelector('#alteration-top-Select'), 'addEventListener');
-    const diffSpy = sinon.spy(document.querySelector('#alterationLevel-diff'), 'addEventListener');
-
-    eventManager.initialize();
-
-    expect(addEventListenerSpy.calledOnceWith('change', eventManager.handleAlterationChange)).to.be.true;
-    expect(diffSpy.calledOnceWith('change', eventManager.handleDifficultyChange)).to.be.true;
-  });
-
-  it('should handle alteration change with value', () => {
-    const fakeEvent = { target: { value: 'repair-zippers-on-dress' } };
-    stateManagerMock.getState.returns({ selectedDifficulty: 'simple' });
-    priceCalculatorMock.calculatePrice.withArgs('repair-zippers-on-dress', 'simple').returns(30);
-    priceCalculatorMock.getAlterationDetails.withArgs('repair-zippers-on-dress').returns({ detail: 'test' });
-
-    eventManager.handleAlterationChange(fakeEvent);
-
-    expect(stateManagerMock.setState.calledWith({
-      selectedAlteration: 'repair-zippers-on-dress',
-      currentPrice: 30,
-      alterationDetails: { detail: 'test' },
-      lastSelectedElement: fakeEvent.target
-    })).to.be.true;
-  });
-
-  it('should handle alteration change with empty value', () => {
-    const fakeEvent = { target: { value: '' } };
-    eventManager.handleAlterationChange(fakeEvent);
-
-    expect(stateManagerMock.setState.calledWith({
-      selectedAlteration: null,
-      currentPrice: 0,
-      alterationDetails: null
-    })).to.be.true;
-  });
-
-  it('should handle difficulty change with value', () => {
-    const fakeEvent = { target: { value: 'intermediate' } };
-    stateManagerMock.getState.returns({ selectedAlteration: 'repair-zippers-on-dress' });
-    priceCalculatorMock.calculatePrice.withArgs('repair-zippers-on-dress', 'intermediate').returns(0); // intermediate price may be zero
-    priceCalculatorMock.getAlterationDetails.withArgs('repair-zippers-on-dress').returns({ detail: 'test' });
-
-    eventManager.handleDifficultyChange(fakeEvent);
-
-    expect(stateManagerMock.setState.calledWith({
-      selectedDifficulty: 'intermediate',
-      currentPrice: 0,
-      alterationDetails: { detail: 'test' }
-    })).to.be.true;
-  });
-
-  it('should handle difficulty change with empty value', () => {
-    const fakeEvent = { target: { value: '' } };
-    eventManager.handleDifficultyChange(fakeEvent);
-
-    expect(stateManagerMock.setState.calledWith({
-      selectedDifficulty: null,
-      currentPrice: 0
-    })).to.be.true;
-  });
+  // ... other tests remain unchanged ...
 
   it('should reset other selects except current and difficulty', () => {
-    const select1 = document.createElement('select');
-    select1.id = 'select1';
-    select1.value = 'val1';
-    const select2 = document.createElement('select');
-    select2.id = 'select2';
-    select2.value = 'val2';
-    const diff = document.createElement('select');
-    diff.id = 'alterationLevel-diff';
-    diff.value = 'simple';
+    // Get the actual DOM elements
+    const topSelect = document.getElementById('alteration-top-Select');
+    const bottomSelect = document.getElementById('alteration-bottom-Select');
+    const diffSelect = document.getElementById('alterationLevel-diff');
 
-    // Manually assign to eventManager's alterationSelects for this test
-    eventManager.alterationSelects = [select1, select2, diff];
+    // Set initial values
+    topSelect.value = 'top-value';
+    bottomSelect.value = 'bottom-value';
+    diffSelect.value = 'simple';
 
-    eventManager.resetOtherSelects(select1);
+    // The eventManager.alterationSelects already contains both alteration selects
+    // (because they match the selector 'select[id$="Select"]'). We can rely on that.
 
-    expect(select1.value).to.equal('val1'); // unchanged
-    expect(select2.value).to.equal(''); // reset
-    expect(diff.value).to.equal('simple'); // not reset because id is 'alterationLevel-diff'
-  });
+    // Call resetOtherSelects with the top select as the current one
+    eventManager.resetOtherSelects(topSelect);
 
-  it('should clean up event listeners', () => {
-    const removeEventListenerSpy = sinon.spy(document.querySelector('#alteration-top-Select'), 'removeEventListener');
-    const diffSpy = sinon.spy(document.querySelector('#alterationLevel-diff'), 'removeEventListener');
-
-    eventManager.cleanup();
-
-    expect(removeEventListenerSpy.calledOnceWith('change', eventManager.handleAlterationChange)).to.be.true;
-    expect(diffSpy.calledOnceWith('change', eventManager.handleDifficultyChange)).to.be.true;
+    // Top select should keep its value
+    expect(topSelect.value).to.equal('top-value');
+    // Bottom select should be reset
+    expect(bottomSelect.value).to.equal('');
+    // Difficulty select should not be touched (it's not in alterationSelects anyway)
+    expect(diffSelect.value).to.equal('simple');
   });
 });
 ]  
@@ -1021,7 +954,6 @@ describe('AlterationApp', () => {
   let app;
 
   beforeEach(() => {
-    // Create a DOM with all elements required by DOMRenderer
     dom = new JSDOM(`
       <!DOCTYPE html>
       <body>
@@ -1031,15 +963,14 @@ describe('AlterationApp', () => {
         <p id="alteration-customer-request"></p>
         <p id="alteration-type"></p>
         <p id="alteration-level"></p>
-        <!-- Also include the selects that EventManager expects -->
         <select id="alteration-top-Select"></select>
         <select id="alterationLevel-diff"></select>
       </body>
     `);
     document = dom.window.document;
     global.document = document;
-    global.window = dom.window;
-    global.alert = sinon.stub();
+    global.window = dom.window;               // make window available globally
+    global.alert = sinon.stub();               // stub alert on the global object
 
     app = new AlterationApp();
   });
@@ -1051,25 +982,7 @@ describe('AlterationApp', () => {
     sinon.restore();
   });
 
-  it('should instantiate all sub-modules', () => {
-    expect(app.stateManager).to.exist;
-    expect(app.priceCalculator).to.exist;
-    expect(app.domRenderer).to.exist;
-    expect(app.cartManager).to.exist;
-    expect(app.eventManager).to.exist;
-  });
-
-  it('should set up subscription from stateManager to domRenderer', () => {
-    const renderSpy = sinon.spy(app.domRenderer, 'render');
-    app.stateManager.setState({ currentPrice: 123 });
-    expect(renderSpy.calledOnce).to.be.true;
-  });
-
-  it('initialize() should call eventManager.initialize', () => {
-    const initSpy = sinon.spy(app.eventManager, 'initialize');
-    app.initialize();
-    expect(initSpy.calledOnce).to.be.true;
-  });
+  // ... other tests remain unchanged ...
 
   describe('global handlers', () => {
     beforeEach(() => {
@@ -1084,7 +997,8 @@ describe('AlterationApp', () => {
       });
       const addItemSpy = sinon.spy(app.cartManager, 'addItem');
 
-      global.handleAdd();
+      // Call the handler attached to window
+      window.handleAdd();
 
       expect(addItemSpy.calledOnceWith('Alteration: test (simple)', 45)).to.be.true;
       expect(global.alert.calledOnce).to.be.true;
@@ -1094,7 +1008,7 @@ describe('AlterationApp', () => {
       app.stateManager.setState({ currentPrice: 0 });
       const addItemSpy = sinon.spy(app.cartManager, 'addItem');
 
-      global.handleAdd();
+      window.handleAdd();
 
       expect(addItemSpy.notCalled).to.be.true;
       expect(global.alert.calledWith('Please select a valid alteration and difficulty level first.')).to.be.true;
@@ -1102,27 +1016,9 @@ describe('AlterationApp', () => {
 
     it('handleClear should call reset', () => {
       const resetSpy = sinon.spy(app, 'reset');
-      global.handleClear();
+      window.handleClear();
       expect(resetSpy.calledOnce).to.be.true;
     });
-  });
-
-  it('reset should reset state and selects', () => {
-    const stateResetSpy = sinon.spy(app.stateManager, 'reset');
-    const rendererResetSpy = sinon.spy(app.domRenderer, 'resetSelects');
-    app.eventManager.alterationSelects = [];
-    app.eventManager.difficultySelect = null;
-
-    app.reset();
-
-    expect(stateResetSpy.calledOnce).to.be.true;
-    expect(rendererResetSpy.calledOnce).to.be.true;
-  });
-
-  it('destroy should clean up eventManager', () => {
-    const cleanupSpy = sinon.spy(app.eventManager, 'cleanup');
-    app.destroy();
-    expect(cleanupSpy.calledOnce).to.be.true;
   });
 });
 ]  
@@ -1419,36 +1315,16 @@ Izzy-Alteration
 
 **ERROR/ISSUE:**
 [
+
   1) EventManager
        should reset other selects except current and difficulty:
 
-      AssertionError: expected '' to equal 'val1'
+      AssertionError: expected '' to equal 'top-value'
       + expected - actual
 
-      +val1
+      +top-value
       
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/alteration-module-tests/unit/alteration-EventManager.test.js:128:30)
-      at processImmediate (node:internal/timers:466:21)
-
-  2) AlterationApp
-       global handlers
-         handleAdd should add item to cart when valid state:
-     TypeError: global.handleAdd is not a function
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/alteration-module-tests/unit/alteration-Main.test.js:75:14)
-      at processImmediate (node:internal/timers:466:21)
-
-  3) AlterationApp
-       global handlers
-         handleAdd should alert if no valid alteration:
-     TypeError: global.handleAdd is not a function
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/alteration-module-tests/unit/alteration-Main.test.js:85:14)
-      at processImmediate (node:internal/timers:466:21)
-
-  4) AlterationApp
-       global handlers
-         handleClear should call reset:
-     TypeError: global.handleClear is not a function
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/alteration-module-tests/unit/alteration-Main.test.js:93:14)
+      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/alteration-module-tests/unit/alteration-EventManager.test.js:69:32)
       at processImmediate (node:internal/timers:466:21)
 ]
 
@@ -1456,5 +1332,7 @@ Izzy-Alteration
 [
     1. fix the cause of failed tests
     2. rewrite an updated version but preserve the behavior and functionality of the module
+    3. rename the first describe of each test based on the name of the file its testing, [example: describe('AlterationApp', () => rename it to alteration-Main.js]
+
 
 ]
