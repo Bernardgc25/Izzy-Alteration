@@ -42,11 +42,14 @@ describe('measurement-Main.js', () => {
   });
 
   afterEach(() => {
+    // Clean up the app first – this cancels timers and removes listeners
+    if (app) {
+      app.destroy();
+    }
     sinon.restore();
     delete globalThis.window;
     delete globalThis.document;
     delete globalThis.alert;
-    if (app && app.viewHandler) app.viewHandler.cleanup();
   });
 
   describe('constructor and init', () => {

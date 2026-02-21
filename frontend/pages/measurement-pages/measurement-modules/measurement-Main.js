@@ -13,6 +13,7 @@ export class MeasurementApp {
         this.validator = null;
         this.viewHandler = null;
         this.debounceTimers = new Map();
+        this.initTimeoutId = null;           // Store timeout ID
         this.init();
     }
 
@@ -53,8 +54,10 @@ export class MeasurementApp {
         this.manager.setupDateField();
         // Force initial image load for desktop view
         if (!this.viewHandler.isMobileView) {
-            setTimeout(() => {
+            // Store timeout ID so it can be cancelled later
+            this.initTimeoutId = setTimeout(() => {
                 this.viewHandler.setupDesktopGuideImage();
+                this.initTimeoutId = null;
             }, 100);
         }
     }
@@ -210,6 +213,32 @@ export class MeasurementApp {
 
     logInitialization() {
         console.log(`Measurement App initialized for ${this.manager.gender}`);
+    }
+
+    /**
+     * Clean up resources: cancel timers and clean up view handler.
+     * Should be called when the app is no longer needed (e.g., in tests).
+     */
+    destroy() {
+        // Cancel the init timeout if it exists
+        if (this.initTimeoutId) {
+            clearTimeout(this.initTimeoutId);
+            this.initTimeoutId = null;
+        }
+
+        // Clear all debounce timers
+        this.debounceTimers.forEach((timerId) => clearTimeout(timerId));
+        this.debounceTimers.clear();
+
+        // Clean up view handler (removes event listeners, etc.)
+        if (this.viewHandler) {
+            this.viewHandler.cleanup();
+        }
+
+        // Optionally nullify references
+        this.manager = null;
+        this.validator = null;
+        this.viewHandler = null;
     }
 }
 
