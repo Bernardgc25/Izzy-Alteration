@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import PriceCalculator from '../../../pages/alteration-pages/alteration-modules/alteration-PriceCalculator.js';
 import { alterationMaps } from '../../../pages/alteration-pages/alteration-modules/alteration-DataMaps.js';
 
-describe('PriceCalculator', () => {
+describe('alteration-PriceCalculator.js', () => {
   let calculator;
 
   beforeEach(() => {

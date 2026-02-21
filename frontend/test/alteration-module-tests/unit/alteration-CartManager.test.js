@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import CartManager from '../../../pages/alteration-pages/alteration-modules/alteration-CartManager.js';
 
-describe('CartManager', () => {
+describe('alteration-CartManager.js', () => {
   let cartManager;
 
   beforeEach(() => {

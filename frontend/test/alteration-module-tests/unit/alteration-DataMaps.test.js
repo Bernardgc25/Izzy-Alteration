@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { alterationMaps } from '../../../pages/alteration-pages/alteration-modules/alteration-DataMaps.js';
 
-describe('alterationMaps', () => {
+describe('alteration-DataMaps.js', () => {
   it('should be an object with expected top-level categories', () => {
     expect(alterationMaps).to.be.an('object');
     const expectedCategories = [

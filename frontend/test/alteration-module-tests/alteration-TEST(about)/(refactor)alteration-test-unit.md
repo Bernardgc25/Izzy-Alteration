@@ -363,7 +363,8 @@ class EventManager {
     // Reset other select elements when one is selected
     resetOtherSelects(currentSelect) {
         this.alterationSelects.forEach(select => {
-            if (select !== currentSelect && select.id !== 'alterationLevel-diff') {
+            // Compare by id instead of reference to avoid test/environment discrepancies
+            if (select.id !== currentSelect.id && select.id !== 'alterationLevel-diff') {
                 select.value = '';
             }
         });
@@ -630,7 +631,7 @@ export default StateManager;
 import { expect } from 'chai';
 import CartManager from '../../../pages/alteration-pages/alteration-modules/alteration-CartManager.js';
 
-describe('CartManager', () => {
+describe('alteration-CartManager.js', () => {
   let cartManager;
 
   beforeEach(() => {
@@ -697,7 +698,7 @@ describe('CartManager', () => {
 import { expect } from 'chai';
 import { alterationMaps } from '../../../pages/alteration-pages/alteration-modules/alteration-DataMaps.js';
 
-describe('alterationMaps', () => {
+describe('alteration-DataMaps.js', () => {
   it('should be an object with expected top-level categories', () => {
     expect(alterationMaps).to.be.an('object');
     const expectedCategories = [
@@ -757,7 +758,7 @@ import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import DOMRenderer from '../../../pages/alteration-pages/alteration-modules/alteration-DOMRenderer.js';
 
-describe('DOMRenderer', () => {
+describe('alteration-DOMRenderer.js', () => {
   let dom;
   let document;
   let renderer;
@@ -869,7 +870,7 @@ import sinon from 'sinon';
 import { JSDOM } from 'jsdom';
 import EventManager from '../../../pages/alteration-pages/alteration-modules/alteration-EventManager.js';
 
-describe('EventManager', () => {
+describe('alteration-EventManager.js', () => {
   let dom;
   let document;
   let stateManagerMock;
@@ -880,13 +881,22 @@ describe('EventManager', () => {
   let difficultySelect;
 
   beforeEach(() => {
-    // Create DOM with two alteration selects (to test resetting multiple) and a difficulty select
+    // Create DOM with selects that include options so value assignments work
     dom = new JSDOM(`
       <!DOCTYPE html>
       <body>
-        <select id="alteration-top-Select"></select>
-        <select id="alteration-bottom-Select"></select>
-        <select id="alterationLevel-diff"></select>
+        <select id="alteration-top-Select">
+          <option value="top-value">Top</option>
+          <option value="other">Other</option>
+        </select>
+        <select id="alteration-bottom-Select">
+          <option value="bottom-value">Bottom</option>
+          <option value="other">Other</option>
+        </select>
+        <select id="alterationLevel-diff">
+          <option value="simple">Simple</option>
+          <option value="intermediate">Intermediate</option>
+        </select>
       </body>
     `);
     document = dom.window.document;
@@ -915,27 +925,22 @@ describe('EventManager', () => {
   // ... other tests remain unchanged ...
 
   it('should reset other selects except current and difficulty', () => {
-    // Get the actual DOM elements
     const topSelect = document.getElementById('alteration-top-Select');
     const bottomSelect = document.getElementById('alteration-bottom-Select');
     const diffSelect = document.getElementById('alterationLevel-diff');
 
-    // Set initial values
+    // Set initial values (now options exist, so values stick)
     topSelect.value = 'top-value';
     bottomSelect.value = 'bottom-value';
     diffSelect.value = 'simple';
 
-    // The eventManager.alterationSelects already contains both alteration selects
-    // (because they match the selector 'select[id$="Select"]'). We can rely on that.
-
-    // Call resetOtherSelects with the top select as the current one
     eventManager.resetOtherSelects(topSelect);
 
     // Top select should keep its value
     expect(topSelect.value).to.equal('top-value');
     // Bottom select should be reset
     expect(bottomSelect.value).to.equal('');
-    // Difficulty select should not be touched (it's not in alterationSelects anyway)
+    // Difficulty select should not be touched
     expect(diffSelect.value).to.equal('simple');
   });
 });
@@ -948,7 +953,7 @@ import sinon from 'sinon';
 import { JSDOM } from 'jsdom';
 import AlterationApp from '../../../pages/alteration-pages/alteration-modules/alteration-Main.js';
 
-describe('AlterationApp', () => {
+describe('alteration-Main.js', () => {
   let dom;
   let document;
   let app;
@@ -1029,7 +1034,7 @@ import { expect } from 'chai';
 import PriceCalculator from '../../../pages/alteration-pages/alteration-modules/alteration-PriceCalculator.js';
 import { alterationMaps } from '../../../pages/alteration-pages/alteration-modules/alteration-DataMaps.js';
 
-describe('PriceCalculator', () => {
+describe('alteration-PriceCalculator.js', () => {
   let calculator;
 
   beforeEach(() => {
@@ -1100,11 +1105,11 @@ describe('PriceCalculator', () => {
 
 **CODE 14 - File: alteration-StateManager.test.js**
 [
-    import { expect } from 'chai';
+import { expect } from 'chai';
 import sinon from 'sinon';
 import StateManager from '../../../pages/alteration-pages/alteration-modules/alteration-StateManager.js';
 
-describe('StateManager', () => {
+describe('alteration-StateManager.js', () => {
   let stateManager;
 
   beforeEach(() => {
@@ -1316,23 +1321,80 @@ Izzy-Alteration
 **ERROR/ISSUE:**
 [
 
-  1) EventManager
-       should reset other selects except current and difficulty:
+  bernard@ubuntu:~/Documents/Izzy-Alteration/frontend$ npm run test:alteration
 
-      AssertionError: expected '' to equal 'top-value'
-      + expected - actual
+> test:alteration
+> mocha test/alteration-module-tests/unit/**/*.test.js
 
-      +top-value
-      
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/alteration-module-tests/unit/alteration-EventManager.test.js:69:32)
-      at processImmediate (node:internal/timers:466:21)
+
+
+  alteration-CartManager.js
+    ✔ should initialize with empty cart and nextId = 1
+    ✔ should add an item and return it with id and timestamp
+    ✔ should remove an existing item by id
+    ✔ should return null when removing non-existent item
+    ✔ should clear all items
+    ✔ should calculate total correctly
+    ✔ should return a copy of items
+
+  alteration-DataMaps.js
+    ✔ should be an object with expected top-level categories
+    ✔ should have female-dress with many alteration keys
+    ✔ should have repair category with correct structure
+    ✔ should have all price entries as numbers (or zero)
+
+  alteration-DOMRenderer.js
+    ✔ should clear all display elements
+    ✔ should render state with price and details
+    ✔ should render customer request text for intermediate difficulty
+    ✔ should render customer request text for difficult difficulty
+    ✔ should show n/a when price is zero
+    ✔ should reset select elements
+
+  alteration-EventManager.js
+    ✔ should reset other selects except current and difficulty
+
+  alteration-Main.js
+    global handlers
+      ✔ handleAdd should add item to cart when valid state
+      ✔ handleAdd should alert if no valid alteration
+      ✔ handleClear should call reset
+
+  alteration-PriceCalculator.js
+    findCategory
+      ✔ should return correct category for known alteration
+      ✔ should return null for unknown alteration
+    calculatePrice
+      ✔ should return correct price for known alteration and difficulty
+Alteration not found: unknown
+      ✔ should return 0 if alteration not found
+      ✔ should return 0 if difficulty not found or zero
+      ✔ should return 0 if difficulty missing
+    getAlterationDetails
+      ✔ should return the full alteration object
+      ✔ should return empty detail object if not found
+    getCustomerRequestText
+      ✔ should return correct text for intermediate
+      ✔ should return correct text for difficult
+      ✔ should return empty string for unknown
+
+  alteration-StateManager.js
+    ✔ should initialize with default state
+    ✔ should update state with setState
+    ✔ should notify listeners on setState
+    ✔ should allow unsubscribing
+    ✔ should reset state to initial values
+    ✔ getState returns a copy, not a reference
+
+
+  38 passing (209ms)
 ]
 
 **REQUEST:**
 [
     1. fix the cause of failed tests
     2. rewrite an updated version but preserve the behavior and functionality of the module
-    3. rename the first describe of each test based on the name of the file its testing, [example: describe('AlterationApp', () => rename it to alteration-Main.js]
+
 
 
 ]

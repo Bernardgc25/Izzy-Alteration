@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { JSDOM } from 'jsdom';
 import AlterationApp from '../../../pages/alteration-pages/alteration-modules/alteration-Main.js';
 
-describe('AlterationApp', () => {
+describe('alteration-Main.js', () => {
   let dom;
   let document;
   let app;

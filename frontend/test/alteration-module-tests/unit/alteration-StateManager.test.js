@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import StateManager from '../../../pages/alteration-pages/alteration-modules/alteration-StateManager.js';
 
-describe('StateManager', () => {
+describe('alteration-StateManager.js', () => {
   let stateManager;
 
   beforeEach(() => {

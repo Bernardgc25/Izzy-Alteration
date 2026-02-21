@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import DOMRenderer from '../../../pages/alteration-pages/alteration-modules/alteration-DOMRenderer.js';
 
-describe('DOMRenderer', () => {
+describe('alteration-DOMRenderer.js', () => {
   let dom;
   let document;
   let renderer;
