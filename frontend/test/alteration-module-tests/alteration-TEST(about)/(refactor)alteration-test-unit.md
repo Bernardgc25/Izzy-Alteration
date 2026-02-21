@@ -621,147 +621,798 @@ class StateManager {
 
 export default StateManager;
 ]
-
-**CODE 8 - File: package.json**  
+**CODE 8 - File: alteration-CartManager.test.js**
 [
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Izzy Alteration</title>
-    <!--relative path-->
-    <link rel="stylesheet" href="/frontend/public/css/index.css">
-    <link rel="stylesheet" href="/frontend/public/css/alteration.css">
-</head>
-<body>
-    <!--Header Section-->
-    <header>
-        <nav class="navbar">
-            <div class="nav-container">
-                <div class="nav-logo">
-                    <a href="/frontend/pages/index.html">Izzy Alteration</a>
-                </div>
-                
-                <button class="menu-toggle" aria-label="Toggle menu">☰</button>
-                
-                <ul class="nav-menu">
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">Book an Appointment</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle">
-                            Account ⌄ 
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="/frontend/pages/signup.html" class="dropdown-link">Create</a></li>
-                            <li><a href="/frontend/pages/login.html" class="dropdown-link">Log In</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/frontend/pages/services.html" class="nav-link">Services</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">Pricing</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">About</a>
-                    </li>
-                    
-                
-                </ul>
-            </div>
-        </nav>
-    </header>
+import { expect } from 'chai';
+import CartManager from '../../../pages/alteration-pages/alteration-modules/alteration-CartManager.js';
 
-    <!--Alteration Section-->
-    <div class="container">
-        <form id="myForm" action="/submit" method="POST">
-            <div class="alteration-container">
-                <!--Repair list of services-->
-                <!--first column-->
-                <h2 id="price-list">Price list</h2>      
-                <div class="alteration-list">
-                    <label for="alteration-top-Select">repair (unisex):</label>
-                    <select id="alteration-top-Select">
-                        <!--Zippers-->
-                        <option id="alteration-type-default" value="" data-link="" hidden></option>
-                        <option value="repair-zippers-on-dress" data-link="">zippers on dress</option>
-                        <option value="repair-zippers-on-pants" data-link="">zippers on pants</option>
-                        <option value="repair-zippers-on-coats-jackets" data-link="">zippers on coats/jackets</option>
-                    
-                        <!--Tears/Holes-->
-                        <option value="repair-apply-patches" data-link="">apply patches</option>
-                        <option value="repair-sew-in-rips-tears" data-link="">sew-in rips tears</option>
-                    
-                        <!-- Buttons -->
-                        <option value="repair-button-replacement" data-link="">button replacement</option>                    
-                    </select>
-                </div>
+describe('CartManager', () => {
+  let cartManager;
 
-                <!--alteration level-->
-                <!--second column-->
-                <div class="alteration-level">
-                    <label for="alterationLevel-diff">Level of difficulty:</label>
-                    <select id="alterationLevel-diff" class="alteration-select">
-                        <option value="" data-link="" hidden></option>
-                        <option value="simple" data-link="">simple</option>
-                        <option value="intermediate" data-link="">intermediate</option>
-                        <option value="difficult" data-link="">difficult</option>
-                    </select>                  
-                </div>
-                
-                <!--third column-->
-                <!--fee amount calculator-->
-                <div class="amount-container">
-                    <div class="amount-row">
-                        <span id="amount">Amount = </span>
-                        <span id="priceCalculation"></span>
-                        <div class="button-group">
-                            <button id="add-button" type="button" onclick="handleAdd()">Add</button> 
-                            <button id="clear-button" type="button" onclick="handleClear()">Clear</button>
-                        </div>
-                    </div>
-                    <!-- depending on the level of difficulty, the price will be calculated accordingly. -->
-                    <details open>
-                        <summary>note</summary>
-                        <p id="alteration-note"></p>
-                    </details>
-                    <!--description of alteration-->
-                    <details open>
-                        <summary>description</summary>
-                        <p id="alteration-description"></p>
-                        <p id="alteration-customer-request"></p>
-                    </details>
-                    
-                    <!--summary detail-->
-                    <details open>
-                        <summary>order summary</summary>
-                        <p id="alteration-type"></p>
-                        <p id="alteration-level"></p>
-                    </details>
-                </div>
-            </div>
-        </form>
-    </div>
+  beforeEach(() => {
+    cartManager = new CartManager();
+  });
 
-    <script src="/frontend/public/js/index.js"></script>
-    <script type="module" src="/frontend/pages/alteration-pages/alteration-modules/alteration-Main.js"></script>
+  it('should initialize with empty cart and nextId = 1', () => {
+    expect(cartManager.cart).to.be.an('array').that.is.empty;
+    expect(cartManager.nextId).to.equal(1);
+  });
 
+  it('should add an item and return it with id and timestamp', () => {
+    const item = cartManager.addItem('Test item', 25.99);
+    expect(item).to.have.property('id', 1);
+    expect(item).to.have.property('description', 'Test item');
+    expect(item).to.have.property('price', 25.99);
+    expect(item).to.have.property('timestamp').that.is.a('string');
+    expect(cartManager.cart).to.have.lengthOf(1);
+    expect(cartManager.nextId).to.equal(2);
+  });
 
+  it('should remove an existing item by id', () => {
+    cartManager.addItem('Item 1', 10);
+    cartManager.addItem('Item 2', 20);
+    const removed = cartManager.removeItem(1);
+    expect(removed).to.have.property('id', 1);
+    expect(removed).to.have.property('description', 'Item 1');
+    expect(cartManager.cart).to.have.lengthOf(1);
+    expect(cartManager.cart[0].id).to.equal(2);
+  });
 
-</body>
-</html>
+  it('should return null when removing non-existent item', () => {
+    cartManager.addItem('Item', 10);
+    const removed = cartManager.removeItem(999);
+    expect(removed).to.be.null;
+    expect(cartManager.cart).to.have.lengthOf(1);
+  });
+
+  it('should clear all items', () => {
+    cartManager.addItem('Item 1', 10);
+    cartManager.addItem('Item 2', 20);
+    cartManager.clearCart();
+    expect(cartManager.cart).to.be.empty;
+    expect(cartManager.nextId).to.equal(3); // nextId is not reset
+  });
+
+  it('should calculate total correctly', () => {
+    cartManager.addItem('A', 15.5);
+    cartManager.addItem('B', 7.25);
+    expect(cartManager.getTotal()).to.equal(22.75);
+  });
+
+  it('should return a copy of items', () => {
+    const item = cartManager.addItem('Test', 5);
+    const items = cartManager.getItems();
+    expect(items).to.deep.equal([item]);
+    expect(items).not.to.equal(cartManager.cart); // different array reference
+  });
+});
+]  
+
+**CODE 9 - File: alteration-DataMaps.test.js**
+[
+import { expect } from 'chai';
+import { alterationMaps } from '../../../pages/alteration-pages/alteration-modules/alteration-DataMaps.js';
+
+describe('alterationMaps', () => {
+  it('should be an object with expected top-level categories', () => {
+    expect(alterationMaps).to.be.an('object');
+    const expectedCategories = [
+      'female-bottom',
+      'female-dress',
+      'female-jacket',
+      'female-top',
+      'male-bottom',
+      'male-suits',
+      'male-top',
+      'repair'
+    ];
+    expect(Object.keys(alterationMaps)).to.have.members(expectedCategories);
+  });
+
+  it('should have female-dress with many alteration keys', () => {
+    const femaleDress = alterationMaps['female-dress'];
+    expect(femaleDress).to.be.an('object');
+    // Spot check a few entries
+    expect(femaleDress['female-dress-hem']).to.exist;
+    expect(femaleDress['female-dress-hem']).to.have.property('simple', 75);
+    expect(femaleDress['female-dress-hem']).to.have.property('detail').that.is.a('string');
+  });
+
+  it('should have repair category with correct structure', () => {
+    const repair = alterationMaps['repair'];
+    expect(repair['repair-zippers-on-dress']).to.deep.include({
+      simple: 30,
+      intermediate: 0,
+      difficult: 0
+    });
+  });
+
+  it('should have all price entries as numbers (or zero)', () => {
+    const checkPrices = (obj) => {
+      for (const key in obj) {
+        if (typeof obj[key] === 'object' && obj[key] !== null) {
+          if ('simple' in obj[key]) {
+            expect(obj[key].simple).to.be.a('number');
+            expect(obj[key].intermediate).to.be.a('number');
+            expect(obj[key].difficult).to.be.a('number');
+            expect(obj[key].detail).to.be.a('string');
+          } else {
+            checkPrices(obj[key]);
+          }
+        }
+      }
+    };
+    checkPrices(alterationMaps);
+  });
+});
+]  
+
+**CODE 10 - File: alteration-DOMRenderer.test.js**
+[
+import { expect } from 'chai';
+import { JSDOM } from 'jsdom';
+import DOMRenderer from '../../../pages/alteration-pages/alteration-modules/alteration-DataMaps.js';
+
+describe('DOMRenderer', () => {
+  let dom;
+  let document;
+  let renderer;
+
+  beforeEach(() => {
+    // Set up a fake DOM with required elements
+    dom = new JSDOM(`
+      <!DOCTYPE html>
+      <body>
+        <span id="priceCalculation"></span>
+        <p id="alteration-note"></p>
+        <p id="alteration-description"></p>
+        <p id="alteration-customer-request"></p>
+        <p id="alteration-type"></p>
+        <p id="alteration-level"></p>
+      </body>
+    `);
+    document = dom.window.document;
+    global.document = document; // needed for DOMRenderer's constructor
+    renderer = new DOMRenderer();
+  });
+
+  afterEach(() => {
+    delete global.document;
+  });
+
+  it('should clear all display elements', () => {
+    document.getElementById('priceCalculation').textContent = 'old';
+    document.getElementById('alteration-note').textContent = 'old';
+    renderer.clearDisplay();
+    expect(document.getElementById('priceCalculation').textContent).to.equal('');
+    expect(document.getElementById('alteration-note').textContent).to.equal('');
+  });
+
+  it('should render state with price and details', () => {
+    const state = {
+      selectedAlteration: 'test-alteration',
+      selectedDifficulty: 'simple',
+      currentPrice: 42.5,
+      alterationDetails: { detail: 'Test detail' }
+    };
+    renderer.render(state);
+
+    expect(document.getElementById('priceCalculation').textContent).to.equal('$42.50');
+    expect(document.getElementById('alteration-note').textContent).to.contain('Prices are determined');
+    expect(document.getElementById('alteration-description').textContent).to.equal('• Test detail');
+    expect(document.getElementById('alteration-type').textContent).to.equal('Alteration type: test-alteration');
+    expect(document.getElementById('alteration-level').textContent).to.equal('Alteration level: simple');
+  });
+
+  it('should render customer request text for intermediate difficulty', () => {
+    const state = {
+      selectedAlteration: 'a',
+      selectedDifficulty: 'intermediate',
+      currentPrice: 10,
+      alterationDetails: { detail: 'x' }
+    };
+    renderer.render(state);
+    expect(document.getElementById('alteration-customer-request').textContent).to.equal('• plus (1) customer-requested modification');
+  });
+
+  it('should render customer request text for difficult difficulty', () => {
+    const state = {
+      selectedAlteration: 'a',
+      selectedDifficulty: 'difficult',
+      currentPrice: 10,
+      alterationDetails: { detail: 'x' }
+    };
+    renderer.render(state);
+    expect(document.getElementById('alteration-customer-request').textContent).to.equal('• plus (2) customer-requested modification');
+  });
+
+  it('should show n/a when price is zero', () => {
+    const state = {
+      selectedAlteration: null,
+      selectedDifficulty: null,
+      currentPrice: 0,
+      alterationDetails: null
+    };
+    renderer.render(state);
+    expect(document.getElementById('priceCalculation').textContent).to.equal('n/a');
+    expect(document.getElementById('alteration-note').textContent).to.equal(' ');
+  });
+
+  it('should reset select elements', () => {
+    const select1 = document.createElement('select');
+    select1.id = 'select1';
+    const select2 = document.createElement('select');
+    select2.id = 'select2';
+    const difficultySelect = document.createElement('select');
+    difficultySelect.id = 'alterationLevel-diff';
+
+    select1.value = 'something';
+    select2.value = 'else';
+    difficultySelect.value = 'simple';
+
+    renderer.resetSelects([select1, select2], difficultySelect);
+    expect(select1.value).to.equal('');
+    expect(select2.value).to.equal('');
+    expect(difficultySelect.value).to.equal('');
+  });
+});
+]  
+
+**CODE 11 - File: alteration-EventManager.test.js**
+[
+import { expect } from 'chai';
+import sinon from 'sinon';
+import { JSDOM } from 'jsdom';
+import EventManager from '../../../pages/alteration-pages/alteration-modules/alteration-EventManager.js';
+
+describe('EventManager', () => {
+  let dom;
+  let document;
+  let stateManagerMock;
+  let priceCalculatorMock;
+  let domRendererMock;
+  let eventManager;
+  let alterationSelects;
+  let difficultySelect;
+
+  beforeEach(() => {
+    // Create DOM with necessary selects
+    dom = new JSDOM(`
+      <!DOCTYPE html>
+      <body>
+        <select id="alteration-top-Select"></select>
+        <select id="alterationLevel-diff"></select>
+      </body>
+    `);
+    document = dom.window.document;
+    global.document = document;
+
+    // Mocks
+    stateManagerMock = {
+      getState: sinon.stub().returns({ selectedDifficulty: null }),
+      setState: sinon.spy()
+    };
+    priceCalculatorMock = {
+      calculatePrice: sinon.stub().returns(99),
+      getAlterationDetails: sinon.stub().returns({ detail: 'mock detail' })
+    };
+    domRendererMock = {};
+
+    // Create instance
+    eventManager = new EventManager(stateManagerMock, priceCalculatorMock, domRendererMock);
+    alterationSelects = eventManager.alterationSelects;
+    difficultySelect = eventManager.difficultySelect;
+  });
+
+  afterEach(() => {
+    delete global.document;
+    sinon.restore();
+  });
+
+  it('should initialize event listeners', () => {
+    const addEventListenerSpy = sinon.spy(document.querySelector('#alteration-top-Select'), 'addEventListener');
+    const diffSpy = sinon.spy(document.querySelector('#alterationLevel-diff'), 'addEventListener');
+
+    eventManager.initialize();
+
+    expect(addEventListenerSpy.calledOnceWith('change', eventManager.handleAlterationChange)).to.be.true;
+    expect(diffSpy.calledOnceWith('change', eventManager.handleDifficultyChange)).to.be.true;
+  });
+
+  it('should handle alteration change with value', () => {
+    const fakeEvent = { target: { value: 'repair-zippers-on-dress' } };
+    stateManagerMock.getState.returns({ selectedDifficulty: 'simple' });
+    priceCalculatorMock.calculatePrice.withArgs('repair-zippers-on-dress', 'simple').returns(30);
+    priceCalculatorMock.getAlterationDetails.withArgs('repair-zippers-on-dress').returns({ detail: 'test' });
+
+    eventManager.handleAlterationChange(fakeEvent);
+
+    expect(stateManagerMock.setState.calledWith({
+      selectedAlteration: 'repair-zippers-on-dress',
+      currentPrice: 30,
+      alterationDetails: { detail: 'test' },
+      lastSelectedElement: fakeEvent.target
+    })).to.be.true;
+  });
+
+  it('should handle alteration change with empty value', () => {
+    const fakeEvent = { target: { value: '' } };
+    eventManager.handleAlterationChange(fakeEvent);
+
+    expect(stateManagerMock.setState.calledWith({
+      selectedAlteration: null,
+      currentPrice: 0,
+      alterationDetails: null
+    })).to.be.true;
+  });
+
+  it('should handle difficulty change with value', () => {
+    const fakeEvent = { target: { value: 'intermediate' } };
+    stateManagerMock.getState.returns({ selectedAlteration: 'repair-zippers-on-dress' });
+    priceCalculatorMock.calculatePrice.withArgs('repair-zippers-on-dress', 'intermediate').returns(0); // intermediate price may be zero
+    priceCalculatorMock.getAlterationDetails.withArgs('repair-zippers-on-dress').returns({ detail: 'test' });
+
+    eventManager.handleDifficultyChange(fakeEvent);
+
+    expect(stateManagerMock.setState.calledWith({
+      selectedDifficulty: 'intermediate',
+      currentPrice: 0,
+      alterationDetails: { detail: 'test' }
+    })).to.be.true;
+  });
+
+  it('should handle difficulty change with empty value', () => {
+    const fakeEvent = { target: { value: '' } };
+    eventManager.handleDifficultyChange(fakeEvent);
+
+    expect(stateManagerMock.setState.calledWith({
+      selectedDifficulty: null,
+      currentPrice: 0
+    })).to.be.true;
+  });
+
+  it('should reset other selects except current and difficulty', () => {
+    const select1 = document.createElement('select');
+    select1.id = 'select1';
+    select1.value = 'val1';
+    const select2 = document.createElement('select');
+    select2.id = 'select2';
+    select2.value = 'val2';
+    const diff = document.createElement('select');
+    diff.id = 'alterationLevel-diff';
+    diff.value = 'simple';
+
+    // Manually assign to eventManager's alterationSelects for this test
+    eventManager.alterationSelects = [select1, select2, diff];
+
+    eventManager.resetOtherSelects(select1);
+
+    expect(select1.value).to.equal('val1'); // unchanged
+    expect(select2.value).to.equal(''); // reset
+    expect(diff.value).to.equal('simple'); // not reset because id is 'alterationLevel-diff'
+  });
+
+  it('should clean up event listeners', () => {
+    const removeEventListenerSpy = sinon.spy(document.querySelector('#alteration-top-Select'), 'removeEventListener');
+    const diffSpy = sinon.spy(document.querySelector('#alterationLevel-diff'), 'removeEventListener');
+
+    eventManager.cleanup();
+
+    expect(removeEventListenerSpy.calledOnceWith('change', eventManager.handleAlterationChange)).to.be.true;
+    expect(diffSpy.calledOnceWith('change', eventManager.handleDifficultyChange)).to.be.true;
+  });
+});
+]  
+
+**CODE 12 - File: alteration-Main.test.js**
+[
+import { expect } from 'chai';
+import sinon from 'sinon';
+import { JSDOM } from 'jsdom';
+import AlterationApp from '../../../pages/alteration-pages/alteration-modules/alteration-Main.js';
+
+// Mock dependent modules (we only need to check that they are instantiated and wired)
+describe('AlterationApp', () => {
+  let dom;
+  let document;
+  let app;
+
+  beforeEach(() => {
+    // Basic DOM for the app to attach to (though Main doesn't directly use DOM in constructor)
+    dom = new JSDOM('<!DOCTYPE html><body></body>');
+    document = dom.window.document;
+    global.document = document;
+    global.window = dom.window;
+
+    // Stub global alert
+    global.alert = sinon.stub();
+
+    app = new AlterationApp();
+  });
+
+  afterEach(() => {
+    delete global.document;
+    delete global.window;
+    delete global.alert;
+    sinon.restore();
+  });
+
+  it('should instantiate all sub-modules', () => {
+    expect(app.stateManager).to.exist;
+    expect(app.priceCalculator).to.exist;
+    expect(app.domRenderer).to.exist;
+    expect(app.cartManager).to.exist;
+    expect(app.eventManager).to.exist;
+  });
+
+  it('should set up subscription from stateManager to domRenderer', () => {
+    const renderSpy = sinon.spy(app.domRenderer, 'render');
+    app.stateManager.setState({ currentPrice: 123 });
+    expect(renderSpy.calledOnce).to.be.true;
+  });
+
+  it('initialize() should call eventManager.initialize', () => {
+    const initSpy = sinon.spy(app.eventManager, 'initialize');
+    app.initialize();
+    expect(initSpy.calledOnce).to.be.true;
+  });
+
+  describe('global handlers', () => {
+    beforeEach(() => {
+      // Mock window functions are attached in setupGlobalHandlers
+      app.setupGlobalHandlers();
+    });
+
+    it('handleAdd should add item to cart when valid state', () => {
+      app.stateManager.setState({
+        currentPrice: 45,
+        selectedAlteration: 'test',
+        selectedDifficulty: 'simple'
+      });
+      const addItemSpy = sinon.spy(app.cartManager, 'addItem');
+
+      global.handleAdd();
+
+      expect(addItemSpy.calledOnceWith('Alteration: test (simple)', 45)).to.be.true;
+      expect(global.alert.calledOnce).to.be.true;
+    });
+
+    it('handleAdd should alert if no valid alteration', () => {
+      app.stateManager.setState({ currentPrice: 0 });
+      const addItemSpy = sinon.spy(app.cartManager, 'addItem');
+
+      global.handleAdd();
+
+      expect(addItemSpy.notCalled).to.be.true;
+      expect(global.alert.calledWith('Please select a valid alteration and difficulty level first.')).to.be.true;
+    });
+
+    it('handleClear should call reset', () => {
+      const resetSpy = sinon.spy(app, 'reset');
+      global.handleClear();
+      expect(resetSpy.calledOnce).to.be.true;
+    });
+  });
+
+  it('reset should reset state and selects', () => {
+    const stateResetSpy = sinon.spy(app.stateManager, 'reset');
+    const rendererResetSpy = sinon.spy(app.domRenderer, 'resetSelects');
+    app.eventManager.alterationSelects = [];
+    app.eventManager.difficultySelect = null;
+
+    app.reset();
+
+    expect(stateResetSpy.calledOnce).to.be.true;
+    expect(rendererResetSpy.calledOnce).to.be.true;
+  });
+
+  it('destroy should clean up eventManager', () => {
+    const cleanupSpy = sinon.spy(app.eventManager, 'cleanup');
+    app.destroy();
+    expect(cleanupSpy.calledOnce).to.be.true;
+  });
+});
+]  
+
+**CODE 13 - File: alteration-PriceCalculator.test.js**
+[
+import { expect } from 'chai';
+import PriceCalculator from '../../../pages/alteration-pages/alteration-modules/alteration-PriceCalculator.js';
+import { alterationMaps } from '../../../pages/alteration-pages/alteration-modules/alteration-DataMaps.js';
+
+describe('PriceCalculator', () => {
+  let calculator;
+
+  beforeEach(() => {
+    calculator = new PriceCalculator(alterationMaps);
+  });
+
+  describe('findCategory', () => {
+    it('should return correct category for known alteration', () => {
+      const category = calculator.findCategory('female-bottom-hem-skirt-straight-slim');
+      expect(category).to.equal('female-bottom');
+    });
+
+    it('should return null for unknown alteration', () => {
+      const category = calculator.findCategory('non-existent');
+      expect(category).to.be.null;
+    });
+  });
+
+  describe('calculatePrice', () => {
+    it('should return correct price for known alteration and difficulty', () => {
+      const price = calculator.calculatePrice('female-bottom-hem-skirt-straight-slim', 'simple');
+      expect(price).to.equal(33);
+    });
+
+    it('should return 0 if alteration not found', () => {
+      const price = calculator.calculatePrice('unknown', 'simple');
+      expect(price).to.equal(0);
+    });
+
+    it('should return 0 if difficulty not found or zero', () => {
+      const price = calculator.calculatePrice('repair-zippers-on-dress', 'intermediate');
+      expect(price).to.equal(0); // intermediate is 0 in map
+    });
+
+    it('should return 0 if difficulty missing', () => {
+      const price = calculator.calculatePrice('female-bottom-hem-skirt-straight-slim', null);
+      expect(price).to.equal(0);
+    });
+  });
+
+  describe('getAlterationDetails', () => {
+    it('should return the full alteration object', () => {
+      const details = calculator.getAlterationDetails('female-bottom-hem-skirt-straight-slim');
+      expect(details).to.deep.equal(alterationMaps['female-bottom']['female-bottom-hem-skirt-straight-slim']);
+    });
+
+    it('should return empty detail object if not found', () => {
+      const details = calculator.getAlterationDetails('nonexistent');
+      expect(details).to.deep.equal({ detail: '', price: 0 });
+    });
+  });
+
+  describe('getCustomerRequestText', () => {
+    it('should return correct text for intermediate', () => {
+      expect(calculator.getCustomerRequestText('intermediate')).to.equal('• plus (1) customer-requested modification');
+    });
+
+    it('should return correct text for difficult', () => {
+      expect(calculator.getCustomerRequestText('difficult')).to.equal('• plus (2) customer-requested modification');
+    });
+
+    it('should return empty string for unknown', () => {
+      expect(calculator.getCustomerRequestText('simple')).to.equal('');
+    });
+  });
+});
+]  
+
+**CODE 14 - File: alteration-StateManager.test.js**
+[
+    import { expect } from 'chai';
+import sinon from 'sinon';
+import StateManager from '../../../pages/alteration-pages/alteration-modules/alteration-StateManager.js';
+
+describe('StateManager', () => {
+  let stateManager;
+
+  beforeEach(() => {
+    stateManager = new StateManager({}); // alterationMaps not used in state
+  });
+
+  it('should initialize with default state', () => {
+    const state = stateManager.getState();
+    expect(state).to.deep.equal({
+      selectedAlteration: null,
+      selectedDifficulty: null,
+      currentPrice: 0,
+      alterationDetails: null,
+      lastSelectedElement: null
+    });
+  });
+
+  it('should update state with setState', () => {
+    stateManager.setState({ currentPrice: 99, selectedAlteration: 'test' });
+    const state = stateManager.getState();
+    expect(state.currentPrice).to.equal(99);
+    expect(state.selectedAlteration).to.equal('test');
+  });
+
+  it('should notify listeners on setState', () => {
+    const listener = sinon.spy();
+    stateManager.subscribe(listener);
+
+    stateManager.setState({ currentPrice: 50 });
+
+    expect(listener.calledOnce).to.be.true;
+    expect(listener.calledWith(stateManager.getState())).to.be.true;
+  });
+
+  it('should allow unsubscribing', () => {
+    const listener = sinon.spy();
+    const unsubscribe = stateManager.subscribe(listener);
+
+    unsubscribe();
+    stateManager.setState({ currentPrice: 50 });
+
+    expect(listener.notCalled).to.be.true;
+  });
+
+  it('should reset state to initial values', () => {
+    stateManager.setState({ currentPrice: 123, selectedAlteration: 'x', selectedDifficulty: 'simple', alterationDetails: { a: 1 }, lastSelectedElement: {} });
+    stateManager.reset();
+
+    const state = stateManager.getState();
+    expect(state).to.deep.equal({
+      selectedAlteration: null,
+      selectedDifficulty: null,
+      currentPrice: 0,
+      alterationDetails: null,
+      lastSelectedElement: null
+    });
+  });
+
+  it('getState returns a copy, not a reference', () => {
+    const state1 = stateManager.getState();
+    state1.currentPrice = 999;
+    const state2 = stateManager.getState();
+    expect(state2.currentPrice).to.equal(0);
+  });
+});
 ]
+
+**CODE 15 - File: package.json**  
+[
+
+]
+
+**CODE 16 - File: readme.md(file structure)**
+[
+Izzy-Alteration
+├─ about
+│  ├─ deepseek
+│  │  └─ alteration-female.txt
+│  └─ measurements-about.txt
+└─ frontend
+   ├─ package-lock.json
+   ├─ package.json
+   ├─ pages
+   │  ├─ account-menu.html
+   │  ├─ add-service.html
+   │  ├─ alteration-pages
+   │  │  ├─ alteration-about
+   │  │  │  ├─ (debug)alteration-modules.md
+   │  │  │  ├─ alteration(how-the-program-works).md
+   │  │  │  ├─ alteration-functionality-prompt.md
+   │  │  │  ├─ alteration-modules.md
+   │  │  │  └─ alteration-responsive-page.md
+   │  │  ├─ alteration-female-bottom.html
+   │  │  ├─ alteration-female-dress.html
+   │  │  ├─ alteration-female-jacket.html
+   │  │  ├─ alteration-female-top.html
+   │  │  ├─ alteration-male-bottom.html
+   │  │  ├─ alteration-male-suits.html
+   │  │  ├─ alteration-male-top.html
+   │  │  ├─ alteration-modules
+   │  │  │  ├─ alteration-CartManager.js
+   │  │  │  ├─ alteration-DOMRenderer.js
+   │  │  │  ├─ alteration-DataMaps.js
+   │  │  │  ├─ alteration-EventManager.js
+   │  │  │  ├─ alteration-Main.js
+   │  │  │  ├─ alteration-PriceCalculator.js
+   │  │  │  └─ alteration-StateManager.js
+   │  │  └─ alteration-repair.html
+   │  ├─ index.html
+   │  ├─ login.html
+   │  ├─ measurement-pages
+   │  │  ├─ measurement-about
+   │  │  │  ├─ (debug)floating-window-measurement.md
+   │  │  │  ├─ (debug)measurement-split-modules.md
+   │  │  │  ├─ (refactor)measurement-modules.md
+   │  │  │  ├─ measurement(how-the-program-works).md
+   │  │  │  ├─ measurement-functionality-prompt.md
+   │  │  │  └─ measurement-modules.md
+   │  │  ├─ measurement-modules
+   │  │  │  ├─ measurement-DataMaps.js
+   │  │  │  ├─ measurement-Main.js
+   │  │  │  ├─ measurement-Manager.js
+   │  │  │  ├─ measurement-Validator.js
+   │  │  │  └─ measurement-ViewHandler.js
+   │  │  ├─ measurements-female.html
+   │  │  ├─ measurements-male.html
+   │  │  └─ sample.html
+   │  ├─ order-history.html
+   │  ├─ services.html
+   │  └─ signup.html
+   ├─ public
+   │  ├─ css
+   │  │  ├─ account-menu.css
+   │  │  ├─ add-service.css
+   │  │  ├─ alteration-female.css
+   │  │  ├─ alteration.css
+   │  │  ├─ index.css
+   │  │  ├─ login.css
+   │  │  ├─ measurements.css
+   │  │  ├─ order-history.css
+   │  │  ├─ services.css
+   │  │  └─ signup.css
+   │  ├─ images
+   │  │  ├─ female-(chart)-tablet-mobile.png
+   │  │  ├─ female-back-tablet-mobile.png
+   │  │  ├─ female-desktop.png
+   │  │  ├─ female-front-tablet-mobile.png
+   │  │  ├─ male-(chart)-tablet-mobile.png
+   │  │  ├─ male-back-tablet-mobile.png
+   │  │  ├─ male-desktop.png
+   │  │  └─ male-front-tablet-mobile.png
+   │  └─ js
+   │     ├─ account.js
+   │     ├─ add-service.js
+   │     ├─ alteration-female.js
+   │     ├─ alteration-price-calculator.js
+   │     ├─ index.js
+   │     ├─ login.js
+   │     ├─ order-history.js
+   │     ├─ services.js
+   │     └─ signup.js
+   └─ test
+      ├─ TEST(how to run).md
+      ├─ alteration-module-tests
+      │  ├─ alteration-TEST(about)
+      │  │  ├─ (debug)alteration-test-unit.md
+      │  │  ├─ (refactor)alteration-test-unit.md
+      │  │  └─ alteration-unit-tests-prompt.md
+      │  └─ unit
+      │     ├─ alteration-CartManager.test.js
+      │     ├─ alteration-DOMRenderer.test.js
+      │     ├─ alteration-DataMaps.test.js
+      │     ├─ alteration-EventManager.test.js
+      │     ├─ alteration-Main.test.js
+      │     ├─ alteration-PriceCalculator.test.js
+      │     └─ alteration-StateManager.test.js
+      └─ measurement-module-tests
+         ├─ measurement-TEST(about)
+         │  ├─ (debug)measurement-test-unit.md
+         │  ├─ (refactor)measurement-test-unit.md
+         │  └─ measurement-unit-tests-prompt.md
+         └─ unit
+            ├─ measurement-DataMaps.test.js
+            ├─ measurement-Main.test.js
+            ├─ measurement-Manager.test.js
+            ├─ measurement-Validator.test.js
+            └─ measurement-ViewHandler.test.js
+]  
 
 
 **ERROR/ISSUE:**
 [
+bernard@ubuntu:~/Documents/Izzy-Alteration/frontend$ npm run test:alteration
 
+> test:alteration
+> mocha test/alteration-module-tests/unit/**/*.test.js
+
+
+ Exception during run: file:///home/bernard/Documents/Izzy-Alteration/frontend/test/alteration-module-tests/unit/alteration-DOMRenderer.test.js:3
+import DOMRenderer from '../../../pages/alteration-pages/alteration-modules/alteration-DataMaps.js';
+       ^^^^^^^^^^^
+SyntaxError: The requested module '../../../pages/alteration-pages/alteration-modules/alteration-DataMaps.js' does not provide an export named 'default'
+    at ModuleJob._instantiate (node:internal/modules/esm/module_job:123:21)
+    at async ModuleJob.run (node:internal/modules/esm/module_job:189:5)
+    at async Promise.all (index 0)
+    at async ESMLoader.import (node:internal/modules/esm/loader:530:24)
+    at async importModuleDynamicallyWrapper (node:internal/vm/module:438:15)
+    at async formattedImport (/home/bernard/Documents/Izzy-Alteration/frontend/node_modules/mocha/lib/nodejs/esm-utils.js:9:14)
+    at async Object.exports.requireOrImport (/home/bernard/Documents/Izzy-Alteration/frontend/node_modules/mocha/lib/nodejs/esm-utils.js:42:28)
+    at async Object.exports.loadFilesAsync (/home/bernard/Documents/Izzy-Alteration/frontend/node_modules/mocha/lib/nodejs/esm-utils.js:100:20)
+    at async singleRun (/home/bernard/Documents/Izzy-Alteration/frontend/node_modules/mocha/lib/cli/run-helpers.js:162:3)
+    at async Object.exports.handler (/home/bernard/Documents/Izzy-Alteration/frontend/node_modules/mocha/lib/cli/run.js:375:5)
+bernard@ubuntu:~/Documents/Izzy-Alteration/frontend$ 
 ]
 
 **REQUEST:**
 [
-    create a mocha unit test for each CODE 
+    1. fix the error
 
 ]
