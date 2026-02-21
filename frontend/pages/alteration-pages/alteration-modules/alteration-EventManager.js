@@ -85,7 +85,8 @@ class EventManager {
     // Reset other select elements when one is selected
     resetOtherSelects(currentSelect) {
         this.alterationSelects.forEach(select => {
-            if (select !== currentSelect && select.id !== 'alterationLevel-diff') {
+            // Compare by id instead of reference to avoid test/environment discrepancies
+            if (select.id !== currentSelect.id && select.id !== 'alterationLevel-diff') {
                 select.value = '';
             }
         });

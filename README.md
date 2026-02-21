@@ -92,14 +92,16 @@ Izzy-Alteration
       ├─ alteration-module-tests
       │  ├─ alteration-TEST(about)
       │  │  ├─ (debug)alteration-test-unit.md
+      │  │  ├─ (refactor)alteration-test-unit.md
       │  │  └─ alteration-unit-tests-prompt.md
       │  └─ unit
-      │     ├─ AlterationApp.test.js
-      │     ├─ CartManager.test.js
-      │     ├─ DOMRenderer.test.js
-      │     ├─ EventManager.test.js
-      │     ├─ PriceCalculator.test.js
-      │     └─ StateManager.test.js
+      │     ├─ alteration-CartManager.test.js
+      │     ├─ alteration-DOMRenderer.test.js
+      │     ├─ alteration-DataMaps.test.js
+      │     ├─ alteration-EventManager.test.js
+      │     ├─ alteration-Main.test.js
+      │     ├─ alteration-PriceCalculator.test.js
+      │     └─ alteration-StateManager.test.js
       └─ measurement-module-tests
          ├─ measurement-TEST(about)
          │  ├─ (debug)measurement-test-unit.md
