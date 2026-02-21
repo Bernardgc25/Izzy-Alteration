@@ -1,853 +1,5 @@
 
-
-**CODE 1 - File: measurement-DataMaps.test.js**
-[
-// test/test-measurement-DataMaps.js
-import { expect } from 'chai';
-import {
-  measurementDataMap,
-  getMeasurement,
-  getAllMeasurementsForGender
-} from '../../../pages/measurement-pages/measurement-modules/measurement-DataMaps.js';
-
-describe('measurement-DataMaps', () => {
-  describe('measurementDataMap structure', () => {
-    it('should have gender, measurements, and sizes properties', () => {
-      expect(measurementDataMap).to.have.property('gender');
-      expect(measurementDataMap).to.have.property('measurements');
-      expect(measurementDataMap).to.have.property('sizes');
-    });
-
-    it('should contain male and female gender entries with imageDesktop', () => {
-      expect(measurementDataMap.gender.male).to.have.property('imageDesktop').that.is.a('string');
-      expect(measurementDataMap.gender.female).to.have.property('imageDesktop').that.is.a('string');
-    });
-
-    it('should have male measurements with expected keys', () => {
-      const maleMeas = measurementDataMap.measurements.male;
-      expect(maleMeas).to.have.property('neck');
-      expect(maleMeas).to.have.property('shoulder-length');
-      expect(maleMeas).to.have.property('arm-length');
-      // spot-check a few
-    });
-
-    it('should have female measurements with expected keys', () => {
-      const femaleMeas = measurementDataMap.measurements.female;
-      expect(femaleMeas).to.have.property('neck');
-      expect(femaleMeas).to.have.property('under-bust');
-      expect(femaleMeas).to.have.property('hip-bone-circumference');
-    });
-
-    it('should have sizes with cupSize and size-number', () => {
-      expect(measurementDataMap.sizes).to.have.property('cupSize');
-      expect(measurementDataMap.sizes).to.have.property('size-number');
-    });
-  });
-
-  describe('getMeasurement', () => {
-    it('should return correct measurement object for valid gender and key', () => {
-      const result = getMeasurement('male', 'neck');
-      expect(result).to.be.an('object');
-      expect(result.object).to.equal('Neck Circumference');
-    });
-
-    it('should return null for non-existent gender', () => {
-      const result = getMeasurement('other', 'neck');
-      expect(result).to.be.null;
-    });
-
-    it('should return null for non-existent measurement key', () => {
-      const result = getMeasurement('male', 'nonexistent');
-      expect(result).to.be.null;
-    });
-  });
-
-  describe('getAllMeasurementsForGender', () => {
-    it('should return all measurements for a valid gender', () => {
-      const result = getAllMeasurementsForGender('female');
-      expect(result).to.be.an('object');
-      expect(result).to.have.property('neck');
-      expect(result).to.have.property('waist');
-    });
-
-    it('should return empty object for invalid gender', () => {
-      const result = getAllMeasurementsForGender('other');
-      expect(result).to.deep.equal({});
-    });
-  });
-});
-]
-
-**CODE 2 - File: measurement-Main.test.js**  
-[
-// test/test-measurement-Main.js
-import { expect } from 'chai';
-import sinon from 'sinon';
-import { JSDOM } from 'jsdom';
-import { MeasurementApp } from '../../../pages/measurement-pages/measurement-modules/measurement-Main.js';
-// No need to import DataMaps for stubbing - removed
-
-describe('MeasurementApp', () => {
-  let dom;
-  let app;
-  let form;
-
-  beforeEach(() => {
-    dom = new JSDOM(`
-      <!DOCTYPE html>
-      <body>
-        <form id="measurement-form" data-gender="male">
-          <input id="client-name" />
-          <input id="save-date" />
-          <input id="size-number" />
-          <select id="cupSize"></select>
-          <button id="save-measurements"></button>
-          <button id="reset-form"></button>
-          <button id="print-summary"></button>
-          <div class="measurement-input" data-measurement="neck"></div>
-        </form>
-        <div id="floating-guide-overlay"></div>
-        <div id="floating-measurement-guide"></div>
-        <button id="close-floating-guide"></button>
-        <img id="guide-image" />
-        <div id="default-guide"></div>
-      </body>
-    `);
-    // Make DOM globals available
-    globalThis.window = dom.window;
-    globalThis.document = dom.window.document;
-    globalThis.alert = dom.window.alert; // JSDOM alert is a no-op
-    global.console = { log: sinon.spy(), warn: sinon.spy(), error: sinon.spy() };
-    form = document.getElementById('measurement-form');
-
-    // Removed the sinon.stub on DataMaps.getMeasurement – not needed
-  });
-
-  afterEach(() => {
-    sinon.restore();
-    delete globalThis.window;
-    delete globalThis.document;
-    delete globalThis.alert;
-    if (app && app.viewHandler) app.viewHandler.cleanup();
-  });
-
-  describe('constructor and init', () => {
-    it('should initialize modules and set up event listeners', () => {
-      app = new MeasurementApp();
-      expect(app.manager).to.exist;
-      expect(app.validator).to.exist;
-      expect(app.viewHandler).to.exist;
-      expect(console.log.calledWith('Measurement App initialized for male')).to.be.true;
-    });
-
-    it('should log error if form missing', () => {
-      document.getElementById('measurement-form').remove();
-      app = new MeasurementApp();
-      expect(console.error.calledWith('Measurement form not found')).to.be.true;
-    });
-  });
-
-  describe('handleSaveMeasurements', () => {
-    beforeEach(() => {
-      app = new MeasurementApp();
-      sinon.stub(app.validator, 'validateAll').returns(true);
-      sinon.stub(app.manager, 'getFormData').returns({ name: 'Test' });
-      sinon.stub(app.viewHandler, 'showSuccessMessage');
-    });
-
-    it('should save and show success when validation passes', () => {
-      app.handleSaveMeasurements();
-      expect(app.validator.validateAll.calledOnce).to.be.true;
-      expect(app.manager.getFormData.calledOnce).to.be.true;
-      expect(app.viewHandler.showSuccessMessage.calledWith({ name: 'Test' })).to.be.true;
-    });
-
-    it('should focus first error and show alert if validation fails', () => {
-      app.validator.validateAll.returns(false);
-      sinon.stub(app.viewHandler, 'focusFirstErrorField');
-      sinon.stub(app.viewHandler, 'showValidationErrorAlert');
-
-      app.handleSaveMeasurements();
-
-      expect(app.viewHandler.focusFirstErrorField.calledOnce).to.be.true;
-      expect(app.viewHandler.showValidationErrorAlert.calledOnce).to.be.true;
-    });
-  });
-
-  describe('handleResetForm', () => {
-    beforeEach(() => {
-      app = new MeasurementApp();
-      sinon.stub(window, 'confirm').returns(true);
-      sinon.stub(app.manager, 'resetFormData');
-      sinon.stub(app.validator, 'clearErrors');
-      sinon.stub(app.viewHandler, 'hideFloatingGuide');
-    });
-
-    it('should reset form, manager, validator, and hide guide when confirmed', () => {
-      app.handleResetForm();
-      expect(window.confirm.calledOnce).to.be.true;
-      expect(app.manager.resetFormData.calledOnce).to.be.true;
-      expect(app.validator.clearErrors.calledOnce).to.be.true;
-      expect(app.viewHandler.hideFloatingGuide.calledOnce).to.be.true;
-    });
-
-    it('should not reset if confirm false', () => {
-      window.confirm.returns(false);
-      app.handleResetForm();
-      expect(app.manager.resetFormData.called).to.be.false;
-    });
-  });
-
-  describe('bindGlobalFunctions', () => {
-    it('should attach handlers to window', () => {
-      app = new MeasurementApp();
-      expect(window.handleSaveMeasurements).to.be.a('function');
-      expect(window.handleResetForm).to.be.a('function');
-    });
-  });
-
-  describe('setupFormInputListeners', () => {
-    it('should add input/blur listeners to name field', () => {
-      app = new MeasurementApp();
-      const nameField = document.getElementById('client-name');
-      const inputSpy = sinon.spy(app, 'debounceValidation');
-      const blurSpy = sinon.spy(app.validator, 'validateField');
-
-      nameField.dispatchEvent(new dom.window.Event('input'));
-      nameField.dispatchEvent(new dom.window.Event('blur'));
-
-      setTimeout(() => {
-        expect(inputSpy.calledWith('client-name')).to.be.true;
-        expect(blurSpy.calledWith('client-name')).to.be.true;
-      }, 200);
-    });
-  });
-});
-]
-
-**CODE 3 - File: measurement-Manager.test.js**
-[
-// test/test-measurement-Manager.js
-import { expect } from 'chai';
-import sinon from 'sinon';
-import { JSDOM } from 'jsdom';
-import { MeasurementManager } from '../../../pages/measurement-pages/measurement-modules/measurement-Manager.js';
-
-describe('MeasurementManager', () => {
-  let manager;
-  let dom;
-
-  beforeEach(() => {
-    dom = new JSDOM(`
-      <!DOCTYPE html>
-      <body>
-        <input id="client-name" value="John Doe" />
-        <input id="save-date" />
-        <input id="size-number" value="40" />
-        <input id="cupSize" value="C" />
-        <div id="measurement-form"></div>
-      </body>
-    `);
-    globalThis.window = dom.window;
-    globalThis.document = dom.window.document;
-    globalThis.alert = dom.window.alert;
-
-    manager = new MeasurementManager();
-  });
-
-  afterEach(() => {
-    sinon.restore();
-    delete globalThis.window;
-    delete globalThis.document;
-    delete globalThis.alert;
-  });
-
-  describe('initialize', () => {
-    it('should set gender and return this', () => {
-      const result = manager.initialize('male');
-      expect(manager.gender).to.equal('male');
-      expect(result).to.equal(manager);
-    });
-  });
-
-  describe('setupDateField', () => {
-    it('should set today\'s date and max attribute on #save-date', () => {
-      manager.initialize('male');
-      const dateField = document.getElementById('save-date');
-      const today = new Date().toISOString().split('T')[0];
-
-      manager.setupDateField();
-
-      expect(dateField.value).to.equal(today);
-      expect(dateField.max).to.equal(today);
-    });
-
-    it('should do nothing if date field not present', () => {
-      document.getElementById('save-date').remove();
-      expect(() => manager.setupDateField()).not.to.throw();
-    });
-  });
-
-  describe('saveMeasurement', () => {
-    it('should store measurement in Map when value non-empty', () => {
-      manager.saveMeasurement('neck', '15.5', 'Neck:');
-      expect(manager.measurements.size).to.equal(1);
-      const entry = manager.measurements.get('neck');
-      expect(entry.value).to.equal('15.5');
-      expect(entry.label).to.equal('Neck');
-      expect(entry).to.have.property('timestamp');
-    });
-
-    it('should not store empty or whitespace value', () => {
-      manager.saveMeasurement('neck', '', 'Neck:');
-      expect(manager.measurements.size).to.equal(0);
-
-      manager.saveMeasurement('neck', '   ', 'Neck:');
-      expect(manager.measurements.size).to.equal(0);
-    });
-  });
-
-  describe('getFormData', () => {
-    it('should collect all form data for male', () => {
-      manager.initialize('male');
-      manager.saveMeasurement('neck', '15.5', 'Neck:');
-      const data = manager.getFormData();
-
-      expect(data.name).to.equal('John Doe');
-      expect(data.date).to.equal('');
-      expect(data.gender).to.equal('male');
-      expect(data.sizeNumber).to.equal('40');
-      expect(data.cupSize).to.be.undefined;
-      expect(data.measurements).to.have.property('neck');
-    });
-
-    it('should collect all form data for female', () => {
-      manager.initialize('female');
-      // replace size-number with cupSize in DOM
-      const sizeNum = document.getElementById('size-number');
-      if (sizeNum) sizeNum.remove();
-      const cup = document.createElement('input');
-      cup.id = 'cupSize';
-      cup.value = 'C';
-      document.body.appendChild(cup);
-
-      manager.saveMeasurement('waist', '28', 'Waist:');
-      const data = manager.getFormData();
-
-      expect(data.name).to.equal('John Doe');
-      expect(data.gender).to.equal('female');
-      expect(data.cupSize).to.equal('C');
-      expect(data.sizeNumber).to.be.undefined;
-    });
-  });
-
-  describe('generatePrintContent', () => {
-    it('should return HTML string containing measurement data', () => {
-      manager.initialize('male');
-      // Populate measurements map directly (not formData)
-      manager.measurements.set('neck', { label: 'Neck', value: '15.5' });
-      manager.formData = {
-        name: 'John',
-        date: '2025-01-01',
-        gender: 'male',
-        sizeNumber: '40',
-        measurements: {} // not used
-      };
-      const html = manager.generatePrintContent();
-      expect(html).to.include('John');
-      expect(html).to.include('2025-01-01');
-      expect(html).to.include('Neck:');
-      expect(html).to.include('15.5"');
-    });
-  });
-
-  describe('printSummary', () => {
-    it('should open a window and write content', () => {
-      const openStub = sinon.stub(window, 'open').returns({
-        document: { write: sinon.spy(), close: sinon.spy() }
-      });
-      manager.initialize('male');
-      manager.getFormData(); // populate formData
-
-      manager.printSummary();
-
-      expect(openStub.calledOnce).to.be.true;
-      const mockWindow = openStub.returnValues[0];
-      expect(mockWindow.document.write.calledOnce).to.be.true;
-      expect(mockWindow.document.close.calledOnce).to.be.true;
-    });
-
-    it('should throw error if popup blocked', () => {
-      sinon.stub(window, 'open').returns(null);
-      manager.initialize('male');
-      expect(() => manager.printSummary()).to.throw('Popup blocked');
-    });
-  });
-
-  describe('resetFormData', () => {
-    it('should clear measurements map and formData', () => {
-      manager.saveMeasurement('neck', '15', 'Neck');
-      manager.formData = { some: 'data' };
-      manager.resetFormData();
-      expect(manager.measurements.size).to.equal(0);
-      expect(manager.formData).to.deep.equal({});
-    });
-  });
-});
-]  
-
-**CODE 4 - File: measurement-Validator.test.js**
-[
-// test/test-measurement-Validator.js
-import { expect } from 'chai';
-import sinon from 'sinon';
-import { JSDOM } from 'jsdom';
-import { MeasurementValidator } from '../../../pages/measurement-pages/measurement-modules/measurement-Validator.js';
-
-describe('MeasurementValidator', () => {
-  let dom;
-  let form;
-  let validator;
-
-  beforeEach(() => {
-    dom = new JSDOM(`
-      <!DOCTYPE html>
-      <body>
-        <form id="measurement-form" data-gender="male">
-          <input id="client-name" value="John" />
-          <input id="save-date" value="2025-01-01" />
-          <input id="size-number" value="40" />
-          <select id="cupSize"></select>
-
-          <input id="neck" class="measurement-input" data-min="0" data-max="100" value="15.5" />
-          <div id="neck-error" class="error-message"></div>
-
-          <input id="waist" class="measurement-input" data-min="0" data-max="100" value="32" />
-          <div id="waist-error" class="error-message"></div>
-        </form>
-      </body>
-    `);
-    globalThis.window = dom.window;
-    globalThis.document = dom.window.document;
-    globalThis.alert = dom.window.alert;
-    form = document.getElementById('measurement-form');
-    validator = new MeasurementValidator(form);
-  });
-
-  afterEach(() => {
-    sinon.restore();
-    delete globalThis.window;
-    delete globalThis.document;
-    delete globalThis.alert;
-  });
-
-  describe('constructor', () => {
-    it('should throw if form element missing', () => {
-      expect(() => new MeasurementValidator(null)).to.throw('Form element is required');
-    });
-
-    it('should set gender from dataset', () => {
-      expect(validator.gender).to.equal('male');
-    });
-  });
-
-  describe('validateAll', () => {
-    it('should return true when all fields valid', () => {
-      const result = validator.validateAll();
-      expect(result).to.be.true;
-    });
-
-    it('should return false if required text field empty', () => {
-      document.getElementById('client-name').value = '';
-      const result = validator.validateAll();
-      expect(result).to.be.false;
-      expect(validator.errors.has('client-name')).to.be.true;
-    });
-
-    it('should return false if measurement input empty', () => {
-      document.getElementById('neck').value = '';
-      const result = validator.validateAll();
-      expect(result).to.be.false;
-      expect(validator.errors.has('neck')).to.be.true;
-    });
-
-    it('should return false if measurement out of range', () => {
-      document.getElementById('neck').value = '150';
-      const result = validator.validateAll();
-      expect(result).to.be.false;
-    });
-
-    it('should return false if measurement has more than one decimal', () => {
-      document.getElementById('neck').value = '15.55';
-      const result = validator.validateAll();
-      expect(result).to.be.false;
-    });
-  });
-
-  describe('validateMeasurementInput', () => {
-    it('should return true for valid input', () => {
-      const input = document.getElementById('neck');
-      expect(validator.validateMeasurementInput(input)).to.be.true;
-    });
-
-    it('should return false for empty input', () => {
-      const input = document.getElementById('neck');
-      input.value = '';
-      expect(validator.validateMeasurementInput(input)).to.be.false;
-      const errorEl = document.getElementById('neck-error');
-      expect(errorEl.textContent).to.equal(' ');
-    });
-
-    it('should return false for non-numeric', () => {
-      const input = document.getElementById('neck');
-      input.value = 'abc';
-      expect(validator.validateMeasurementInput(input)).to.be.false;
-    });
-
-    it('should return false for out-of-range', () => {
-      const input = document.getElementById('neck');
-      input.value = '-5';
-      expect(validator.validateMeasurementInput(input)).to.be.false;
-      const errorEl = document.getElementById('neck-error');
-      expect(errorEl.textContent).to.equal('0-100');
-    });
-
-    it('should return false for too many decimals', () => {
-      const input = document.getElementById('neck');
-      input.value = '15.55';
-      expect(validator.validateMeasurementInput(input)).to.be.false;
-      const errorEl = document.getElementById('neck-error');
-      expect(errorEl.textContent).to.equal('Only one decimal place allowed');
-    });
-  });
-
-  describe('validateField', () => {
-    it('should validate required fields', () => {
-      const input = document.getElementById('client-name');
-      input.value = '';
-      const result = validator.validateField('client-name');
-      expect(result).to.be.false;
-      expect(validator.errors.has('client-name')).to.be.true;
-    });
-
-    it('should validate measurement input', () => {
-      const input = document.getElementById('neck');
-      input.value = '15.55';
-      const result = validator.validateField('neck');
-      expect(result).to.be.false;
-      expect(validator.errors.has('neck')).to.be.true;
-    });
-
-    it('should return true for non-required, non-measurement field', () => {
-      // create a dummy field not in rules
-      const dummy = document.createElement('input');
-      dummy.id = 'dummy';
-      document.body.appendChild(dummy);
-      const result = validator.validateField('dummy');
-      expect(result).to.be.true;
-    });
-  });
-
-  describe('addFieldError', () => {
-    it('should add error class and set message', () => {
-      validator.addFieldError('neck', 'Test error');
-      const input = document.getElementById('neck');
-      const errorEl = document.getElementById('neck-error');
-      expect(input.classList.contains('error')).to.be.true;
-      expect(errorEl.textContent).to.equal('Test error');
-      expect(validator.errors.has('neck')).to.be.true;
-    });
-  });
-
-  describe('clearSingleError', () => {
-    it('should remove error class and clear message', () => {
-      validator.addFieldError('neck', 'error');
-      validator.clearSingleError('neck');
-      const input = document.getElementById('neck');
-      const errorEl = document.getElementById('neck-error');
-      expect(input.classList.contains('error')).to.be.false;
-      expect(errorEl.textContent).to.equal('');
-      expect(validator.errors.has('neck')).to.be.false;
-    });
-  });
-
-  describe('clearErrors', () => {
-    it('should clear all errors in the form', () => {
-      validator.addFieldError('neck', 'err1');
-      validator.addFieldError('waist', 'err2');
-      validator.clearErrors();
-      expect(validator.errors.size).to.equal(0);
-      expect(document.querySelectorAll('.error').length).to.equal(0);
-      expect(document.getElementById('neck-error').textContent).to.equal('');
-      expect(document.getElementById('waist-error').textContent).to.equal('');
-    });
-  });
-
-  describe('getFirstErrorField', () => {
-    it('should return first element with error class', () => {
-      validator.addFieldError('neck', 'err');
-      const first = validator.getFirstErrorField();
-      expect(first.id).to.equal('neck');
-    });
-
-    it('should return null if no errors', () => {
-      expect(validator.getFirstErrorField()).to.be.null;
-    });
-  });
-});
-]  
-
-**CODE 5 - File: measurement-ViewHandler.test.js**
-[
-// test/test-measurement-ViewHandler.js
-import { expect } from 'chai';
-import sinon from 'sinon';
-import { JSDOM } from 'jsdom';
-import { ViewHandler } from '../../../pages/measurement-pages/measurement-modules/measurement-ViewHandler.js';
-
-describe('ViewHandler', () => {
-  let dom;
-  let viewHandler;
-  let getMeasurementStub;
-  const genderImageUrl = 'test.jpg';
-
-  beforeEach(() => {
-    dom = new JSDOM(`
-      <!DOCTYPE html>
-      <body>
-        <img id="guide-image" />
-        <div id="default-guide" style="display: flex;"></div>
-        <div id="guide-text-container">
-          <div id="measure-object"></div>
-          <div id="measure-definition"></div>
-          <div id="measure-description"></div>
-        </div>
-        <div id="floating-measurement-guide" style="display: none;">
-          <div id="floating-measure-object"></div>
-          <div id="floating-measure-definition"></div>
-          <div id="floating-measure-description"></div>
-          <div class="floating-guide-images"></div>
-        </div>
-        <div id="floating-guide-overlay" style="display: none;"></div>
-        <button id="print-summary"></button>
-
-        <!-- FIX: Nest measurement-label inside form-group -->
-        <div class="form-group">
-          <div class="measurement-label">
-            <i class="fa-eye"></i>
-          </div>
-          <input class="measurement-input" data-measurement="neck" />
-        </div>
-      </body>
-    `);
-    globalThis.window = dom.window;
-    globalThis.document = dom.window.document;
-    globalThis.alert = dom.window.alert; // keep reference
-
-    getMeasurementStub = sinon.stub();
-    getMeasurementStub.withArgs('neck').returns({
-      object: 'Neck',
-      definition: 'def',
-      description: 'desc',
-      imageMobile: 'neck.jpg'
-    });
-
-    viewHandler = new ViewHandler({
-      gender: 'male',
-      isMobileView: false,
-      getMeasurement: getMeasurementStub,
-      genderImageUrl
-    });
-  });
-
-  afterEach(() => {
-    viewHandler.cleanup();
-    sinon.restore();
-    delete globalThis.window;
-    delete globalThis.document;
-    delete globalThis.alert;
-  });
-
-  describe('constructor', () => {
-    it('should set properties and call init', () => {
-      expect(viewHandler.gender).to.equal('male');
-      expect(viewHandler.isMobileView).to.be.false;
-      expect(viewHandler.genderImageUrl).to.equal(genderImageUrl);
-    });
-  });
-
-  describe('setupDesktopGuideImage', () => {
-    it('should set guide image src when genderImageUrl exists', () => {
-      const guideImage = document.getElementById('guide-image');
-      const defaultGuide = document.getElementById('default-guide');
-      viewHandler.setupDesktopGuideImage();
-      expect(guideImage.src).to.include(genderImageUrl);
-      expect(guideImage.style.display).to.equal('block');
-      expect(defaultGuide.style.display).to.equal('none');
-    });
-
-    it('should hide guide image and show default if no url', () => {
-      viewHandler.genderImageUrl = null;
-      viewHandler.setupDesktopGuideImage();
-      const guideImage = document.getElementById('guide-image');
-      const defaultGuide = document.getElementById('default-guide');
-      expect(guideImage.style.display).to.equal('none');
-      expect(defaultGuide.style.display).to.equal('flex');
-    });
-  });
-
-  describe('showMeasurementGuide', () => {
-    it('should update guide text with measurement data', () => {
-      viewHandler.showMeasurementGuide('neck');
-      const objEl = document.getElementById('measure-object');
-      expect(objEl.innerHTML).to.include('Neck');
-    });
-  });
-
-  describe('showFloatingGuide', () => {
-    it('should update text, image, and show overlay/guide', async () => {
-      await viewHandler.showFloatingGuide('neck');
-      const objEl = document.getElementById('floating-measure-object');
-      expect(objEl.innerHTML).to.include('Neck');
-      const imgContainer = document.querySelector('#floating-measurement-guide .floating-guide-images');
-      expect(imgContainer.children.length).to.equal(1);
-      expect(imgContainer.children[0].src).to.include('neck.jpg');
-      expect(document.getElementById('floating-guide-overlay').style.display).to.equal('block');
-      expect(document.getElementById('floating-measurement-guide').style.display).to.equal('flex');
-    });
-  });
-
-  describe('hideFloatingGuide', () => {
-    it('should hide overlay and guide', () => {
-      viewHandler.hideFloatingGuide();
-      expect(document.getElementById('floating-guide-overlay').style.display).to.equal('none');
-      expect(document.getElementById('floating-measurement-guide').style.display).to.equal('none');
-    });
-  });
-
-  describe('setupEyeIconListeners', () => {
-      it('should attach click handler to eye icons', () => {
-          // Force mobile view so the callback is triggered
-          viewHandler.isMobileView = true;
-
-          const callback = sinon.spy();
-          viewHandler.setupEyeIconListeners(callback);
-          const eyeIcon = document.querySelector('.fa-eye');
-          eyeIcon.click();
-
-          expect(callback.calledOnce).to.be.true;
-          expect(callback.args[0][0]).to.equal('neck');
-      });
-  });
-
-  describe('setupWindowResizeListener', () => {
-    it('should debounce and call callback when crossing breakpoint', (done) => {
-      const callback = sinon.spy();
-      viewHandler.setupWindowResizeListener(callback);
-
-      // Simulate resize to mobile width
-      window.innerWidth = 800; // less than 992
-      window.dispatchEvent(new dom.window.Event('resize'));
-
-      setTimeout(() => {
-        expect(callback.calledOnce).to.be.true;
-        expect(callback.args[0][0]).to.be.true; // newIsMobileView = true
-        done();
-      }, 250);
-    });
-  });
-
-  describe('setupEscapeKeyListener', () => {
-    it('should call callback on Escape key', () => {
-      const callback = sinon.spy();
-      viewHandler.setupEscapeKeyListener(callback);
-      const event = new dom.window.KeyboardEvent('keydown', { key: 'Escape' });
-      document.dispatchEvent(event);
-      expect(callback.calledOnce).to.be.true;
-    });
-  });
-
-  describe('setupPrintButtonListener', () => {
-    it('should call callback when print button clicked', () => {
-      const callback = sinon.spy();
-      viewHandler.setupPrintButtonListener(callback);
-      document.getElementById('print-summary').click();
-      expect(callback.calledOnce).to.be.true;
-    });
-
-    it('should show alert if callback throws', () => {
-      // FIX: stub globalThis.alert instead of window.alert
-      const alertStub = sinon.stub(globalThis, 'alert');
-      const callback = sinon.stub().throws(new Error('fail'));
-      viewHandler.setupPrintButtonListener(callback);
-      document.getElementById('print-summary').click();
-      expect(alertStub.calledWith('fail')).to.be.true;
-    });
-  });
-
-  describe('image zoom/pan', () => {
-    it('should handle wheel zoom', () => {
-      const image = document.getElementById('guide-image');
-      const container = image.parentElement;
-      const wheelEvent = new dom.window.WheelEvent('wheel', { deltaY: -100, clientX: 50, clientY: 50 });
-      sinon.spy(viewHandler, 'handleZoom');
-      container.dispatchEvent(wheelEvent);
-      expect(viewHandler.handleZoom.calledOnce).to.be.true;
-    });
-
-    it('should update transform on pan', () => {
-      const image = document.getElementById('guide-image');
-      const container = image.parentElement;
-      viewHandler.zoomState.isDragging = true;
-      const mousemove = new dom.window.MouseEvent('mousemove', { clientX: 10, clientY: 10 });
-      container.dispatchEvent(mousemove);
-      // no assertion on transform because it depends on state, just ensure no error
-    });
-  });
-
-  describe('cleanup', () => {
-    it('should remove all event listeners and clear timers', () => {
-      const removeSpy = sinon.spy(window, 'removeEventListener');
-      viewHandler.setupWindowResizeListener(() => {});
-      viewHandler.cleanup();
-      expect(removeSpy.called).to.be.true;
-    });
-  });
-
-  describe('showAlert, showValidationErrorAlert, showSuccessMessage', () => {
-    it('showAlert should call window.alert', () => {
-      // FIX: stub globalThis.alert
-      const alertStub = sinon.stub(globalThis, 'alert');
-      viewHandler.showAlert('test');
-      expect(alertStub.calledWith('test')).to.be.true;
-    });
-
-    it('showValidationErrorAlert should alert specific message', () => {
-      const alertStub = sinon.stub(globalThis, 'alert');
-      viewHandler.showValidationErrorAlert();
-      expect(alertStub.calledWith('Please fill in all required fields correctly. Invalid fields are highlighted in red.')).to.be.true;
-    });
-
-    it('showSuccessMessage should alert with form data', () => {
-      const alertStub = sinon.stub(globalThis, 'alert');
-      viewHandler.showSuccessMessage({ name: 'John', date: '2025', measurements: { a: 1 } });
-      expect(alertStub.calledOnce).to.be.true;
-    });
-  });
-
-  describe('focusFirstErrorField', () => {
-    it('should focus element with error class', () => {
-      const input = document.getElementById('guide-image'); // any element
-      input.classList.add('error');
-      const focusSpy = sinon.spy(input, 'focus');
-      viewHandler.focusFirstErrorField();
-      expect(focusSpy.calledOnce).to.be.true;
-    });
-  });
-});
-]  
-
-**CODE 6 - File: measurement-DataMaps.js**
+**CODE 1 - File: measurement-DataMaps.js**
 [
 // measurement-DataMaps.js
 
@@ -1166,7 +318,7 @@ export const getAllMeasurementsForGender = (gender) => {
 };
 ]
 
-**CODE 7 - File: measurement-Main.js**
+**CODE 2 - File: measurement-Main.js**
 [
 /**
  * Main Application Coordinator
@@ -1392,7 +544,7 @@ if (typeof document !== 'undefined' && typeof window !== 'undefined') {
 }
 ]  
 
-**CODE 8 - File: measurement-Manager.js**  
+**CODE 3 - File: measurement-Manager.js**  
 [
 /**
  * Measurement Manager - Handles business logic and data management
@@ -1581,7 +733,7 @@ export class MeasurementManager {
 }
 ]
 
-**CODE 9 - File: measurement-Validator.js**  
+**CODE 4 - File: measurement-Validator.js**  
 [
 /**
  * Measurement Validator - Handles form validation logic
@@ -1803,7 +955,7 @@ export class MeasurementValidator {
 }
 ]
 
-**CODE 10 - File: measurement-ViewHandler.js**  
+**CODE 5 - File: measurement-ViewHandler.js**  
 [
 /**
  * View Handler - Manages all UI interactions and display logic
@@ -2144,6 +1296,854 @@ export class ViewHandler {
 }
 ]
 
+**CODE 6 - File: measurement-DataMaps.test.js**
+[
+// test/test-measurement-DataMaps.js
+import { expect } from 'chai';
+import {
+  measurementDataMap,
+  getMeasurement,
+  getAllMeasurementsForGender
+} from '../../../pages/measurement-pages/measurement-modules/measurement-DataMaps.js';
+
+describe('measurement-DataMaps.js', () => {
+  describe('measurementDataMap structure', () => {
+    it('should have gender, measurements, and sizes properties', () => {
+      expect(measurementDataMap).to.have.property('gender');
+      expect(measurementDataMap).to.have.property('measurements');
+      expect(measurementDataMap).to.have.property('sizes');
+    });
+
+    it('should contain male and female gender entries with imageDesktop', () => {
+      expect(measurementDataMap.gender.male).to.have.property('imageDesktop').that.is.a('string');
+      expect(measurementDataMap.gender.female).to.have.property('imageDesktop').that.is.a('string');
+    });
+
+    it('should have male measurements with expected keys', () => {
+      const maleMeas = measurementDataMap.measurements.male;
+      expect(maleMeas).to.have.property('neck');
+      expect(maleMeas).to.have.property('shoulder-length');
+      expect(maleMeas).to.have.property('arm-length');
+      // spot-check a few
+    });
+
+    it('should have female measurements with expected keys', () => {
+      const femaleMeas = measurementDataMap.measurements.female;
+      expect(femaleMeas).to.have.property('neck');
+      expect(femaleMeas).to.have.property('under-bust');
+      expect(femaleMeas).to.have.property('hip-bone-circumference');
+    });
+
+    it('should have sizes with cupSize and size-number', () => {
+      expect(measurementDataMap.sizes).to.have.property('cupSize');
+      expect(measurementDataMap.sizes).to.have.property('size-number');
+    });
+  });
+
+  describe('getMeasurement', () => {
+    it('should return correct measurement object for valid gender and key', () => {
+      const result = getMeasurement('male', 'neck');
+      expect(result).to.be.an('object');
+      expect(result.object).to.equal('Neck Circumference');
+    });
+
+    it('should return null for non-existent gender', () => {
+      const result = getMeasurement('other', 'neck');
+      expect(result).to.be.null;
+    });
+
+    it('should return null for non-existent measurement key', () => {
+      const result = getMeasurement('male', 'nonexistent');
+      expect(result).to.be.null;
+    });
+  });
+
+  describe('getAllMeasurementsForGender', () => {
+    it('should return all measurements for a valid gender', () => {
+      const result = getAllMeasurementsForGender('female');
+      expect(result).to.be.an('object');
+      expect(result).to.have.property('neck');
+      expect(result).to.have.property('waist');
+    });
+
+    it('should return empty object for invalid gender', () => {
+      const result = getAllMeasurementsForGender('other');
+      expect(result).to.deep.equal({});
+    });
+  });
+});
+]
+
+**CODE 7 - File: measurement-Main.test.js**  
+[
+// test/test-measurement-Main.js
+import { expect } from 'chai';
+import sinon from 'sinon';
+import { JSDOM } from 'jsdom';
+import { MeasurementApp } from '../../../pages/measurement-pages/measurement-modules/measurement-Main.js';
+// No need to import DataMaps for stubbing - removed
+
+describe('measurement-Main.js', () => {
+  let dom;
+  let app;
+  let form;
+
+  beforeEach(() => {
+    dom = new JSDOM(`
+      <!DOCTYPE html>
+      <body>
+        <form id="measurement-form" data-gender="male">
+          <input id="client-name" />
+          <input id="save-date" />
+          <input id="size-number" />
+          <select id="cupSize"></select>
+          <button id="save-measurements"></button>
+          <button id="reset-form"></button>
+          <button id="print-summary"></button>
+          <div class="measurement-input" data-measurement="neck"></div>
+        </form>
+        <div id="floating-guide-overlay"></div>
+        <div id="floating-measurement-guide"></div>
+        <button id="close-floating-guide"></button>
+        <img id="guide-image" />
+        <div id="default-guide"></div>
+      </body>
+    `);
+    // Make DOM globals available
+    globalThis.window = dom.window;
+    globalThis.document = dom.window.document;
+    globalThis.alert = dom.window.alert; // JSDOM alert is a no-op
+    global.console = { log: sinon.spy(), warn: sinon.spy(), error: sinon.spy() };
+    form = document.getElementById('measurement-form');
+
+    // Removed the sinon.stub on DataMaps.getMeasurement – not needed
+  });
+
+  afterEach(() => {
+    sinon.restore();
+    delete globalThis.window;
+    delete globalThis.document;
+    delete globalThis.alert;
+    if (app && app.viewHandler) app.viewHandler.cleanup();
+  });
+
+  describe('constructor and init', () => {
+    it('should initialize modules and set up event listeners', () => {
+      app = new MeasurementApp();
+      expect(app.manager).to.exist;
+      expect(app.validator).to.exist;
+      expect(app.viewHandler).to.exist;
+      expect(console.log.calledWith('Measurement App initialized for male')).to.be.true;
+    });
+
+    it('should log error if form missing', () => {
+      document.getElementById('measurement-form').remove();
+      app = new MeasurementApp();
+      expect(console.error.calledWith('Measurement form not found')).to.be.true;
+    });
+  });
+
+  describe('handleSaveMeasurements', () => {
+    beforeEach(() => {
+      app = new MeasurementApp();
+      sinon.stub(app.validator, 'validateAll').returns(true);
+      sinon.stub(app.manager, 'getFormData').returns({ name: 'Test' });
+      sinon.stub(app.viewHandler, 'showSuccessMessage');
+    });
+
+    it('should save and show success when validation passes', () => {
+      app.handleSaveMeasurements();
+      expect(app.validator.validateAll.calledOnce).to.be.true;
+      expect(app.manager.getFormData.calledOnce).to.be.true;
+      expect(app.viewHandler.showSuccessMessage.calledWith({ name: 'Test' })).to.be.true;
+    });
+
+    it('should focus first error and show alert if validation fails', () => {
+      app.validator.validateAll.returns(false);
+      sinon.stub(app.viewHandler, 'focusFirstErrorField');
+      sinon.stub(app.viewHandler, 'showValidationErrorAlert');
+
+      app.handleSaveMeasurements();
+
+      expect(app.viewHandler.focusFirstErrorField.calledOnce).to.be.true;
+      expect(app.viewHandler.showValidationErrorAlert.calledOnce).to.be.true;
+    });
+  });
+
+  describe('handleResetForm', () => {
+    beforeEach(() => {
+      app = new MeasurementApp();
+      sinon.stub(window, 'confirm').returns(true);
+      sinon.stub(app.manager, 'resetFormData');
+      sinon.stub(app.validator, 'clearErrors');
+      sinon.stub(app.viewHandler, 'hideFloatingGuide');
+    });
+
+    it('should reset form, manager, validator, and hide guide when confirmed', () => {
+      app.handleResetForm();
+      expect(window.confirm.calledOnce).to.be.true;
+      expect(app.manager.resetFormData.calledOnce).to.be.true;
+      expect(app.validator.clearErrors.calledOnce).to.be.true;
+      expect(app.viewHandler.hideFloatingGuide.calledOnce).to.be.true;
+    });
+
+    it('should not reset if confirm false', () => {
+      window.confirm.returns(false);
+      app.handleResetForm();
+      expect(app.manager.resetFormData.called).to.be.false;
+    });
+  });
+
+  describe('bindGlobalFunctions', () => {
+    it('should attach handlers to window', () => {
+      app = new MeasurementApp();
+      expect(window.handleSaveMeasurements).to.be.a('function');
+      expect(window.handleResetForm).to.be.a('function');
+    });
+  });
+
+  describe('setupFormInputListeners', () => {
+    it('should add input/blur listeners to name field', () => {
+      app = new MeasurementApp();
+      const nameField = document.getElementById('client-name');
+      const inputSpy = sinon.spy(app, 'debounceValidation');
+      const blurSpy = sinon.spy(app.validator, 'validateField');
+
+      nameField.dispatchEvent(new dom.window.Event('input'));
+      nameField.dispatchEvent(new dom.window.Event('blur'));
+
+      setTimeout(() => {
+        expect(inputSpy.calledWith('client-name')).to.be.true;
+        expect(blurSpy.calledWith('client-name')).to.be.true;
+      }, 200);
+    });
+  });
+});
+]
+
+**CODE 8 - File: measurement-Manager.test.js**
+[
+// test/test-measurement-Manager.js
+import { expect } from 'chai';
+import sinon from 'sinon';
+import { JSDOM } from 'jsdom';
+import { MeasurementManager } from '../../../pages/measurement-pages/measurement-modules/measurement-Manager.js';
+
+describe('measurement-Manager.js', () => {
+  let manager;
+  let dom;
+
+  beforeEach(() => {
+    dom = new JSDOM(`
+      <!DOCTYPE html>
+      <body>
+        <input id="client-name" value="John Doe" />
+        <input id="save-date" />
+        <input id="size-number" value="40" />
+        <input id="cupSize" value="C" />
+        <div id="measurement-form"></div>
+      </body>
+    `);
+    globalThis.window = dom.window;
+    globalThis.document = dom.window.document;
+    globalThis.alert = dom.window.alert;
+
+    manager = new MeasurementManager();
+  });
+
+  afterEach(() => {
+    sinon.restore();
+    delete globalThis.window;
+    delete globalThis.document;
+    delete globalThis.alert;
+  });
+
+  describe('initialize', () => {
+    it('should set gender and return this', () => {
+      const result = manager.initialize('male');
+      expect(manager.gender).to.equal('male');
+      expect(result).to.equal(manager);
+    });
+  });
+
+  describe('setupDateField', () => {
+    it('should set today\'s date and max attribute on #save-date', () => {
+      manager.initialize('male');
+      const dateField = document.getElementById('save-date');
+      const today = new Date().toISOString().split('T')[0];
+
+      manager.setupDateField();
+
+      expect(dateField.value).to.equal(today);
+      expect(dateField.max).to.equal(today);
+    });
+
+    it('should do nothing if date field not present', () => {
+      document.getElementById('save-date').remove();
+      expect(() => manager.setupDateField()).not.to.throw();
+    });
+  });
+
+  describe('saveMeasurement', () => {
+    it('should store measurement in Map when value non-empty', () => {
+      manager.saveMeasurement('neck', '15.5', 'Neck:');
+      expect(manager.measurements.size).to.equal(1);
+      const entry = manager.measurements.get('neck');
+      expect(entry.value).to.equal('15.5');
+      expect(entry.label).to.equal('Neck');
+      expect(entry).to.have.property('timestamp');
+    });
+
+    it('should not store empty or whitespace value', () => {
+      manager.saveMeasurement('neck', '', 'Neck:');
+      expect(manager.measurements.size).to.equal(0);
+
+      manager.saveMeasurement('neck', '   ', 'Neck:');
+      expect(manager.measurements.size).to.equal(0);
+    });
+  });
+
+  describe('getFormData', () => {
+    it('should collect all form data for male', () => {
+      manager.initialize('male');
+      manager.saveMeasurement('neck', '15.5', 'Neck:');
+      const data = manager.getFormData();
+
+      expect(data.name).to.equal('John Doe');
+      expect(data.date).to.equal('');
+      expect(data.gender).to.equal('male');
+      expect(data.sizeNumber).to.equal('40');
+      expect(data.cupSize).to.be.undefined;
+      expect(data.measurements).to.have.property('neck');
+    });
+
+    it('should collect all form data for female', () => {
+      manager.initialize('female');
+      // replace size-number with cupSize in DOM
+      const sizeNum = document.getElementById('size-number');
+      if (sizeNum) sizeNum.remove();
+      const cup = document.createElement('input');
+      cup.id = 'cupSize';
+      cup.value = 'C';
+      document.body.appendChild(cup);
+
+      manager.saveMeasurement('waist', '28', 'Waist:');
+      const data = manager.getFormData();
+
+      expect(data.name).to.equal('John Doe');
+      expect(data.gender).to.equal('female');
+      expect(data.cupSize).to.equal('C');
+      expect(data.sizeNumber).to.be.undefined;
+    });
+  });
+
+  describe('generatePrintContent', () => {
+    it('should return HTML string containing measurement data', () => {
+      manager.initialize('male');
+      // Populate measurements map directly (not formData)
+      manager.measurements.set('neck', { label: 'Neck', value: '15.5' });
+      manager.formData = {
+        name: 'John',
+        date: '2025-01-01',
+        gender: 'male',
+        sizeNumber: '40',
+        measurements: {} // not used
+      };
+      const html = manager.generatePrintContent();
+      expect(html).to.include('John');
+      expect(html).to.include('2025-01-01');
+      expect(html).to.include('Neck:');
+      expect(html).to.include('15.5"');
+    });
+  });
+
+  describe('printSummary', () => {
+    it('should open a window and write content', () => {
+      const openStub = sinon.stub(window, 'open').returns({
+        document: { write: sinon.spy(), close: sinon.spy() }
+      });
+      manager.initialize('male');
+      manager.getFormData(); // populate formData
+
+      manager.printSummary();
+
+      expect(openStub.calledOnce).to.be.true;
+      const mockWindow = openStub.returnValues[0];
+      expect(mockWindow.document.write.calledOnce).to.be.true;
+      expect(mockWindow.document.close.calledOnce).to.be.true;
+    });
+
+    it('should throw error if popup blocked', () => {
+      sinon.stub(window, 'open').returns(null);
+      manager.initialize('male');
+      expect(() => manager.printSummary()).to.throw('Popup blocked');
+    });
+  });
+
+  describe('resetFormData', () => {
+    it('should clear measurements map and formData', () => {
+      manager.saveMeasurement('neck', '15', 'Neck');
+      manager.formData = { some: 'data' };
+      manager.resetFormData();
+      expect(manager.measurements.size).to.equal(0);
+      expect(manager.formData).to.deep.equal({});
+    });
+  });
+});
+]  
+
+**CODE 9 - File: measurement-Validator.test.js**
+[
+// test/test-measurement-Validator.js
+import { expect } from 'chai';
+import sinon from 'sinon';
+import { JSDOM } from 'jsdom';
+import { MeasurementValidator } from '../../../pages/measurement-pages/measurement-modules/measurement-Validator.js';
+
+describe('measurement-Validator.js', () => {
+  let dom;
+  let form;
+  let validator;
+
+  beforeEach(() => {
+    dom = new JSDOM(`
+      <!DOCTYPE html>
+      <body>
+        <form id="measurement-form" data-gender="male">
+          <input id="client-name" value="John" />
+          <input id="save-date" value="2025-01-01" />
+          <input id="size-number" value="40" />
+          <select id="cupSize"></select>
+
+          <input id="neck" class="measurement-input" data-min="0" data-max="100" value="15.5" />
+          <div id="neck-error" class="error-message"></div>
+
+          <input id="waist" class="measurement-input" data-min="0" data-max="100" value="32" />
+          <div id="waist-error" class="error-message"></div>
+        </form>
+      </body>
+    `);
+    globalThis.window = dom.window;
+    globalThis.document = dom.window.document;
+    globalThis.alert = dom.window.alert;
+    form = document.getElementById('measurement-form');
+    validator = new MeasurementValidator(form);
+  });
+
+  afterEach(() => {
+    sinon.restore();
+    delete globalThis.window;
+    delete globalThis.document;
+    delete globalThis.alert;
+  });
+
+  describe('constructor', () => {
+    it('should throw if form element missing', () => {
+      expect(() => new MeasurementValidator(null)).to.throw('Form element is required');
+    });
+
+    it('should set gender from dataset', () => {
+      expect(validator.gender).to.equal('male');
+    });
+  });
+
+  describe('validateAll', () => {
+    it('should return true when all fields valid', () => {
+      const result = validator.validateAll();
+      expect(result).to.be.true;
+    });
+
+    it('should return false if required text field empty', () => {
+      document.getElementById('client-name').value = '';
+      const result = validator.validateAll();
+      expect(result).to.be.false;
+      expect(validator.errors.has('client-name')).to.be.true;
+    });
+
+    it('should return false if measurement input empty', () => {
+      document.getElementById('neck').value = '';
+      const result = validator.validateAll();
+      expect(result).to.be.false;
+      expect(validator.errors.has('neck')).to.be.true;
+    });
+
+    it('should return false if measurement out of range', () => {
+      document.getElementById('neck').value = '150';
+      const result = validator.validateAll();
+      expect(result).to.be.false;
+    });
+
+    it('should return false if measurement has more than one decimal', () => {
+      document.getElementById('neck').value = '15.55';
+      const result = validator.validateAll();
+      expect(result).to.be.false;
+    });
+  });
+
+  describe('validateMeasurementInput', () => {
+    it('should return true for valid input', () => {
+      const input = document.getElementById('neck');
+      expect(validator.validateMeasurementInput(input)).to.be.true;
+    });
+
+    it('should return false for empty input', () => {
+      const input = document.getElementById('neck');
+      input.value = '';
+      expect(validator.validateMeasurementInput(input)).to.be.false;
+      const errorEl = document.getElementById('neck-error');
+      expect(errorEl.textContent).to.equal(' ');
+    });
+
+    it('should return false for non-numeric', () => {
+      const input = document.getElementById('neck');
+      input.value = 'abc';
+      expect(validator.validateMeasurementInput(input)).to.be.false;
+    });
+
+    it('should return false for out-of-range', () => {
+      const input = document.getElementById('neck');
+      input.value = '-5';
+      expect(validator.validateMeasurementInput(input)).to.be.false;
+      const errorEl = document.getElementById('neck-error');
+      expect(errorEl.textContent).to.equal('0-100');
+    });
+
+    it('should return false for too many decimals', () => {
+      const input = document.getElementById('neck');
+      input.value = '15.55';
+      expect(validator.validateMeasurementInput(input)).to.be.false;
+      const errorEl = document.getElementById('neck-error');
+      expect(errorEl.textContent).to.equal('Only one decimal place allowed');
+    });
+  });
+
+  describe('validateField', () => {
+    it('should validate required fields', () => {
+      const input = document.getElementById('client-name');
+      input.value = '';
+      const result = validator.validateField('client-name');
+      expect(result).to.be.false;
+      expect(validator.errors.has('client-name')).to.be.true;
+    });
+
+    it('should validate measurement input', () => {
+      const input = document.getElementById('neck');
+      input.value = '15.55';
+      const result = validator.validateField('neck');
+      expect(result).to.be.false;
+      expect(validator.errors.has('neck')).to.be.true;
+    });
+
+    it('should return true for non-required, non-measurement field', () => {
+      // create a dummy field not in rules
+      const dummy = document.createElement('input');
+      dummy.id = 'dummy';
+      document.body.appendChild(dummy);
+      const result = validator.validateField('dummy');
+      expect(result).to.be.true;
+    });
+  });
+
+  describe('addFieldError', () => {
+    it('should add error class and set message', () => {
+      validator.addFieldError('neck', 'Test error');
+      const input = document.getElementById('neck');
+      const errorEl = document.getElementById('neck-error');
+      expect(input.classList.contains('error')).to.be.true;
+      expect(errorEl.textContent).to.equal('Test error');
+      expect(validator.errors.has('neck')).to.be.true;
+    });
+  });
+
+  describe('clearSingleError', () => {
+    it('should remove error class and clear message', () => {
+      validator.addFieldError('neck', 'error');
+      validator.clearSingleError('neck');
+      const input = document.getElementById('neck');
+      const errorEl = document.getElementById('neck-error');
+      expect(input.classList.contains('error')).to.be.false;
+      expect(errorEl.textContent).to.equal('');
+      expect(validator.errors.has('neck')).to.be.false;
+    });
+  });
+
+  describe('clearErrors', () => {
+    it('should clear all errors in the form', () => {
+      validator.addFieldError('neck', 'err1');
+      validator.addFieldError('waist', 'err2');
+      validator.clearErrors();
+      expect(validator.errors.size).to.equal(0);
+      expect(document.querySelectorAll('.error').length).to.equal(0);
+      expect(document.getElementById('neck-error').textContent).to.equal('');
+      expect(document.getElementById('waist-error').textContent).to.equal('');
+    });
+  });
+
+  describe('getFirstErrorField', () => {
+    it('should return first element with error class', () => {
+      validator.addFieldError('neck', 'err');
+      const first = validator.getFirstErrorField();
+      expect(first.id).to.equal('neck');
+    });
+
+    it('should return null if no errors', () => {
+      expect(validator.getFirstErrorField()).to.be.null;
+    });
+  });
+});
+]  
+
+**CODE 10 - File: measurement-ViewHandler.test.js**
+[
+// test/test-measurement-ViewHandler.js
+import { expect } from 'chai';
+import sinon from 'sinon';
+import { JSDOM } from 'jsdom';
+import { ViewHandler } from '../../../pages/measurement-pages/measurement-modules/measurement-ViewHandler.js';
+
+describe('measurement-ViewHandler.js', () => {
+  let dom;
+  let viewHandler;
+  let getMeasurementStub;
+  const genderImageUrl = 'test.jpg';
+
+  beforeEach(() => {
+    dom = new JSDOM(`
+      <!DOCTYPE html>
+      <body>
+        <img id="guide-image" />
+        <div id="default-guide" style="display: flex;"></div>
+        <div id="guide-text-container">
+          <div id="measure-object"></div>
+          <div id="measure-definition"></div>
+          <div id="measure-description"></div>
+        </div>
+        <div id="floating-measurement-guide" style="display: none;">
+          <div id="floating-measure-object"></div>
+          <div id="floating-measure-definition"></div>
+          <div id="floating-measure-description"></div>
+          <div class="floating-guide-images"></div>
+        </div>
+        <div id="floating-guide-overlay" style="display: none;"></div>
+        <button id="print-summary"></button>
+
+        <!-- FIX: Nest measurement-label inside form-group -->
+        <div class="form-group">
+          <div class="measurement-label">
+            <i class="fa-eye"></i>
+          </div>
+          <input class="measurement-input" data-measurement="neck" />
+        </div>
+      </body>
+    `);
+    globalThis.window = dom.window;
+    globalThis.document = dom.window.document;
+    globalThis.alert = dom.window.alert; // keep reference
+
+    getMeasurementStub = sinon.stub();
+    getMeasurementStub.withArgs('neck').returns({
+      object: 'Neck',
+      definition: 'def',
+      description: 'desc',
+      imageMobile: 'neck.jpg'
+    });
+
+    viewHandler = new ViewHandler({
+      gender: 'male',
+      isMobileView: false,
+      getMeasurement: getMeasurementStub,
+      genderImageUrl
+    });
+  });
+
+  afterEach(() => {
+    viewHandler.cleanup();
+    sinon.restore();
+    delete globalThis.window;
+    delete globalThis.document;
+    delete globalThis.alert;
+  });
+
+  describe('constructor', () => {
+    it('should set properties and call init', () => {
+      expect(viewHandler.gender).to.equal('male');
+      expect(viewHandler.isMobileView).to.be.false;
+      expect(viewHandler.genderImageUrl).to.equal(genderImageUrl);
+    });
+  });
+
+  describe('setupDesktopGuideImage', () => {
+    it('should set guide image src when genderImageUrl exists', () => {
+      const guideImage = document.getElementById('guide-image');
+      const defaultGuide = document.getElementById('default-guide');
+      viewHandler.setupDesktopGuideImage();
+      expect(guideImage.src).to.include(genderImageUrl);
+      expect(guideImage.style.display).to.equal('block');
+      expect(defaultGuide.style.display).to.equal('none');
+    });
+
+    it('should hide guide image and show default if no url', () => {
+      viewHandler.genderImageUrl = null;
+      viewHandler.setupDesktopGuideImage();
+      const guideImage = document.getElementById('guide-image');
+      const defaultGuide = document.getElementById('default-guide');
+      expect(guideImage.style.display).to.equal('none');
+      expect(defaultGuide.style.display).to.equal('flex');
+    });
+  });
+
+  describe('showMeasurementGuide', () => {
+    it('should update guide text with measurement data', () => {
+      viewHandler.showMeasurementGuide('neck');
+      const objEl = document.getElementById('measure-object');
+      expect(objEl.innerHTML).to.include('Neck');
+    });
+  });
+
+  describe('showFloatingGuide', () => {
+    it('should update text, image, and show overlay/guide', async () => {
+      await viewHandler.showFloatingGuide('neck');
+      const objEl = document.getElementById('floating-measure-object');
+      expect(objEl.innerHTML).to.include('Neck');
+      const imgContainer = document.querySelector('#floating-measurement-guide .floating-guide-images');
+      expect(imgContainer.children.length).to.equal(1);
+      expect(imgContainer.children[0].src).to.include('neck.jpg');
+      expect(document.getElementById('floating-guide-overlay').style.display).to.equal('block');
+      expect(document.getElementById('floating-measurement-guide').style.display).to.equal('flex');
+    });
+  });
+
+  describe('hideFloatingGuide', () => {
+    it('should hide overlay and guide', () => {
+      viewHandler.hideFloatingGuide();
+      expect(document.getElementById('floating-guide-overlay').style.display).to.equal('none');
+      expect(document.getElementById('floating-measurement-guide').style.display).to.equal('none');
+    });
+  });
+
+  describe('setupEyeIconListeners', () => {
+      it('should attach click handler to eye icons', () => {
+          // Force mobile view so the callback is triggered
+          viewHandler.isMobileView = true;
+
+          const callback = sinon.spy();
+          viewHandler.setupEyeIconListeners(callback);
+          const eyeIcon = document.querySelector('.fa-eye');
+          eyeIcon.click();
+
+          expect(callback.calledOnce).to.be.true;
+          expect(callback.args[0][0]).to.equal('neck');
+      });
+  });
+
+  describe('setupWindowResizeListener', () => {
+    it('should debounce and call callback when crossing breakpoint', (done) => {
+      const callback = sinon.spy();
+      viewHandler.setupWindowResizeListener(callback);
+
+      // Simulate resize to mobile width
+      window.innerWidth = 800; // less than 992
+      window.dispatchEvent(new dom.window.Event('resize'));
+
+      setTimeout(() => {
+        expect(callback.calledOnce).to.be.true;
+        expect(callback.args[0][0]).to.be.true; // newIsMobileView = true
+        done();
+      }, 250);
+    });
+  });
+
+  describe('setupEscapeKeyListener', () => {
+    it('should call callback on Escape key', () => {
+      const callback = sinon.spy();
+      viewHandler.setupEscapeKeyListener(callback);
+      const event = new dom.window.KeyboardEvent('keydown', { key: 'Escape' });
+      document.dispatchEvent(event);
+      expect(callback.calledOnce).to.be.true;
+    });
+  });
+
+  describe('setupPrintButtonListener', () => {
+    it('should call callback when print button clicked', () => {
+      const callback = sinon.spy();
+      viewHandler.setupPrintButtonListener(callback);
+      document.getElementById('print-summary').click();
+      expect(callback.calledOnce).to.be.true;
+    });
+
+    it('should show alert if callback throws', () => {
+      // FIX: stub globalThis.alert instead of window.alert
+      const alertStub = sinon.stub(globalThis, 'alert');
+      const callback = sinon.stub().throws(new Error('fail'));
+      viewHandler.setupPrintButtonListener(callback);
+      document.getElementById('print-summary').click();
+      expect(alertStub.calledWith('fail')).to.be.true;
+    });
+  });
+
+  describe('image zoom/pan', () => {
+    it('should handle wheel zoom', () => {
+      const image = document.getElementById('guide-image');
+      const container = image.parentElement;
+      const wheelEvent = new dom.window.WheelEvent('wheel', { deltaY: -100, clientX: 50, clientY: 50 });
+      sinon.spy(viewHandler, 'handleZoom');
+      container.dispatchEvent(wheelEvent);
+      expect(viewHandler.handleZoom.calledOnce).to.be.true;
+    });
+
+    it('should update transform on pan', () => {
+      const image = document.getElementById('guide-image');
+      const container = image.parentElement;
+      viewHandler.zoomState.isDragging = true;
+      const mousemove = new dom.window.MouseEvent('mousemove', { clientX: 10, clientY: 10 });
+      container.dispatchEvent(mousemove);
+      // no assertion on transform because it depends on state, just ensure no error
+    });
+  });
+
+  describe('cleanup', () => {
+    it('should remove all event listeners and clear timers', () => {
+      const removeSpy = sinon.spy(window, 'removeEventListener');
+      viewHandler.setupWindowResizeListener(() => {});
+      viewHandler.cleanup();
+      expect(removeSpy.called).to.be.true;
+    });
+  });
+
+  describe('showAlert, showValidationErrorAlert, showSuccessMessage', () => {
+    it('showAlert should call window.alert', () => {
+      // FIX: stub globalThis.alert
+      const alertStub = sinon.stub(globalThis, 'alert');
+      viewHandler.showAlert('test');
+      expect(alertStub.calledWith('test')).to.be.true;
+    });
+
+    it('showValidationErrorAlert should alert specific message', () => {
+      const alertStub = sinon.stub(globalThis, 'alert');
+      viewHandler.showValidationErrorAlert();
+      expect(alertStub.calledWith('Please fill in all required fields correctly. Invalid fields are highlighted in red.')).to.be.true;
+    });
+
+    it('showSuccessMessage should alert with form data', () => {
+      const alertStub = sinon.stub(globalThis, 'alert');
+      viewHandler.showSuccessMessage({ name: 'John', date: '2025', measurements: { a: 1 } });
+      expect(alertStub.calledOnce).to.be.true;
+    });
+  });
+
+  describe('focusFirstErrorField', () => {
+    it('should focus element with error class', () => {
+      const input = document.getElementById('guide-image'); // any element
+      input.classList.add('error');
+      const focusSpy = sinon.spy(input, 'focus');
+      viewHandler.focusFirstErrorField();
+      expect(focusSpy.calledOnce).to.be.true;
+    });
+  });
+});
+]  
+
+
 **CODE 11 - File: package.json**  
 [ 
 {
@@ -2288,34 +2288,17 @@ Izzy-Alteration
 
 **ERROR/ISSUE:**
 [
- 1) MeasurementApp
-       handleResetForm
-         should reset form, manager, validator, and hide guide when confirmed:
-     ReferenceError: confirm is not defined
-      at MeasurementApp.handleResetForm (file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/measurement-pages/measurement-modules/measurement-Main.js:195:9)
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-Main.test.js:105:11)
-      at processImmediate (node:internal/timers:466:21)
-
-  2) MeasurementApp
-       handleResetForm
-         should not reset if confirm false:
-     ReferenceError: confirm is not defined
-      at MeasurementApp.handleResetForm (file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/measurement-pages/measurement-modules/measurement-Main.js:195:9)
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-Main.test.js:114:11)
-      at processImmediate (node:internal/timers:466:21)
-
-  3) ViewHandler
-       setupEyeIconListeners
-         should attach click handler to eye icons:
-
-      AssertionError: expected false to be true
-      + expected - actual
-
-      -false
-      +true
-      
-      at Context.<anonymous> (file:///home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-ViewHandler.test.js:133:40)
-      at processImmediate (node:internal/timers:466:21)
+  1) measurement-Manager.js
+       "after each" hook in "measurement-Manager.js":
+     Error: done() called multiple times in hook <measurement-Manager.js "after each" hook in "measurement-Manager.js"> of file /home/bernard/Documents/Izzy-Alteration/frontend/test/measurement-module-tests/unit/measurement-Manager.test.js; in addition, done() received error: ReferenceError: document is not defined
+    at ViewHandler.setupDesktopGuideImage (file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/measurement-pages/measurement-modules/measurement-ViewHandler.js:39:28)
+    at Timeout._onTimeout (file:///home/bernard/Documents/Izzy-Alteration/frontend/pages/measurement-pages/measurement-modules/measurement-Main.js:57:34)
+    at listOnTimeout (node:internal/timers:559:17)
+    at processTimers (node:internal/timers:502:7) {
+  uncaught: true
+}
+      at process.emit (node:events:513:28)
+      at process._fatalException (node:internal/process/execution:149:25)
 ]
 
 **REQUEST:**
