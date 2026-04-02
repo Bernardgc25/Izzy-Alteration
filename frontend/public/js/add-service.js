@@ -26,16 +26,16 @@ const elements = {
 // Service Links Configuration Module
 const serviceLinks = {
     // Alteration sub-pages
-    'alteration-male-top': '/src/pages/alteration-pages/alteration-male-top.html',
-    'alteration-male-bottom': '/src/pages/alteration-pages/alteration-male-bottom.html',
-    'alteration-male-suits': '/src/pages/alteration-pages/alteration-male-suits.html',
-    'alteration-female-dress': '/src/pages/alteration-pages/alteration-female-dress.html',
-    'alteration-female-top': '/src/pages/alteration-pages/alteration-female-top.html',
-    'alteration-female-bottom': '/src/pages/alteration-pages/alteration-female-bottom.html',
-    'alteration-female-jacket': '/src/pages/alteration-pages/alteration-female-jacket.html',
+    'alteration-male-top': '/frontend/pages/alteration-pages/alteration-male-top.html',
+    'alteration-male-bottom': '/frontend/pages/alteration-pages/alteration-male-bottom.html',
+    'alteration-male-suits': '/frontend/pages/alteration-pages/alteration-male-suits.html',
+    'alteration-female-dress': '/frontend/pages/alteration-pages/alteration-female-dress.html',
+    'alteration-female-top': '/frontend/pages/alteration-pages/alteration-female-top.html',
+    'alteration-female-bottom': '/frontend/pages/alteration-pages/alteration-female-bottom.html',
+    'alteration-female-jacket': '/frontend/pages/alteration-pages/alteration-female-jacket.html',
     
     // Repair page
-    'repair': '/src/pages/alteration-pages/alteration-repair.html',
+    'repair': '/frontend/pages/alteration-pages/alteration-repair.html',
     
     // Custom tailoring page
     'custom-tailoring': ''
