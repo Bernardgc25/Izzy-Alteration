@@ -1,30 +1,21 @@
-const chai = require('chai');
-const chaiHttp = require('chai-http');
 const express = require('express');
 const sqlite3 = require('sqlite3');
+const { expect } = require('chai');
+const request = require('supertest');
 const fs = require('fs');
-const { expect } = chai;
 
-// Handle both default and named exports of chai-http
-const chaiHttpPlugin = typeof chaiHttp === 'function' ? chaiHttp : chaiHttp.default;
-chai.use(chaiHttpPlugin);
+// (No top-level require of the router)
 
-// Path to the router
-const measurementMaleRouter = require('../routes/measurement-male-route');
-
-// Helper: run a single SQL statement and return a Promise
-const runSql = (db, sql, params = []) => {
+const runSql = (db, sql) => {
   return new Promise((resolve, reject) => {
-    db.run(sql, params, function (err) {
+    db.run(sql, (err) => {
       if (err) reject(err);
-      else resolve(this);
+      else resolve();
     });
   });
 };
 
-// Helper: create all tables, indexes and trigger
-const setupDatabase = async (db) => {
-  // Create MaleMeasurement table
+const createTables = async (db) => {
   await runSql(db, `CREATE TABLE IF NOT EXISTS MaleMeasurement (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     neck DECIMAL(5,2),
@@ -55,12 +46,10 @@ const setupDatabase = async (db) => {
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   )`);
 
-  // Create indexes
   for (const field of ['client_name', 'measurement_date', 'size_number']) {
     await runSql(db, `CREATE INDEX IF NOT EXISTS idx_malemeasurement_${field} ON MaleMeasurement(${field})`);
   }
 
-  // Create trigger for auto-updating updated_at
   await runSql(db, `CREATE TRIGGER IF NOT EXISTS update_malemeasurement_timestamp 
     AFTER UPDATE ON MaleMeasurement
     BEGIN
@@ -68,7 +57,6 @@ const setupDatabase = async (db) => {
     END`);
 };
 
-// Sample measurement data (includes all required fields)
 const sampleMeasurement = {
   neck: 38.5,
   shoulder_length: 45.0,
@@ -99,104 +87,120 @@ const sampleMeasurement = {
 describe('Male Measurement CRUD Operations', () => {
   let app;
   let testDbPath;
+  let measurementMaleRouter; // will hold the router after loading
 
-  before(async () => {
-    // Use a temporary file on disk so the router and our setup share the same database
+  before(async function() {
+    this.timeout(5000);
+
     testDbPath = './test-database.sqlite';
-    process.env.TEST_DATABASE = testDbPath;
-
-    // Force a fresh load of the router with the new TEST_DATABASE value
-    delete require.cache[require.resolve('../routes/measurement-male-route')];
-    const freshRouter = require('../routes/measurement-male-route');
-
-    // Create Express app and mount the router
-    const apiRouter = express.Router();
-    apiRouter.use('/measurements/male', freshRouter);
-    app = express();
-    app.use(express.json());
-    app.use('/api', apiRouter);
-
-    // Set up the database schema using a separate connection to the same file
-    const setupDb = new sqlite3.Database(testDbPath);
-    await setupDatabase(setupDb);
-    setupDb.close();
-  });
-
-  after((done) => {
-    // Delete the test database file after all tests finish
     if (fs.existsSync(testDbPath)) {
       fs.unlinkSync(testDbPath);
     }
-    done();
+
+    // 1. Create the database file and tables before the router is loaded
+    const setupDb = new sqlite3.Database(testDbPath);
+    await createTables(setupDb);
+    setupDb.close();
+
+    // 2. Set environment variable so the router uses the test database
+    process.env.TEST_DATABASE = testDbPath;
+
+    // 3. NOW load the router (it will open the test database and see the table)
+    measurementMaleRouter = require('../routes/measurement-male-route');
+
+    // 4. Set up the Express app
+    const apiRouter = express.Router();
+    apiRouter.use('/measurements/male', measurementMaleRouter);
+    app = express();
+    app.use(express.json());
+    app.use('/api', apiRouter);
+  });
+
+  after(() => {
+    if (fs.existsSync(testDbPath)) {
+      fs.unlinkSync(testDbPath);
+    }
+    delete process.env.TEST_DATABASE;
   });
 
   let createdId;
 
   it('should CREATE a new male measurement via POST /api/measurements/male', async () => {
-    const res = await chai.request(app)
+    const res = await request(app)
       .post('/api/measurements/male')
       .send(sampleMeasurement);
 
-    expect(res).to.have.status(201);
+    // Log detailed error if not 201
+    if (res.status !== 201) {
+      console.error('POST error response:', res.body);
+    }
+    expect(res.status).to.equal(201);
     expect(res.body).to.have.property('id');
     createdId = res.body.id;
   });
 
   it('should GET all male measurements via GET /api/measurements/male', async () => {
-    const res = await chai.request(app).get('/api/measurements/male');
-    expect(res).to.have.status(200);
+    const res = await request(app)
+      .get('/api/measurements/male')
+      .expect(200);
+
     expect(res.body).to.be.an('array').with.lengthOf.at.least(1);
     const measurement = res.body.find(m => m.id === createdId);
     expect(measurement).to.include({ client_name: 'John Doe', size_number: 'M' });
   });
 
   it('should GET a specific measurement by id via GET /api/measurements/male/:id', async () => {
-    const res = await chai.request(app).get(`/api/measurements/male/${createdId}`);
-    expect(res).to.have.status(200);
+    const res = await request(app)
+      .get(`/api/measurements/male/${createdId}`)
+      .expect(200);
+
     expect(res.body).to.include({ id: createdId, client_name: 'John Doe' });
   });
 
   it('should return 404 for a non-existent measurement id', async () => {
-    const res = await chai.request(app).get('/api/measurements/male/999999');
-    expect(res).to.have.status(404);
-    expect(res.body).to.have.property('error', 'Measurement not found');
+    await request(app)
+      .get('/api/measurements/male/999999')
+      .expect(404)
+      .expect({ error: 'Measurement not found' });
   });
 
   it('should UPDATE an existing measurement via PUT /api/measurements/male/:id', async () => {
     const updatedData = { ...sampleMeasurement, client_name: 'John Updated', size_number: 'L' };
-    const res = await chai.request(app)
+    await request(app)
       .put(`/api/measurements/male/${createdId}`)
-      .send(updatedData);
+      .send(updatedData)
+      .expect(200)
+      .expect({ message: 'Measurement updated successfully' });
 
-    expect(res).to.have.status(200);
-    expect(res.body).to.have.property('message', 'Measurement updated successfully');
-
-    // Verify update
-    const getRes = await chai.request(app).get(`/api/measurements/male/${createdId}`);
+    const getRes = await request(app)
+      .get(`/api/measurements/male/${createdId}`)
+      .expect(200);
     expect(getRes.body).to.include({ client_name: 'John Updated', size_number: 'L' });
   });
 
   it('should return 404 when updating a non-existent measurement', async () => {
-    const res = await chai.request(app)
+    await request(app)
       .put('/api/measurements/male/999999')
-      .send(sampleMeasurement);
-    expect(res).to.have.status(404);
-    expect(res.body).to.have.property('error', 'Measurement not found');
+      .send(sampleMeasurement)
+      .expect(404)
+      .expect({ error: 'Measurement not found' });
   });
 
   it('should DELETE a measurement via DELETE /api/measurements/male/:id', async () => {
-    const res = await chai.request(app).delete(`/api/measurements/male/${createdId}`);
-    expect(res).to.have.status(200);
-    expect(res.body).to.have.property('message', 'Measurement deleted successfully');
+    await request(app)
+      .delete(`/api/measurements/male/${createdId}`)
+      .expect(200)
+      .expect({ message: 'Measurement deleted successfully' });
 
-    // Verify deletion
-    const getRes = await chai.request(app).get(`/api/measurements/male/${createdId}`);
-    expect(getRes).to.have.status(404);
+    await request(app)
+      .get(`/api/measurements/male/${createdId}`)
+      .expect(404);
   });
 
   it('should return 404 when deleting a non-existent measurement', async () => {
-    const res = await chai.request(app).delete('/api/measurements/male/999999');
-    expect(res).to.have.status(404);
-    expect(res.body).to.have.property('error', 'Measurement not found');
+    await request(app)
+      .delete('/api/measurements/male/999999')
+      .expect(404)
+      .expect({ error: 'Measurement not found' });
   });
 });

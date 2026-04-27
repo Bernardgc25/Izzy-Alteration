@@ -470,232 +470,7 @@ module.exports = app;
 
 **CODE 6 - File: measurement-male.test.js**
 [
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const express = require('express');
-const sqlite3 = require('sqlite3');
-const { expect } = chai;
 
-chai.use(chaiHttp);
-
-// Path to the router – adjust if your file location differs
-const measurementMaleRouter = require('../routes/measurement-male-route');
-
-// Helper to run the table creation and index statements (from migration.js)
-const createTables = (db) => {
-  return new Promise((resolve, reject) => {
-    db.serialize(() => {
-      db.run(`CREATE TABLE IF NOT EXISTS MaleMeasurement (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        neck DECIMAL(5,2),
-        shoulder_length DECIMAL(5,2),
-        arm_length DECIMAL(5,2),
-        across_front DECIMAL(5,2),
-        chest_circumference DECIMAL(5,2),
-        waist DECIMAL(5,2),
-        hip_circumference DECIMAL(5,2),
-        total_rise DECIMAL(5,2),
-        thigh DECIMAL(5,2),
-        knee DECIMAL(5,2),
-        calf DECIMAL(5,2),
-        ankle DECIMAL(5,2),
-        bicep DECIMAL(5,2),
-        elbow DECIMAL(5,2),
-        wrist DECIMAL(5,2),
-        inseam_ankle DECIMAL(5,2),
-        inseam_floor DECIMAL(5,2),
-        neck_waist DECIMAL(5,2),
-        neck_floor DECIMAL(5,2),
-        waist_floor DECIMAL(5,2),
-        height DECIMAL(5,2),
-        client_name TEXT NOT NULL,
-        size_number TEXT,
-        measurement_date DATE NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )`);
-
-      // Create indexes
-      ['client_name', 'measurement_date', 'size_number'].forEach(field => {
-        db.run(`CREATE INDEX IF NOT EXISTS idx_malemeasurement_${field} ON MaleMeasurement(${field})`);
-      });
-
-      // Create trigger for auto-updating timestamp (optional for tests)
-      db.run(`CREATE TRIGGER IF NOT EXISTS update_malemeasurement_timestamp 
-        AFTER UPDATE ON MaleMeasurement
-        BEGIN
-          UPDATE MaleMeasurement SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
-        END`);
-    }, (err) => {
-      if (err) reject(err);
-      else resolve();
-    });
-  });
-};
-
-// Minimal sample measurement data (includes required fields)
-const sampleMeasurement = {
-  neck: 38.5,
-  shoulder_length: 45.0,
-  arm_length: 62.0,
-  across_front: 42.0,
-  chest_circumference: 98.0,
-  waist: 82.0,
-  hip_circumference: 96.0,
-  total_rise: 28.0,
-  thigh: 56.0,
-  knee: 38.0,
-  calf: 36.0,
-  ankle: 24.0,
-  bicep: 32.0,
-  elbow: 28.0,
-  wrist: 18.0,
-  inseam_ankle: 72.0,
-  inseam_floor: 100.0,
-  neck_waist: 45.0,
-  neck_floor: 140.0,
-  waist_floor: 105.0,
-  height: 175.0,
-  client_name: 'John Doe',
-  size_number: 'M',
-  measurement_date: '2025-02-20'
-};
-
-describe('Male Measurement CRUD Operations', () => {
-  let app;
-  let db;
-
-  before(async () => {
-    // Use an in-memory database for testing
-    process.env.TEST_DATABASE = ':memory:';
-    // Because the router creates the db when the module is required,
-    // we need to ensure the env var is set BEFORE requiring it.
-    // Re-require it (if already loaded, the module cache will still have the old db)
-    // So we delete the cache entry for the router and for sqlite3? Simpler:
-    // We'll create a new express app and mount a fresh router, but the router file itself
-    // creates the db instance. Since we set the env var, the next require will use it.
-    delete require.cache[require.resolve('../routes/measurement-male-route')];
-    const freshRouter = require('../routes/measurement-male-route');
-    
-    // The router module now has a db connected to ':memory:'
-    // Grab that db reference for table creation (the router's db is closed after tests? We'll keep it)
-    db = freshRouter.db;  // Unfortunately the router doesn't export db. We need to access it.
-    // Alternative: create a new db instance ourselves and override? Easier: 
-    // We'll create the tables by importing the migration script logic here.
-    // But we need the same db the router uses. Since we cannot easily get it,
-    // we'll create our own db in memory, run migrations, then monkey-patch the router's db?
-    // Better: modify the router slightly for testability? But requirement says don't change original code.
-    // Another approach: The router uses process.env.TEST_DATABASE, so if we open the same path ':memory:',
-    // each `new sqlite3.Database(':memory:')` creates a separate in-memory database – data is not shared.
-    // That breaks tests because the router's db and our migration db are different.
-    // So we must use a file-based test database to share.
-  });
-
-  // Better solution: use a temporary file on disk so the router and our setup share the same DB.
-  // We'll implement that.
-  let testDbPath;
-  before(async () => {
-    testDbPath = './test-database.sqlite'; // temporary file
-    process.env.TEST_DATABASE = testDbPath;
-    
-    // Ensure module is reloaded with new env var
-    delete require.cache[require.resolve('../routes/measurement-male-route')];
-    const freshRouter = require('../routes/measurement-male-route');
-    
-    // Re-create the app with the new router
-    const apiRouter = express.Router();
-    apiRouter.use('/measurements/male', freshRouter);
-    app = express();
-    app.use(express.json());
-    app.use('/api', apiRouter);
-    
-    // Create tables using a separate db instance pointing to the same file
-    const setupDb = new sqlite3.Database(testDbPath);
-    await createTables(setupDb);
-    setupDb.close();
-  });
-
-  after((done) => {
-    // Close the router's database connection (if possible – router does not expose db)
-    // To clean up, delete the test database file.
-    const fs = require('fs');
-    if (fs.existsSync(testDbPath)) {
-      fs.unlinkSync(testDbPath);
-    }
-    done();
-  });
-
-  // Helper to get the inserted id from a POST response
-  let createdId;
-
-  it('should CREATE a new male measurement via POST /api/measurements/male', async () => {
-    const res = await chai.request(app)
-      .post('/api/measurements/male')
-      .send(sampleMeasurement);
-
-    expect(res).to.have.status(201);
-    expect(res.body).to.have.property('id');
-    createdId = res.body.id;
-  });
-
-  it('should GET all male measurements via GET /api/measurements/male', async () => {
-    const res = await chai.request(app).get('/api/measurements/male');
-    expect(res).to.have.status(200);
-    expect(res.body).to.be.an('array').with.lengthOf.at.least(1);
-    const measurement = res.body.find(m => m.id === createdId);
-    expect(measurement).to.include({ client_name: 'John Doe', size_number: 'M' });
-  });
-
-  it('should GET a specific measurement by id via GET /api/measurements/male/:id', async () => {
-    const res = await chai.request(app).get(`/api/measurements/male/${createdId}`);
-    expect(res).to.have.status(200);
-    expect(res.body).to.include({ id: createdId, client_name: 'John Doe' });
-  });
-
-  it('should return 404 for a non-existent measurement id', async () => {
-    const res = await chai.request(app).get('/api/measurements/male/999999');
-    expect(res).to.have.status(404);
-    expect(res.body).to.have.property('error', 'Measurement not found');
-  });
-
-  it('should UPDATE an existing measurement via PUT /api/measurements/male/:id', async () => {
-    const updatedData = { ...sampleMeasurement, client_name: 'John Updated', size_number: 'L' };
-    const res = await chai.request(app)
-      .put(`/api/measurements/male/${createdId}`)
-      .send(updatedData);
-
-    expect(res).to.have.status(200);
-    expect(res.body).to.have.property('message', 'Measurement updated successfully');
-
-    // Verify update
-    const getRes = await chai.request(app).get(`/api/measurements/male/${createdId}`);
-    expect(getRes.body).to.include({ client_name: 'John Updated', size_number: 'L' });
-  });
-
-  it('should return 404 when updating a non-existent measurement', async () => {
-    const res = await chai.request(app)
-      .put('/api/measurements/male/999999')
-      .send(sampleMeasurement);
-    expect(res).to.have.status(404);
-    expect(res.body).to.have.property('error', 'Measurement not found');
-  });
-
-  it('should DELETE a measurement via DELETE /api/measurements/male/:id', async () => {
-    const res = await chai.request(app).delete(`/api/measurements/male/${createdId}`);
-    expect(res).to.have.status(200);
-    expect(res.body).to.have.property('message', 'Measurement deleted successfully');
-
-    // Verify deletion
-    const getRes = await chai.request(app).get(`/api/measurements/male/${createdId}`);
-    expect(getRes).to.have.status(404);
-  });
-
-  it('should return 404 when deleting a non-existent measurement', async () => {
-    const res = await chai.request(app).delete('/api/measurements/male/999999');
-    expect(res).to.have.status(404);
-    expect(res.body).to.have.property('error', 'Measurement not found');
-  });
-});
 ]
 
 **ERROR/ISSUE:**
@@ -708,69 +483,98 @@ bernard@ubuntu:~/Documents/Izzy-Alteration/backend$ npm test
 
 
   Male Measurement CRUD Operations
+POST error response: { error: 'SQLITE_ERROR: 23 values for 24 columns' }
     1) should CREATE a new male measurement via POST /api/measurements/male
     2) should GET all male measurements via GET /api/measurements/male
     3) should GET a specific measurement by id via GET /api/measurements/male/:id
-    4) should return 404 for a non-existent measurement id
-    5) should UPDATE an existing measurement via PUT /api/measurements/male/:id
-    6) should return 404 when updating a non-existent measurement
-    7) should DELETE a measurement via DELETE /api/measurements/male/:id
-    8) should return 404 when deleting a non-existent measurement
+    ✔ should return 404 for a non-existent measurement id
+    4) should UPDATE an existing measurement via PUT /api/measurements/male/:id
+    ✔ should return 404 when updating a non-existent measurement
+    5) should DELETE a measurement via DELETE /api/measurements/male/:id
+    ✔ should return 404 when deleting a non-existent measurement
 
 
-  0 passing (104ms)
-  8 failing
+  3 passing (189ms)
+  5 failing
 
   1) Male Measurement CRUD Operations
        should CREATE a new male measurement via POST /api/measurements/male:
-     TypeError: chai.request is not a function
-      at Context.<anonymous> (test/measurement-male.test.js:136:28)
-      at process.processImmediate (node:internal/timers:483:21)
+
+      AssertionError: expected 500 to equal 201
+      + expected - actual
+
+      -500
+      +201
+      
+      at Context.<anonymous> (test/measurement-male.test.js:137:27)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
 
   2) Male Measurement CRUD Operations
        should GET all male measurements via GET /api/measurements/male:
-     TypeError: chai.request is not a function
-      at Context.<anonymous> (test/measurement-male.test.js:146:28)
-      at process.processImmediate (node:internal/timers:483:21)
+
+      AssertionError: expected [] to have a length at least 1 but got +0
+      + expected - actual
+
+      -0
+      +1
+      
+      at Context.<anonymous> (test/measurement-male.test.js:147:57)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
 
   3) Male Measurement CRUD Operations
        should GET a specific measurement by id via GET /api/measurements/male/:id:
-     TypeError: chai.request is not a function
-      at Context.<anonymous> (test/measurement-male.test.js:154:28)
+     Error: expected 200 "OK", got 404 "Not Found"
+      at Context.<anonymous> (test/measurement-male.test.js:155:8)
       at process.processImmediate (node:internal/timers:483:21)
+  ----
+      at Test._assertStatus (node_modules/supertest/lib/test.js:309:14)
+      at /home/bernard/Documents/Izzy-Alteration/backend/node_modules/supertest/lib/test.js:365:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:342:13)
+      at Test.assert (node_modules/supertest/lib/test.js:195:23)
+      at localAssert (node_modules/supertest/lib/test.js:138:14)
+      at Server.<anonymous> (node_modules/supertest/lib/test.js:152:11)
+      at Object.onceWrapper (node:events:638:28)
+      at Server.emit (node:events:524:28)
+      at emitCloseNT (node:net:2344:8)
+      at process.processTicksAndRejections (node:internal/process/task_queues:81:21)
 
   4) Male Measurement CRUD Operations
-       should return 404 for a non-existent measurement id:
-     TypeError: chai.request is not a function
-      at Context.<anonymous> (test/measurement-male.test.js:160:28)
+       should UPDATE an existing measurement via PUT /api/measurements/male/:id:
+     Error: expected 200 "OK", got 404 "Not Found"
+      at Context.<anonymous> (test/measurement-male.test.js:172:8)
       at process.processImmediate (node:internal/timers:483:21)
+  ----
+      at Test._assertStatus (node_modules/supertest/lib/test.js:309:14)
+      at /home/bernard/Documents/Izzy-Alteration/backend/node_modules/supertest/lib/test.js:365:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:342:13)
+      at Test.assert (node_modules/supertest/lib/test.js:195:23)
+      at localAssert (node_modules/supertest/lib/test.js:138:14)
+      at Server.<anonymous> (node_modules/supertest/lib/test.js:152:11)
+      at Object.onceWrapper (node:events:638:28)
+      at Server.emit (node:events:524:28)
+      at emitCloseNT (node:net:2344:8)
+      at process.processTicksAndRejections (node:internal/process/task_queues:81:21)
 
   5) Male Measurement CRUD Operations
-       should UPDATE an existing measurement via PUT /api/measurements/male/:id:
-     TypeError: chai.request is not a function
-      at Context.<anonymous> (test/measurement-male.test.js:167:28)
-      at process.processImmediate (node:internal/timers:483:21)
-
-  6) Male Measurement CRUD Operations
-       should return 404 when updating a non-existent measurement:
-     TypeError: chai.request is not a function
-      at Context.<anonymous> (test/measurement-male.test.js:180:28)
-      at process.processImmediate (node:internal/timers:483:21)
-
-  7) Male Measurement CRUD Operations
        should DELETE a measurement via DELETE /api/measurements/male/:id:
-     TypeError: chai.request is not a function
-      at Context.<anonymous> (test/measurement-male.test.js:188:28)
+     Error: expected 200 "OK", got 404 "Not Found"
+      at Context.<anonymous> (test/measurement-male.test.js:192:8)
       at process.processImmediate (node:internal/timers:483:21)
+  ----
+      at Test._assertStatus (node_modules/supertest/lib/test.js:309:14)
+      at /home/bernard/Documents/Izzy-Alteration/backend/node_modules/supertest/lib/test.js:365:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:342:13)
+      at Test.assert (node_modules/supertest/lib/test.js:195:23)
+      at localAssert (node_modules/supertest/lib/test.js:138:14)
+      at Server.<anonymous> (node_modules/supertest/lib/test.js:152:11)
+      at Object.onceWrapper (node:events:638:28)
+      at Server.emit (node:events:524:28)
+      at emitCloseNT (node:net:2344:8)
+      at process.processTicksAndRejections (node:internal/process/task_queues:81:21)
 
-  8) Male Measurement CRUD Operations
-       should return 404 when deleting a non-existent measurement:
-     TypeError: chai.request is not a function
-      at Context.<anonymous> (test/measurement-male.test.js:198:28)
-      at process.processImmediate (node:internal/timers:483:21)
 ]
 
 **REQUEST:**
 [
-    fix the issue
+    1. fix the failed tests
 ]
