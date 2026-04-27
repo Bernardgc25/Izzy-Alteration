@@ -33,12 +33,12 @@ measurementMaleRouter.get('/:id', (req, res) => {
 measurementMaleRouter.post('/', (req, res) => {
   const {
     neck,
-    shoulder_length,            
+    shoulder_length,
     arm_length,
     across_front,
     chest_circumference,
     waist,
-    hip_circumference,  
+    hip_circumference,
     total_rise,
     thigh,
     knee,
@@ -58,11 +58,12 @@ measurementMaleRouter.post('/', (req, res) => {
     measurement_date
   } = req.body;
 
+  // Fixed: now has 24 placeholders (one for each column)
   const sql = `INSERT INTO MaleMeasurement (
     neck, shoulder_length, arm_length, across_front, chest_circumference, waist, hip_circumference, total_rise,
     thigh, knee, calf, ankle, bicep, elbow, wrist, inseam_ankle, inseam_floor, neck_waist, neck_floor,
     waist_floor, height, client_name, size_number, measurement_date
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
   const params = [
     neck,
@@ -105,12 +106,12 @@ measurementMaleRouter.put('/:id', (req, res) => {
   const id = req.params.id;
   const {
     neck,
-    shoulder_length,            
+    shoulder_length,
     arm_length,
     across_front,
     chest_circumference,
     waist,
-    hip_circumference,  
+    hip_circumference,
     total_rise,
     thigh,
     knee,
@@ -131,47 +132,45 @@ measurementMaleRouter.put('/:id', (req, res) => {
   } = req.body;
 
   const sql = `UPDATE MaleMeasurement SET
-    neck = ?, shoulder_length = ?, arm_length = ?, across_front = ?, chest_circumference = ?, waist = ?, 
+    neck = ?, shoulder_length = ?, arm_length = ?, across_front = ?, chest_circumference = ?, waist = ?,
     hip_circumference = ?, total_rise = ?, thigh = ?, knee = ?, calf = ?, ankle = ?, bicep = ?, elbow = ?, wrist = ?, inseam_ankle = ?, inseam_floor = ?, neck_waist = ?, neck_floor = ?,
     waist_floor = ?, height = ?, client_name = ?, size_number = ?, measurement_date = ?
     WHERE id = ?`;
 
-    const params = [
-        neck,
-        shoulder_length,
-        arm_length,
-        across_front,
-        chest_circumference,
-        waist,
-        hip_circumference,
-        total_rise,     
-        thigh,
-        knee,
-        calf,
-        ankle,
-        bicep,
-        elbow,
-        wrist,
-        inseam_ankle,
-        inseam_floor,
-        neck_waist,
-        neck_floor,
-        waist_floor,
-        height,
-        client_name,
-        size_number,
-        measurement_date,
-        id
-    ];
+  const params = [
+    neck,
+    shoulder_length,
+    arm_length,
+    across_front,
+    chest_circumference,
+    waist,
+    hip_circumference,
+    total_rise,
+    thigh,
+    knee,
+    calf,
+    ankle,
+    bicep,
+    elbow,
+    wrist,
+    inseam_ankle,
+    inseam_floor,
+    neck_waist,
+    neck_floor,
+    waist_floor,
+    height,
+    client_name,
+    size_number,
+    measurement_date,
+    id
+  ];
 
   db.run(sql, params, function(err) {
     if (err) {
       res.status(500).json({ error: err.message });
-    }       
-    else if (this.changes === 0) {
+    } else if (this.changes === 0) {
       res.status(404).json({ error: 'Measurement not found' });
-    }
-    else {
+    } else {
       res.json({ message: 'Measurement updated successfully' });
     }
   });
@@ -179,18 +178,16 @@ measurementMaleRouter.put('/:id', (req, res) => {
 
 // DELETE /api/measurements/male/:id - Delete a male measurement
 measurementMaleRouter.delete('/:id', (req, res) => {
-  const id = req.params.id;     
-    db.run('DELETE FROM MaleMeasurement WHERE id = ?', [id], function(err) {
+  const id = req.params.id;
+  db.run('DELETE FROM MaleMeasurement WHERE id = ?', [id], function(err) {
     if (err) {
       res.status(500).json({ error: err.message });
-    }
-    else if (this.changes === 0) {
+    } else if (this.changes === 0) {
       res.status(404).json({ error: 'Measurement not found' });
-    }
-    else {
+    } else {
       res.json({ message: 'Measurement deleted successfully' });
     }
-  } );
+  });
 });
 
 module.exports = measurementMaleRouter;
