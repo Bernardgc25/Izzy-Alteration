@@ -562,13 +562,13 @@
     │  │     └─ male
     │  │        ├─ measurement-male-database.sqlite
     │  │        ├─ measurement-male-migration.js
-    │  │        ├─ measurement-male-routes.js
-    │  │        └─ seed-measurement-male.js
+    │  │        └─ measurement-male-routes.js
     │  ├─ package-lock.json
     │  ├─ package.json
     │  ├─ server.js
     │  └─ test
     │     ├─ measurement-male-instruction-test.md
+    │     ├─ measurement-male-seed.js
     │     ├─ measurement-male-test.sqlite
     │     └─ measurement-male.test.js
     └─ frontend
@@ -682,6 +682,7 @@
                 ├─ measurement-Manager.test.js
                 ├─ measurement-Validator.test.js
                 └─ measurement-ViewHandler.test.js
+
 
 ]
 
@@ -804,12 +805,24 @@
 
 **ERROR/ISSUE:**
 [
-    none
+    bernard@ubuntu:~/Documents/Izzy-Alteration/backend$ node test/seed-measurement-male.js
+    node:internal/modules/cjs/loader:1210
+    throw err;
+    ^
+
+    Error: Cannot find module '/home/bernard/Documents/Izzy-Alteration/backend/test/seed-measurement-male.js'
+        at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+        at Module._load (node:internal/modules/cjs/loader:1038:27)
+        at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+        at node:internal/main/run_main_module:28:49 {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: []
+    }
+
+    Node.js v20.20.2
 ]
 
 **REQUEST:**
 [
-  1. create a ne file: seed-measurement-male.js
-  2. this file is a population script that seeds the file measurement-male-test.sqlite database with sample records
-  3. add instruction on how to run the test 
+    fix the issue
 ]

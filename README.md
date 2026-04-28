@@ -13,13 +13,13 @@ Izzy-Alteration
 │  │     └─ male
 │  │        ├─ measurement-male-database.sqlite
 │  │        ├─ measurement-male-migration.js
-│  │        ├─ measurement-male-routes.js
-│  │        └─ seed-measurement-male.js
+│  │        └─ measurement-male-routes.js
 │  ├─ package-lock.json
 │  ├─ package.json
 │  ├─ server.js
 │  └─ test
 │     ├─ measurement-male-instruction-test.md
+│     ├─ measurement-male-seed.js
 │     ├─ measurement-male-test.sqlite
 │     └─ measurement-male.test.js
 └─ frontend
