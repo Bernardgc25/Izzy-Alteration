@@ -1,11 +1,29 @@
 
 ```
 Izzy-Alteration
-├─ about
-│  ├─ deepseek
-│  │  └─ alteration-female.txt
-│  └─ measurements-about.txt
+├─ backend
+│  ├─ api.js
+│  ├─ backend-deepseek-prompt
+│  │  ├─ create-test-on-route.md
+│  │  └─ debugging-backend.md
+│  ├─ features
+│  │  ├─ alteration
+│  │  └─ measurement
+│  │     ├─ female
+│  │     └─ male
+│  │        ├─ measurement-male-database.sqlite
+│  │        ├─ measurement-male-migration.js
+│  │        └─ measurement-male-routes.js
+│  ├─ package-lock.json
+│  ├─ package.json
+│  ├─ server.js
+│  └─ test
+│     ├─ measurement-male-instruction-test.md
+│     ├─ measurement-male-seed.js
+│     ├─ measurement-male-test.sqlite
+│     └─ measurement-male.test.js
 └─ frontend
+   ├─ frontend-deepseek-prompt
    ├─ package-lock.json
    ├─ package.json
    ├─ pages
@@ -15,6 +33,7 @@ Izzy-Alteration
    │  │  ├─ alteration-about
    │  │  │  ├─ (debug)alteration-modules.md
    │  │  │  ├─ alteration(how-the-program-works).md
+   │  │  │  ├─ alteration-female.txt
    │  │  │  ├─ alteration-functionality-prompt.md
    │  │  │  ├─ alteration-modules.md
    │  │  │  └─ alteration-responsive-page.md
@@ -43,7 +62,8 @@ Izzy-Alteration
    │  │  │  ├─ (refactor)measurement-modules.md
    │  │  │  ├─ measurement(how-the-program-works).md
    │  │  │  ├─ measurement-functionality-prompt.md
-   │  │  │  └─ measurement-modules.md
+   │  │  │  ├─ measurement-modules.md
+   │  │  │  └─ measurements-about.txt
    │  │  ├─ measurement-modules
    │  │  │  ├─ measurement-DataMaps.js
    │  │  │  ├─ measurement-Main.js
