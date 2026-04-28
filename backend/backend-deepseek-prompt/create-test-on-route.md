@@ -482,11 +482,41 @@
 
 **ERROR/ISSUE:**
 [
+    bernard@ubuntu:~/Documents/Izzy-Alteration/backend$ npm test
 
+    > backend@1.0.0 test
+    > mocha test/**/*.test.js
+
+
+
+    Male Measurement CRUD Operations
+        1) "before all" hook for "should CREATE a new male measurement via POST /api/measurements/male"
+
+
+    0 passing (33ms)
+    1 failing
+
+    1) Male Measurement CRUD Operations
+        "before all" hook for "should CREATE a new male measurement via POST /api/measurements/male":
+        Cannot find module '../routes/measurement-male-route'
+    Require stack:
+    - /home/bernard/Documents/Izzy-Alteration/backend/test/measurement-male.test.js
+    - /home/bernard/Documents/Izzy-Alteration/backend/node_modules/mocha/lib/nodejs/esm-utils.js
+    - /home/bernard/Documents/Izzy-Alteration/backend/node_modules/mocha/lib/mocha.js
+    - /home/bernard/Documents/Izzy-Alteration/backend/node_modules/mocha/lib/cli/one-and-dones.js
+    - /home/bernard/Documents/Izzy-Alteration/backend/node_modules/mocha/lib/cli/options.js
+    - /home/bernard/Documents/Izzy-Alteration/backend/node_modules/mocha/bin/mocha.js
+    Error: Cannot find module '../routes/measurement-male-route'
+    Require stack:
+    - /home/bernard/Documents/Izzy-Alteration/backend/test/measurement-male.test.js
+        at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+        at Module._load (node:internal/modules/cjs/loader:1038:27)
+        at Module.require (node:internal/modules/cjs/loader:1289:19)
+        at require (node:internal/modules/helpers:182:18)
+        at Context.<anonymous> (test/measurement-male.test.js:109:29)
 ]
 
 **REQUEST:**
 [
-    1. create a mocha test that validates all CRUD operations in File: measurement-male-route.js
-    2. provide instruction on how to use the test
+  fix the issue
 ]

@@ -106,7 +106,7 @@ describe('Male Measurement CRUD Operations', () => {
     process.env.TEST_DATABASE = testDbPath;
 
     // 3. NOW load the router (it will open the test database and see the table)
-    measurementMaleRouter = require('../routes/measurement-male-route');
+    measurementMaleRouter = require('../features/measurement/male/measurement-male-routes');
 
     // 4. Set up the Express app
     const apiRouter = express.Router();
