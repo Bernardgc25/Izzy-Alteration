@@ -2,17 +2,26 @@
 ```
 Izzy-Alteration
 ├─ backend
-│  ├─ backend-debugging.md
-│  ├─ database.sqlite
-│  ├─ migration.js
+│  ├─ api.js
+│  ├─ backend-deepseek-prompt
+│  │  ├─ create-test-on-route.md
+│  │  └─ debugging-backend.md
+│  ├─ features
+│  │  ├─ alteration
+│  │  └─ measurement
+│  │     ├─ female
+│  │     └─ male
+│  │        ├─ measurement-male-database.sqlite
+│  │        ├─ measurement-male-migration.js
+│  │        ├─ measurement-male-routes.js
+│  │        └─ seed-measurement-male.js
 │  ├─ package-lock.json
 │  ├─ package.json
-│  ├─ routes
-│  │  ├─ api.js
-│  │  └─ measurement-male-route.js
 │  ├─ server.js
 │  └─ test
-│     └─ measurement-male.test.js.js
+│     ├─ measurement-male-instruction-test.md
+│     ├─ measurement-male-test.sqlite
+│     └─ measurement-male.test.js
 └─ frontend
    ├─ frontend-deepseek-prompt
    ├─ package-lock.json
