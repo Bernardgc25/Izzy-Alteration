@@ -4,7 +4,7 @@ const errorhandler = require('errorhandler');
 const express = require('express');
 const morgan = require('morgan');
 
-const apiRouter = require('./routes/api.js');
+const apiRouter = require('./api');
 
 const app = express();
 const PORT = process.env.PORT || 3000;

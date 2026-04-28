@@ -1,6 +1,6 @@
 const sqlite3 = require('sqlite3');
 
-const db = new sqlite3.Database('./database.sqlite');
+const db = new sqlite3.Database('./measurement-male-database.sqlite');
 
 db.serialize(() => {
   // Create measurement male table

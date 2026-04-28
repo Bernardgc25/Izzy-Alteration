@@ -1,5 +1,5 @@
 const express = require('express');
-const measurementMaleRouter = require('./routes/measurement-male-route'); // import the male measurement router
+const measurementMaleRouter = require('./features/measurement/male/measurement-male-routes'); // import the male measurement router
 
 const apiRouter = express.Router();
 
