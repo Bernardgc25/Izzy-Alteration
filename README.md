@@ -30,8 +30,8 @@ Izzy-Alteration
 │        ├─ Instruction(measurement-male-test).md
 │        ├─ female
 │        │  ├─ Instruction(measurement-female-test).md
+│        │  ├─ measurement-female-seed-test.sqlite
 │        │  ├─ measurement-female-seed.js
-│        │  ├─ measurement-female-test.sqlite
 │        │  └─ measurement-female.test.js
 │        └─ male
 │           ├─ measurement-male-seed.js

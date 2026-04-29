@@ -1,4 +1,11 @@
+// =============================================================================
 // File: backend/test/measurement/female/measurement-female.test.js
+// HOW TO RUN:
+//   From the project root, go to backend directory and execute:
+//       npm run test:female
+// =============================================================================
+
+
 
 const request = require('supertest');
 const { expect } = require('chai');
@@ -10,7 +17,7 @@ const express = require('express');
 // -----------------------------------------------------------------------------
 // Test configuration
 // -----------------------------------------------------------------------------
-const TEST_DB_FILE = path.join(__dirname, 'measurement-female-test.sqlite');
+const TEST_DB_FILE = path.join(__dirname, 'measurement-female-seed-test.sqlite');
 
 // -----------------------------------------------------------------------------
 // Helper: run migration SQL on the test database
