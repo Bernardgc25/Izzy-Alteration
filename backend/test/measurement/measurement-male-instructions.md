@@ -17,7 +17,8 @@ cd Izzy-Alteration/backend
 
 # Step 2:  
 # run test/measurement-male-seed.js: 
-node test/measurement-male-seed.js
+node test/measurement/male/measurement-male-seed.js
 
 # Step 3: 
 go to DB browser for SQlite and open the file: measurement-male-test.sqlite
+the database should be filled out with data 
