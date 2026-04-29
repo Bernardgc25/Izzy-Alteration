@@ -523,12 +523,9 @@
   │  ├─ api.js
   │  ├─ backend-deepseek-prompt
   │  │  ├─ create-test-on-route.md
-  │  │  ├─ debugging-backend.md
-  │  │  ├─ features-measurement-routes-migration.md
-  │  │  └─ measurement-female-routes-migration-test.md
+  │  │  └─ debugging-backend.md
   │  ├─ features
   │  │  └─ measurement
-  │  │     ├─ Instruction(migration script).md
   │  │     ├─ female
   │  │     │  ├─ measurement-female-database.sqlite
   │  │     │  ├─ measurement-female-migration.js
@@ -544,15 +541,11 @@
   │  ├─ server.js
   │  └─ test
   │     └─ measurement
-  │        ├─ Instruction(measurement-male-test).md
-  │        ├─ female
+  │        ├─ male
   │        │  ├─ measurement-male-seed.js
-  │        │  ├─ measurement-male-test
+  │        │  ├─ measurement-male-test.sqlite
   │        │  └─ measurement-male.test.js
-  │        └─ male
-  │           ├─ measurement-male-seed.js
-  │           ├─ measurement-male-test.sqlite
-  │           └─ measurement-male.test.js
+  │        └─ measurement-male-instructions.md
   └─ frontend
     ├─ package-lock.json
     ├─ package.json
@@ -696,6 +689,5 @@
 **REQUEST:**
 [
   1. add mocha test cases for measurement-female-routes.js and measurement-female-migration.js 
-  2. combine them into a single file named measurement-female.test.js and place it in test/measurement/female/measurement-female.test.js
-  3. add instructions on how to run the tests 
+  2. combine them into a single file named measurement-female.test.js
 ]

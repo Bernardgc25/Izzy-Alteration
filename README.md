@@ -5,9 +5,12 @@ Izzy-Alteration
 │  ├─ api.js
 │  ├─ backend-deepseek-prompt
 │  │  ├─ create-test-on-route.md
-│  │  └─ debugging-backend.md
+│  │  ├─ debugging-backend.md
+│  │  ├─ features-measurement-routes-migration.md
+│  │  └─ measurement-female-routes-migration-test.md
 │  ├─ features
 │  │  └─ measurement
+│  │     ├─ Instruction(migration script).md
 │  │     ├─ female
 │  │     │  ├─ measurement-female-database.sqlite
 │  │     │  ├─ measurement-female-migration.js
@@ -23,11 +26,16 @@ Izzy-Alteration
 │  ├─ server.js
 │  └─ test
 │     └─ measurement
-│        ├─ male
-│        │  ├─ measurement-male-seed.js
-│        │  ├─ measurement-male-test.sqlite
-│        │  └─ measurement-male.test.js
-│        └─ measurement-male-instructions.md
+│        ├─ Instruction(measurement-male-test).md
+│        ├─ female
+│        │  ├─ measurement-female-seed.js
+│        │  ├─ measurement-female-test
+│        │  ├─ measurement-female-test.sqlite
+│        │  └─ measurement-female.test.js
+│        └─ male
+│           ├─ measurement-male-seed.js
+│           ├─ measurement-male-test.sqlite
+│           └─ measurement-male.test.js
 └─ frontend
    ├─ package-lock.json
    ├─ package.json
