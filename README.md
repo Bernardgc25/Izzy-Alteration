@@ -18,10 +18,14 @@ Izzy-Alteration
 │  ├─ package.json
 │  ├─ server.js
 │  └─ test
-│     ├─ measurement-male-instruction-test.md
-│     ├─ measurement-male-seed.js
-│     ├─ measurement-male-test.sqlite
-│     └─ measurement-male.test.js
+│     ├─ alteration
+│     └─ measurement
+│        ├─ female
+│        ├─ male
+│        │  ├─ measurement-male-seed.js
+│        │  ├─ measurement-male-test.sqlite
+│        │  └─ measurement-male.test.js
+│        └─ measurement-male-instructions.md
 └─ frontend
    ├─ frontend-deepseek-prompt
    ├─ package-lock.json
