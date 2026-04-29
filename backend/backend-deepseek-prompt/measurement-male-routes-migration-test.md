@@ -333,8 +333,7 @@
   │  │  ├─ create-test-on-route.md
   │  │  ├─ debugging-backend.md
   │  │  ├─ features-measurement-routes-migration.md
-  │  │  ├─ measurement-female-routes-migration-test.md
-  │  │  └─ measurement-male-routes-migration-test.md
+  │  │  └─ measurement-female-routes-migration-test.md
   │  ├─ features
   │  │  └─ measurement
   │  │     ├─ Instruction(migration script).md
@@ -355,9 +354,7 @@
   │     └─ measurement
   │        ├─ Instruction(measurement-male-test).md
   │        ├─ female
-  │        │  ├─ Instruction(measurement-female-test).md
   │        │  ├─ measurement-female-seed.js
-  │        │  ├─ measurement-female-test.sqlite
   │        │  └─ measurement-female.test.js
   │        └─ male
   │           ├─ measurement-male-seed.js
@@ -473,7 +470,6 @@
               ├─ measurement-Manager.test.js
               ├─ measurement-Validator.test.js
               └─ measurement-ViewHandler.test.js
-
 ]
 
 **CODE 6 - File: measurement-female.test.js**
@@ -951,7 +947,276 @@
 
 **CODE 7 - File: measurement-female-seed.js**
 
+**CODE 8 - File: measurement-male-routes.js**
+[
+  const express = require('express');
+  const sqlite3 = require('sqlite3');
+  const db = new sqlite3.Database(process.env.TEST_DATABASE || './measurement-male-database.sqlite');
 
+  const measurementMaleRouter = express.Router();
+
+  // GET /api/measurements/male - Get all male measurements
+  measurementMaleRouter.get('/', (req, res) => {
+    db.all('SELECT * FROM MaleMeasurement', (err, rows) => {
+      if (err) {
+        res.status(500).json({ error: err.message });
+      } else {
+        res.json(rows);
+      }
+    });
+  });
+
+  // GET /api/measurements/male/:id - Get a specific male measurement by ID
+  measurementMaleRouter.get('/:id', (req, res) => {
+    const id = req.params.id;
+    db.get('SELECT * FROM MaleMeasurement WHERE id = ?', [id], (err, row) => {
+      if (err) {
+        res.status(500).json({ error: err.message });
+      } else if (row) {
+        res.json(row);
+      } else {
+        res.status(404).json({ error: 'Measurement not found' });
+      }
+    });
+  });
+
+  // POST /api/measurements/male - Create a new male measurement
+  measurementMaleRouter.post('/', (req, res) => {
+    const {
+      neck,                 // A
+      shoulder_length,      // B
+      arm_length,           // C
+      across_front,         // D  
+      chest_circumference,  // E
+      waist,                // F
+      hip_circumference,    // G
+      total_rise,           // H
+      thigh,                // I
+      knee,                 // J
+      calf,                 // K
+      ankle,                // L
+      bicep,                // M
+      elbow,                // N
+      wrist,                // O
+      inseam_ankle,         // P
+      inseam_floor,         // Q
+      neck_waist,           // R
+      neck_floor,           // S
+      waist_floor,          // T
+      height,               // U
+      client_name,
+      size_number,
+      measurement_date
+    } = req.body;
+
+    // Fixed: now has 24 placeholders (one for each column)
+    const sql = `INSERT INTO MaleMeasurement (
+      neck, shoulder_length, arm_length, across_front, chest_circumference, waist, hip_circumference, total_rise,
+      thigh, knee, calf, ankle, bicep, elbow, wrist, inseam_ankle, inseam_floor, neck_waist, neck_floor,
+      waist_floor, height, client_name, size_number, measurement_date
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+    const params = [
+      neck,                 // A
+      shoulder_length,      // B
+      arm_length,           // C
+      across_front,         // D  
+      chest_circumference,  // E
+      waist,                // F
+      hip_circumference,    // G
+      total_rise,           // H
+      thigh,                // I
+      knee,                 // J
+      calf,                 // K
+      ankle,                // L
+      bicep,                // M
+      elbow,                // N
+      wrist,                // O
+      inseam_ankle,         // P
+      inseam_floor,         // Q
+      neck_waist,           // R
+      neck_floor,           // S
+      waist_floor,          // T
+      height,               // U
+      client_name,
+      size_number,
+      measurement_date
+    ];
+
+    db.run(sql, params, function(err) {
+      if (err) {
+        res.status(500).json({ error: err.message });
+      } else {
+        res.status(201).json({ id: this.lastID });
+      }
+    });
+  });
+
+  // PUT /api/measurements/male/:id - Update an existing male measurement
+  measurementMaleRouter.put('/:id', (req, res) => {
+    const id = req.params.id;
+    const {
+      neck,                 // A
+      shoulder_length,      // B
+      arm_length,           // C
+      across_front,         // D  
+      chest_circumference,  // E
+      waist,                // F
+      hip_circumference,    // G
+      total_rise,           // H
+      thigh,                // I
+      knee,                 // J
+      calf,                 // K
+      ankle,                // L
+      bicep,                // M
+      elbow,                // N
+      wrist,                // O
+      inseam_ankle,         // P
+      inseam_floor,         // Q
+      neck_waist,           // R
+      neck_floor,           // S
+      waist_floor,          // T
+      height,               // U
+      client_name,
+      size_number,
+      measurement_date
+    } = req.body;
+
+    const sql = `UPDATE MaleMeasurement SET
+      neck = ?, shoulder_length = ?, arm_length = ?, across_front = ?, chest_circumference = ?, waist = ?,
+      hip_circumference = ?, total_rise = ?, thigh = ?, knee = ?, calf = ?, ankle = ?, bicep = ?, elbow = ?, wrist = ?, inseam_ankle = ?, inseam_floor = ?, neck_waist = ?, neck_floor = ?,
+      waist_floor = ?, height = ?, client_name = ?, size_number = ?, measurement_date = ?
+      WHERE id = ?`;
+
+    const params = [
+      neck,                 // A
+      shoulder_length,      // B
+      arm_length,           // C
+      across_front,         // D  
+      chest_circumference,  // E
+      waist,                // F
+      hip_circumference,    // G
+      total_rise,           // H
+      thigh,                // I
+      knee,                 // J
+      calf,                 // K
+      ankle,                // L
+      bicep,                // M
+      elbow,                // N
+      wrist,                // O
+      inseam_ankle,         // P
+      inseam_floor,         // Q
+      neck_waist,           // R
+      neck_floor,           // S
+      waist_floor,          // T
+      height,               // U
+      client_name,
+      size_number,
+      measurement_date,
+      id
+    ];
+
+    db.run(sql, params, function(err) {
+      if (err) {
+        res.status(500).json({ error: err.message });
+      } else if (this.changes === 0) {
+        res.status(404).json({ error: 'Measurement not found' });
+      } else {
+        res.json({ message: 'Measurement updated successfully' });
+      }
+    });
+  });
+
+  // DELETE /api/measurements/male/:id - Delete a male measurement
+  measurementMaleRouter.delete('/:id', (req, res) => {
+    const id = req.params.id;
+    db.run('DELETE FROM MaleMeasurement WHERE id = ?', [id], function(err) {
+      if (err) {
+        res.status(500).json({ error: err.message });
+      } else if (this.changes === 0) {
+        res.status(404).json({ error: 'Measurement not found' });
+      } else {
+        res.json({ message: 'Measurement deleted successfully' });
+      }
+    });
+  });
+
+  module.exports = measurementMaleRouter;
+]
+
+**CODE 9 - File: measurement-male-migration.js**
+[
+  const sqlite3 = require('sqlite3');
+  const path = require('path');
+
+  // Use absolute path to avoid directory confusion
+  const dbPath = path.resolve(__dirname, 'measurement-male-database.sqlite');
+  const db = new sqlite3.Database(dbPath);
+
+  db.serialize(() => {
+    // Create table
+    db.run(`CREATE TABLE IF NOT EXISTS MaleMeasurement (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      neck DECIMAL(5,2),                    -- A
+      shoulder_length DECIMAL(5,2),         -- B
+      arm_length DECIMAL(5,2),              -- C
+      across_front DECIMAL(5,2),            -- D
+      chest_circumference DECIMAL(5,2),     -- E
+      waist DECIMAL(5,2),                   -- F
+      hip_circumference DECIMAL(5,2),       -- G
+      total_rise DECIMAL(5,2),              -- H
+      thigh DECIMAL(5,2),                   -- I
+      knee DECIMAL(5,2),                    -- J    
+      calf DECIMAL(5,2),                    -- K 
+      ankle DECIMAL(5,2),                   -- L  
+      bicep DECIMAL(5,2),                   -- M
+      elbow DECIMAL(5,2),                   -- N
+      wrist DECIMAL(5,2),                   -- O
+      inseam_ankle DECIMAL(5,2),            -- P
+      inseam_floor DECIMAL(5,2),            -- Q
+      neck_waist DECIMAL(5,2),              -- R
+      neck_floor DECIMAL(5,2),              -- S
+      waist_floor DECIMAL(5,2),             -- T
+      height DECIMAL(5,2),                  -- U  
+      client_name TEXT NOT NULL,            
+      size_number TEXT,                       
+      measurement_date DATE NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`, (err) => {
+      if (err) {
+        console.error('❌ Error creating MaleMeasurement table:', err.message);
+      } else {
+        console.log('✅ MaleMeasurement table ready.');
+      }
+    });
+
+    // Create indexes
+    ['client_name', 'measurement_date', 'size_number'].forEach(field => {
+      db.run(`CREATE INDEX IF NOT EXISTS idx_malemeasurement_${field} ON MaleMeasurement(${field})`, (err) => {
+        if (err) console.error(`❌ Index idx_malemeasurement_${field} failed:`, err.message);
+        else console.log(`✅ Index idx_malemeasurement_${field} created.`);
+      });
+    });
+
+    // Create trigger for auto-updating timestamp
+    db.run(`CREATE TRIGGER IF NOT EXISTS update_malemeasurement_timestamp 
+      AFTER UPDATE ON MaleMeasurement
+      BEGIN
+        UPDATE MaleMeasurement SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+      END`, (err) => {
+      if (err) console.error('❌ Trigger creation failed:', err.message);
+      else console.log('✅ Trigger update_malemeasurement_timestamp created.');
+    });
+  });
+
+  db.close((err) => {
+    if (err) console.error('❌ Error closing database:', err.message);
+    else console.log('🔒 Database connection closed.');
+  });
+]
+
+**CODE 10 - File: measurement-male.test**
 
 **ERROR/ISSUE:**
 [
@@ -960,8 +1225,10 @@
 
 **REQUEST:**
 [
-  1. create a filename:measurement-female-seed.js
-  2. (measurement-female-seed.js) will populate (measurement-female-test.sqlite) with sample data.
-  3. create a condition that if entire data in database is deleted then (id INTEGER PRIMARY KEY AUTOINCREMENT) will restart to 0
-  4. add instruction how to run it 
+  1. create mocha test cases for measurement-male-routes.js and measurement-male-migration.js, and combine them into a single file named measurement-male.test.js  
+  2. implement the test cases to cover all CRUD operations in measurement-male-routes.js and ensure the database schema is correctly set up by measurement-male-migration.js
+  3. add supertest to test the API endpoints defined in measurement-male-routes.js  
+  4. ensure that the test cases are comprehensive and cover edge cases, such as invalid input and non-existent records
+  5. implement the tests similarly to the measurement-female.test.js file, ensuring consistency in testing style and structure
+  6. add instruction on how to run the tests
 ]

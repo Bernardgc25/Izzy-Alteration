@@ -7,7 +7,8 @@ Izzy-Alteration
 │  │  ├─ create-test-on-route.md
 │  │  ├─ debugging-backend.md
 │  │  ├─ features-measurement-routes-migration.md
-│  │  └─ measurement-female-routes-migration-test.md
+│  │  ├─ measurement-female-routes-migration-test.md
+│  │  └─ measurement-male-routes-migration-test.md
 │  ├─ features
 │  │  └─ measurement
 │  │     ├─ Instruction(migration script).md
@@ -28,8 +29,8 @@ Izzy-Alteration
 │     └─ measurement
 │        ├─ Instruction(measurement-male-test).md
 │        ├─ female
+│        │  ├─ Instruction(measurement-female-test).md
 │        │  ├─ measurement-female-seed.js
-│        │  ├─ measurement-female-test
 │        │  ├─ measurement-female-test.sqlite
 │        │  └─ measurement-female.test.js
 │        └─ male
