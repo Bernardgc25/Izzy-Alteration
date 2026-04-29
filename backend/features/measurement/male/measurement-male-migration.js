@@ -6,29 +6,29 @@ db.serialize(() => {
   // Create measurement male table
   db.run(`CREATE TABLE IF NOT EXISTS MaleMeasurement (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    neck DECIMAL(5,2),
-    shoulder_length DECIMAL(5,2),
-    arm_length DECIMAL(5,2),
-    across_front DECIMAL(5,2),
-    chest_circumference DECIMAL(5,2),
-    waist DECIMAL(5,2),
-    hip_circumference DECIMAL(5,2),
-    total_rise DECIMAL(5,2),
-    thigh DECIMAL(5,2),
-    knee DECIMAL(5,2),
-    calf DECIMAL(5,2),
-    ankle DECIMAL(5,2),
-    bicep DECIMAL(5,2),
-    elbow DECIMAL(5,2),
-    wrist DECIMAL(5,2),
-    inseam_ankle DECIMAL(5,2),
-    inseam_floor DECIMAL(5,2),
-    neck_waist DECIMAL(5,2),
-    neck_floor DECIMAL(5,2),
-    waist_floor DECIMAL(5,2),
-    height DECIMAL(5,2),
-    client_name TEXT NOT NULL,
-    size_number TEXT,
+    neck DECIMAL(5,2),                    // A
+    shoulder_length DECIMAL(5,2),         // B
+    arm_length DECIMAL(5,2),              // C
+    across_front DECIMAL(5,2),            // D
+    chest_circumference DECIMAL(5,2),     // E
+    waist DECIMAL(5,2),                   // F
+    hip_circumference DECIMAL(5,2),       // G
+    total_rise DECIMAL(5,2),              // H
+    thigh DECIMAL(5,2),                   // I
+    knee DECIMAL(5,2),                    // J    
+    calf DECIMAL(5,2),                    // K 
+    ankle DECIMAL(5,2),                   // L  
+    bicep DECIMAL(5,2),                   // M
+    elbow DECIMAL(5,2),                   // N
+    wrist DECIMAL(5,2),                   // O
+    inseam_ankle DECIMAL(5,2),            // P
+    inseam_floor DECIMAL(5,2),            // Q
+    neck_waist DECIMAL(5,2),              // R
+    neck_floor DECIMAL(5,2),              // S
+    waist_floor DECIMAL(5,2),             // T
+    height DECIMAL(5,2),                  // U  
+    client_name TEXT NOT NULL,            
+    size_number TEXT,                       
     measurement_date DATE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

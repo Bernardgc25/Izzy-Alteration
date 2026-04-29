@@ -7,27 +7,28 @@ Izzy-Alteration
 │  │  ├─ create-test-on-route.md
 │  │  └─ debugging-backend.md
 │  ├─ features
-│  │  ├─ alteration
 │  │  └─ measurement
 │  │     ├─ female
+│  │     │  ├─ measurement-female-database.sqlite
+│  │     │  ├─ measurement-female-migration.js
+│  │     │  └─ measurement-female-routes.js
 │  │     └─ male
 │  │        ├─ measurement-male-database.sqlite
 │  │        ├─ measurement-male-migration.js
 │  │        └─ measurement-male-routes.js
+│  ├─ measurement-female-database.sqlite
+│  ├─ measurement-male-database.sqlite
 │  ├─ package-lock.json
 │  ├─ package.json
 │  ├─ server.js
 │  └─ test
-│     ├─ alteration
 │     └─ measurement
-│        ├─ female
 │        ├─ male
 │        │  ├─ measurement-male-seed.js
 │        │  ├─ measurement-male-test.sqlite
 │        │  └─ measurement-male.test.js
 │        └─ measurement-male-instructions.md
 └─ frontend
-   ├─ frontend-deepseek-prompt
    ├─ package-lock.json
    ├─ package.json
    ├─ pages

@@ -32,27 +32,27 @@ measurementMaleRouter.get('/:id', (req, res) => {
 // POST /api/measurements/male - Create a new male measurement
 measurementMaleRouter.post('/', (req, res) => {
   const {
-    neck,
-    shoulder_length,
-    arm_length,
-    across_front,
-    chest_circumference,
-    waist,
-    hip_circumference,
-    total_rise,
-    thigh,
-    knee,
-    calf,
-    ankle,
-    bicep,
-    elbow,
-    wrist,
-    inseam_ankle,
-    inseam_floor,
-    neck_waist,
-    neck_floor,
-    waist_floor,
-    height,
+    neck,                 // A
+    shoulder_length,      // B
+    arm_length,           // C
+    across_front,         // D  
+    chest_circumference,  // E
+    waist,                // F
+    hip_circumference,    // G
+    total_rise,           // H
+    thigh,                // I
+    knee,                 // J
+    calf,                 // K
+    ankle,                // L
+    bicep,                // M
+    elbow,                // N
+    wrist,                // O
+    inseam_ankle,         // P
+    inseam_floor,         // Q
+    neck_waist,           // R
+    neck_floor,           // S
+    waist_floor,          // T
+    height,               // U
     client_name,
     size_number,
     measurement_date
@@ -66,27 +66,27 @@ measurementMaleRouter.post('/', (req, res) => {
   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
   const params = [
-    neck,
-    shoulder_length,
-    arm_length,
-    across_front,
-    chest_circumference,
-    waist,
-    hip_circumference,
-    total_rise,
-    thigh,
-    knee,
-    calf,
-    ankle,
-    bicep,
-    elbow,
-    wrist,
-    inseam_ankle,
-    inseam_floor,
-    neck_waist,
-    neck_floor,
-    waist_floor,
-    height,
+    neck,                 // A
+    shoulder_length,      // B
+    arm_length,           // C
+    across_front,         // D  
+    chest_circumference,  // E
+    waist,                // F
+    hip_circumference,    // G
+    total_rise,           // H
+    thigh,                // I
+    knee,                 // J
+    calf,                 // K
+    ankle,                // L
+    bicep,                // M
+    elbow,                // N
+    wrist,                // O
+    inseam_ankle,         // P
+    inseam_floor,         // Q
+    neck_waist,           // R
+    neck_floor,           // S
+    waist_floor,          // T
+    height,               // U
     client_name,
     size_number,
     measurement_date
@@ -105,27 +105,27 @@ measurementMaleRouter.post('/', (req, res) => {
 measurementMaleRouter.put('/:id', (req, res) => {
   const id = req.params.id;
   const {
-    neck,
-    shoulder_length,
-    arm_length,
-    across_front,
-    chest_circumference,
-    waist,
-    hip_circumference,
-    total_rise,
-    thigh,
-    knee,
-    calf,
-    ankle,
-    bicep,
-    elbow,
-    wrist,
-    inseam_ankle,
-    inseam_floor,
-    neck_waist,
-    neck_floor,
-    waist_floor,
-    height,
+    neck,                 // A
+    shoulder_length,      // B
+    arm_length,           // C
+    across_front,         // D  
+    chest_circumference,  // E
+    waist,                // F
+    hip_circumference,    // G
+    total_rise,           // H
+    thigh,                // I
+    knee,                 // J
+    calf,                 // K
+    ankle,                // L
+    bicep,                // M
+    elbow,                // N
+    wrist,                // O
+    inseam_ankle,         // P
+    inseam_floor,         // Q
+    neck_waist,           // R
+    neck_floor,           // S
+    waist_floor,          // T
+    height,               // U
     client_name,
     size_number,
     measurement_date
@@ -138,27 +138,27 @@ measurementMaleRouter.put('/:id', (req, res) => {
     WHERE id = ?`;
 
   const params = [
-    neck,
-    shoulder_length,
-    arm_length,
-    across_front,
-    chest_circumference,
-    waist,
-    hip_circumference,
-    total_rise,
-    thigh,
-    knee,
-    calf,
-    ankle,
-    bicep,
-    elbow,
-    wrist,
-    inseam_ankle,
-    inseam_floor,
-    neck_waist,
-    neck_floor,
-    waist_floor,
-    height,
+    neck,                 // A
+    shoulder_length,      // B
+    arm_length,           // C
+    across_front,         // D  
+    chest_circumference,  // E
+    waist,                // F
+    hip_circumference,    // G
+    total_rise,           // H
+    thigh,                // I
+    knee,                 // J
+    calf,                 // K
+    ankle,                // L
+    bicep,                // M
+    elbow,                // N
+    wrist,                // O
+    inseam_ankle,         // P
+    inseam_floor,         // Q
+    neck_waist,           // R
+    neck_floor,           // S
+    waist_floor,          // T
+    height,               // U
     client_name,
     size_number,
     measurement_date,
