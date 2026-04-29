@@ -1,9 +1,12 @@
 const sqlite3 = require('sqlite3');
+const path = require('path');
 
-const db = new sqlite3.Database('./measurement-male-database.sqlite');
+// Use absolute path to avoid directory confusion
+const dbPath = path.resolve(__dirname, 'measurement-male-database.sqlite');
+const db = new sqlite3.Database(dbPath);
 
 db.serialize(() => {
-  // Create measurement male table
+  // Create table
   db.run(`CREATE TABLE IF NOT EXISTS MaleMeasurement (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     neck DECIMAL(5,2),                    -- A
@@ -32,11 +35,20 @@ db.serialize(() => {
     measurement_date DATE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  )`);
+  )`, (err) => {
+    if (err) {
+      console.error('❌ Error creating MaleMeasurement table:', err.message);
+    } else {
+      console.log('✅ MaleMeasurement table ready.');
+    }
+  });
 
   // Create indexes
   ['client_name', 'measurement_date', 'size_number'].forEach(field => {
-    db.run(`CREATE INDEX IF NOT EXISTS idx_malemeasurement_${field} ON MaleMeasurement(${field})`);
+    db.run(`CREATE INDEX IF NOT EXISTS idx_malemeasurement_${field} ON MaleMeasurement(${field})`, (err) => {
+      if (err) console.error(`❌ Index idx_malemeasurement_${field} failed:`, err.message);
+      else console.log(`✅ Index idx_malemeasurement_${field} created.`);
+    });
   });
 
   // Create trigger for auto-updating timestamp
@@ -44,5 +56,13 @@ db.serialize(() => {
     AFTER UPDATE ON MaleMeasurement
     BEGIN
       UPDATE MaleMeasurement SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
-    END`);
+    END`, (err) => {
+    if (err) console.error('❌ Trigger creation failed:', err.message);
+    else console.log('✅ Trigger update_malemeasurement_timestamp created.');
+  });
+});
+
+db.close((err) => {
+  if (err) console.error('❌ Error closing database:', err.message);
+  else console.log('🔒 Database connection closed.');
 });
