@@ -1,42 +1,54 @@
 const sqlite3 = require('sqlite3');
+const path = require('path');
 
-const db = new sqlite3.Database('./measurement-male-database.sqlite');
+// Use absolute path to avoid directory confusion
+const dbPath = path.resolve(__dirname, 'measurement-male-database.sqlite');
+const db = new sqlite3.Database(dbPath);
 
 db.serialize(() => {
-  // Create measurement male table
+  // Create table
   db.run(`CREATE TABLE IF NOT EXISTS MaleMeasurement (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    neck DECIMAL(5,2),
-    shoulder_length DECIMAL(5,2),
-    arm_length DECIMAL(5,2),
-    across_front DECIMAL(5,2),
-    chest_circumference DECIMAL(5,2),
-    waist DECIMAL(5,2),
-    hip_circumference DECIMAL(5,2),
-    total_rise DECIMAL(5,2),
-    thigh DECIMAL(5,2),
-    knee DECIMAL(5,2),
-    calf DECIMAL(5,2),
-    ankle DECIMAL(5,2),
-    bicep DECIMAL(5,2),
-    elbow DECIMAL(5,2),
-    wrist DECIMAL(5,2),
-    inseam_ankle DECIMAL(5,2),
-    inseam_floor DECIMAL(5,2),
-    neck_waist DECIMAL(5,2),
-    neck_floor DECIMAL(5,2),
-    waist_floor DECIMAL(5,2),
-    height DECIMAL(5,2),
-    client_name TEXT NOT NULL,
-    size_number TEXT,
+    neck DECIMAL(5,2),                    -- A
+    shoulder_length DECIMAL(5,2),         -- B
+    arm_length DECIMAL(5,2),              -- C
+    across_front DECIMAL(5,2),            -- D
+    chest_circumference DECIMAL(5,2),     -- E
+    waist DECIMAL(5,2),                   -- F
+    hip_circumference DECIMAL(5,2),       -- G
+    total_rise DECIMAL(5,2),              -- H
+    thigh DECIMAL(5,2),                   -- I
+    knee DECIMAL(5,2),                    -- J    
+    calf DECIMAL(5,2),                    -- K 
+    ankle DECIMAL(5,2),                   -- L  
+    bicep DECIMAL(5,2),                   -- M
+    elbow DECIMAL(5,2),                   -- N
+    wrist DECIMAL(5,2),                   -- O
+    inseam_ankle DECIMAL(5,2),            -- P
+    inseam_floor DECIMAL(5,2),            -- Q
+    neck_waist DECIMAL(5,2),              -- R
+    neck_floor DECIMAL(5,2),              -- S
+    waist_floor DECIMAL(5,2),             -- T
+    height DECIMAL(5,2),                  -- U  
+    client_name TEXT NOT NULL,            
+    size_number TEXT,                       
     measurement_date DATE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  )`);
+  )`, (err) => {
+    if (err) {
+      console.error('❌ Error creating MaleMeasurement table:', err.message);
+    } else {
+      console.log('✅ MaleMeasurement table ready.');
+    }
+  });
 
   // Create indexes
   ['client_name', 'measurement_date', 'size_number'].forEach(field => {
-    db.run(`CREATE INDEX IF NOT EXISTS idx_malemeasurement_${field} ON MaleMeasurement(${field})`);
+    db.run(`CREATE INDEX IF NOT EXISTS idx_malemeasurement_${field} ON MaleMeasurement(${field})`, (err) => {
+      if (err) console.error(`❌ Index idx_malemeasurement_${field} failed:`, err.message);
+      else console.log(`✅ Index idx_malemeasurement_${field} created.`);
+    });
   });
 
   // Create trigger for auto-updating timestamp
@@ -44,5 +56,13 @@ db.serialize(() => {
     AFTER UPDATE ON MaleMeasurement
     BEGIN
       UPDATE MaleMeasurement SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
-    END`);
+    END`, (err) => {
+    if (err) console.error('❌ Trigger creation failed:', err.message);
+    else console.log('✅ Trigger update_malemeasurement_timestamp created.');
+  });
+});
+
+db.close((err) => {
+  if (err) console.error('❌ Error closing database:', err.message);
+  else console.log('🔒 Database connection closed.');
 });

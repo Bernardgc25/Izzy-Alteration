@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "mocha test/**/*.test.js"
+    "test": "mocha test/**/*.test.js",
+    "test:female": "mocha test/measurement/female/measurement-female.test.js --timeout 5000"
   },
   "keywords": [],
   "author": "",
