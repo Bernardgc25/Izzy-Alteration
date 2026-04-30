@@ -1,3 +1,11 @@
+// This script sets up the SQLite database for the FemaleMeasurement feature.
+// It creates the necessary table, indexes, and a trigger to automatically update 
+// the 'updated_at' timestamp on record updates.
+//
+// HOW TO RUN:
+//   from the backend directory:
+//     node features/measurement/female/measurement-female-migration.js
+
 const sqlite3 = require('sqlite3');
 const path = require('path');
 
