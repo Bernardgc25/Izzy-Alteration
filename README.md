@@ -8,7 +8,7 @@ Izzy-Alteration
 │  │  ├─ create-test-on-route.md
 │  │  ├─ debugging-backend.md
 │  │  ├─ features-measurement-routes-migration.md
-│  │  ├─ measurement-female-routes-migration-test.md
+│  │  ├─ measurement-female.md
 │  │  └─ measurement-male-routes-migration-test.md
 │  ├─ features
 │  │  └─ measurement
@@ -22,8 +22,6 @@ Izzy-Alteration
 │  │        ├─ measurement-male-database.sqlite
 │  │        ├─ measurement-male-migration.js
 │  │        └─ measurement-male-routes.js
-│  ├─ measurement-female-database.sqlite
-│  ├─ measurement-male-database.sqlite
 │  ├─ package-lock.json
 │  ├─ package.json
 │  ├─ server.js
@@ -31,9 +29,6 @@ Izzy-Alteration
 │     └─ measurement
 │        ├─ Instruction(measurement-male-test).md
 │        ├─ female
-│        │  ├─ Instruction(measurement-female-test).md
-│        │  ├─ measurement-female-seed-test.sqlite
-│        │  ├─ measurement-female-seed.js
 │        │  └─ measurement-female.test.js
 │        └─ male
 │           ├─ measurement-male-seed.js

@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha test/**/*.test.js",
-    "test:female": "mocha test/measurement/female/measurement-female.test.js --timeout 5000"
+    "test:female": "mocha test/measurement/female/measurement-female.test.js --timeout 5000",
+    "test:male": "mocha test/measurement/male/measurement-male.test.js --timeout 5000"
   },
   "keywords": [],
   "author": "",
