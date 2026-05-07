@@ -21,7 +21,8 @@ Izzy-Alteration
 │  │     └─ male
 │  │        ├─ measurement-male-database.sqlite
 │  │        ├─ measurement-male-migration.js
-│  │        └─ measurement-male-routes.js
+│  │        ├─ measurement-male-routes.js
+│  │        └─ measurement-male-seeding.js
 │  ├─ package-lock.json
 │  ├─ package.json
 │  ├─ server.js
