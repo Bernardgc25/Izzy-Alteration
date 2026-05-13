@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test Console</title>
+    <style>
+        body { font-family: monospace; padding: 20px; }
+        button { margin: 5px; padding: 10px; }
+        pre { background: #f4f4f4; padding: 10px; border-radius: 5px; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Measurement API Test Console</h1>
+    
+    <div>
+        <h2>Male Measurements</h2>
+        <button onclick="testMaleGetAll()">GET All Male</button>
+        <button onclick="testMaleGetById()">GET Male by ID (1)</button>
+        <button onclick="testMalePost()">POST New Male</button>
+        <button onclick="testMaleDelete()">DELETE Male (last created)</button>
+    </div>
+    
+    <div>
+        <h2>Female Measurements</h2>
+        <button onclick="testFemaleGetAll()">GET All Female</button>
+        <button onclick="testFemaleGetById()">GET Female by ID (1)</button>
+        <button onclick="testFemalePost()">POST New Female</button>
+        <button onclick="testFemaleDelete()">DELETE Female (last created)</button>
+    </div>
+    
+    <h2>Results:</h2>
+    <pre id="results"></pre>
+
+    <script>
+        const BASE_URL = 'http://localhost:3000/api';
+        let lastCreatedMaleId = null;
+        let lastCreatedFemaleId = null;
+        
+        function log(message, isError = false) {
+            const resultsDiv = document.getElementById('results');
+            const className = isError ? 'error' : 'success';
+            resultsDiv.innerHTML += `<div class="${className}">${message}</div>`;
+        }
+        
+        function clearLog() {
+            document.getElementById('results').innerHTML = '';
+        }
+        
+        async function testMaleGetAll() {
+            clearLog();
+            try {
+                const response = await fetch(`${BASE_URL}/measurements/male`);
+                const data = await response.json();
+                log(`✅ GET All Male: ${response.status} - Found ${data.length} records`);
+                log(JSON.stringify(data, null, 2));
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, true);
+            }
+        }
+        
+        async function testMaleGetById() {
+            clearLog();
+            try {
+                const response = await fetch(`${BASE_URL}/measurements/male/1`);
+                const data = await response.json();
+                log(`✅ GET Male ID 1: ${response.status}`);
+                log(JSON.stringify(data, null, 2));
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, true);
+            }
+        }
+        
+        async function testMalePost() {
+            clearLog();
+            try {
+                const testData = {
+                    neck: 38.5, shoulder_length: 16.5, arm_length: 60.0,
+                    across_front: 42.0, chest_circumference: 98.0,
+                    waist: 84.0, hip_circumference: 102.0,
+                    total_rise: 28.0, thigh: 58.0, knee: 37.0,
+                    calf: 36.0, ankle: 24.0, bicep: 32.0,
+                    elbow: 26.0, wrist: 18.0, inseam_ankle: 76.0,
+                    inseam_floor: 78.0, neck_waist: 44.0,
+                    neck_floor: 140.0, waist_floor: 108.0,
+                    height: 178.0, client_name: "Browser Test",
+                    size_number: "M", measurement_date: "2026-05-12"
+                };
+                
+                const response = await fetch(`${BASE_URL}/measurements/male`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(testData)
+                });
+                const data = await response.json();
+                lastCreatedMaleId = data.id;
+                log(`✅ POST Male: ${response.status} - Created ID: ${data.id}`);
+                log(JSON.stringify(data, null, 2));
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, true);
+            }
+        }
+        
+        async function testMaleDelete() {
+            if (!lastCreatedMaleId) {
+                log("⚠️ Create a record first using POST", true);
+                return;
+            }
+            clearLog();
+            try {
+                const response = await fetch(`${BASE_URL}/measurements/male/${lastCreatedMaleId}`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                log(`✅ DELETE Male ID ${lastCreatedMaleId}: ${response.status}`);
+                log(JSON.stringify(data, null, 2));
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, true);
+            }
+        }
+        
+        // Female tests follow same pattern
+        async function testFemaleGetAll() {
+            clearLog();
+            try {
+                const response = await fetch(`${BASE_URL}/measurements/female`);
+                const data = await response.json();
+                log(`✅ GET All Female: ${response.status} - Found ${data.length} records`);
+                log(JSON.stringify(data, null, 2));
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, true);
+            }
+        }
+        
+        async function testFemaleGetById() {
+            clearLog();
+            try {
+                const response = await fetch(`${BASE_URL}/measurements/female/1`);
+                const data = await response.json();
+                log(`✅ GET Female ID 1: ${response.status}`);
+                log(JSON.stringify(data, null, 2));
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, true);
+            }
+        }
+        
+        async function testFemalePost() {
+            clearLog();
+            try {
+                const testData = {
+                    neck: 35.5, shoulder_length: 14.0, arm_length: 55.0,
+                    chest_circumference: 90.0, under_bust: 80.5,
+                    waist: 70.0, hipbone_circumference: 95.0,
+                    hip_circumference: 100.0, thigh: 58.0,
+                    knee: 36.0, calf: 34.0, ankle: 22.0,
+                    bicep: 28.0, elbow: 24.0, wrist: 16.0,
+                    inseam_ankle: 72.0, inseam_floor: 74.0,
+                    neck_waist: 40.0, neck_floor: 130.0,
+                    waist_floor: 100.0, height: 165.0,
+                    client_name: "Browser Test Female",
+                    size_number: "M", measurement_date: "2026-05-12"
+                };
+                
+                const response = await fetch(`${BASE_URL}/measurements/female`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(testData)
+                });
+                const data = await response.json();
+                lastCreatedFemaleId = data.id;
+                log(`✅ POST Female: ${response.status} - Created ID: ${data.id}`);
+                log(JSON.stringify(data, null, 2));
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, true);
+            }
+        }
+        
+        async function testFemaleDelete() {
+            if (!lastCreatedFemaleId) {
+                log("⚠️ Create a record first using POST", true);
+                return;
+            }
+            clearLog();
+            try {
+                const response = await fetch(`${BASE_URL}/measurements/female/${lastCreatedFemaleId}`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                log(`✅ DELETE Female ID ${lastCreatedFemaleId}: ${response.status}`);
+                log(JSON.stringify(data, null, 2));
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, true);
+            }
+        }
+    </script>
+</body>
+</html>

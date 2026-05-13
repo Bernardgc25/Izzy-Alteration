@@ -8,8 +8,11 @@ Izzy-Alteration
 │  │  ├─ create-test-on-route.md
 │  │  ├─ debugging-backend.md
 │  │  ├─ features-measurement-routes-migration.md
+│  │  ├─ measurement-API-Postman-debug.md
+│  │  ├─ measurement-API-postman-test.md
 │  │  ├─ measurement-female.md
-│  │  └─ measurement-male-routes-migration-test.md
+│  │  ├─ measurement-male-routes-migration-test.md
+│  │  └─ measurement-male-seeding.md
 │  ├─ features
 │  │  └─ measurement
 │  │     ├─ Instruction(migration script).md
@@ -23,8 +26,15 @@ Izzy-Alteration
 │  │        ├─ measurement-male-migration.js
 │  │        ├─ measurement-male-routes.js
 │  │        └─ measurement-male-seeding.js
+│  ├─ measurement-female-database.sqlite
+│  ├─ measurement-male-database.sqlite
 │  ├─ package-lock.json
 │  ├─ package.json
+│  ├─ postman
+│  │  └─ measurment-API-test
+│  │     ├─ female-measurements-collection.json
+│  │     ├─ male-measurements-collection.json
+│  │     └─ test-api.html
 │  ├─ server.js
 │  └─ test
 │     └─ measurement
