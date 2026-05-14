@@ -13,6 +13,7 @@ Izzy-Alteration
 │  │  ├─ measurement-female.md
 │  │  ├─ measurement-male-routes-migration-test.md
 │  │  └─ measurement-male-seeding.md
+│  ├─ config
 │  ├─ features
 │  │  └─ measurement
 │  │     ├─ Instruction(migration script).md
@@ -22,12 +23,9 @@ Izzy-Alteration
 │  │     │  ├─ measurement-female-routes.js
 │  │     │  └─ measurement-female-seeding.js
 │  │     └─ male
-│  │        ├─ measurement-male-database.sqlite
 │  │        ├─ measurement-male-migration.js
 │  │        ├─ measurement-male-routes.js
 │  │        └─ measurement-male-seeding.js
-│  ├─ measurement-female-database.sqlite
-│  ├─ measurement-male-database.sqlite
 │  ├─ package-lock.json
 │  ├─ package.json
 │  ├─ postman
