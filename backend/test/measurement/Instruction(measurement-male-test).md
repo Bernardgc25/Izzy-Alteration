@@ -1,9 +1,10 @@
 # Verify if routes are working via unit test (mocha)
-# How to test all routes on Measurement-male.test.js
+# How to test all routes on both measurement-male.test.js and measurement-female.test.js
 # Step 1: go to backend folder:     
     cd Izzy-Alteration/backend
-# Step 2: run measurement-male.test.js:     
-    npm test
+# Step 2:  
+    npm run test:female
+    npm run test:male
 
 
 # test routes via HTTP url 
