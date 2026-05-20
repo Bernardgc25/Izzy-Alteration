@@ -21,31 +21,24 @@ Izzy-Alteration
 │  │     │  ├─ measurement-female-database.sqlite
 │  │     │  ├─ measurement-female-migration.js
 │  │     │  ├─ measurement-female-routes.js
-│  │     │  ├─ measurement-female-seeding.js
-│  │     │  └─ measurement-male-database.sqlite
+│  │     │  └─ measurement-female-seeding.js
 │  │     └─ male
 │  │        ├─ measurement-male-database.sqlite
 │  │        ├─ measurement-male-migration.js
 │  │        ├─ measurement-male-routes.js
 │  │        └─ measurement-male-seeding.js
-│  ├─ measurement-female-database.sqlite
 │  ├─ package-lock.json
 │  ├─ package.json
 │  ├─ postman
 │  │  └─ measurment-API-test
 │  │     ├─ female-measurements-crud-tests.postman_collection.json
-│  │     ├─ male-measurements-crud-tests.postman_collection.json
-│  │     └─ test-api.html
+│  │     └─ male-measurements-crud-tests.postman_collection.json
 │  ├─ server.js
 │  └─ test
 │     └─ measurement
-│        ├─ Instruction(measurement-male-test).md
-│        ├─ female
-│        │  └─ measurement-female.test.js
-│        └─ male
-│           ├─ measurement-male-seed.js
-│           ├─ measurement-male-test.sqlite
-│           └─ measurement-male.test.js
+│        ├─ Instruction-measurement-test.md
+│        ├─ measurement-female.test.js
+│        └─ measurement-male.test.js
 ├─ frontend
 │  ├─ package-lock.json
 │  ├─ package.json

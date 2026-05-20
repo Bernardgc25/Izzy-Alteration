@@ -774,164 +774,201 @@
 **CODE 9 - File: README.md**   
 [
     Izzy-Alteration
-    ├─ Package-list.md
-    ├─ backend
-    │  ├─ api.js
-    │  ├─ backend-deepseek-prompt
-    │  │  ├─ create-test-on-route.md
-    │  │  ├─ debugging-backend.md
-    │  │  ├─ features-measurement-routes-migration.md
-    │  │  ├─ measurement-API-Postman-debug.md
-    │  │  ├─ measurement-API-postman-test.md
-    │  │  ├─ measurement-female.md
-    │  │  ├─ measurement-male-routes-migration-test.md
-    │  │  └─ measurement-male-seeding.md
-    │  ├─ config
-    │  ├─ features
-    │  │  └─ measurement
-    │  │     ├─ Instruction(migration script).md
-    │  │     ├─ female
-    │  │     │  ├─ measurement-female-database.sqlite
-    │  │     │  ├─ measurement-female-migration.js
-    │  │     │  ├─ measurement-female-routes.js
-    │  │     │  └─ measurement-female-seeding.js
-    │  │     └─ male
-    │  │        ├─ measurement-male-database.sqlite
-    │  │        ├─ measurement-male-migration.js
-    │  │        ├─ measurement-male-routes.js
-    │  │        └─ measurement-male-seeding.js
-    │  ├─ package-lock.json
-    │  ├─ package.json
-    │  ├─ postman
-    │  │  └─ measurment-API-test
-    │  │     ├─ female-measurements-crud-tests.postman_collection.json
-    │  │     └─ male-measurements-crud-tests.postman_collection.json
-    │  ├─ server.js
-    │  └─ test
-    │     └─ measurement
-    │        ├─ Instruction(measurement-male-test).md
-    │        ├─ female
-    │        ├─ male
-    │        ├─ measurement-female.test.js
-    │        └─ measurement-male.test.js
-    ├─ frontend
-    │  ├─ package-lock.json
-    │  ├─ package.json
-    │  ├─ pages
-    │  │  ├─ account-menu.html
-    │  │  ├─ add-service.html
-    │  │  ├─ alteration-pages
-    │  │  │  ├─ alteration-about
-    │  │  │  │  ├─ (debug)alteration-modules.md
-    │  │  │  │  ├─ alteration(how-the-program-works).md
-    │  │  │  │  ├─ alteration-female.txt
-    │  │  │  │  ├─ alteration-functionality-prompt.md
-    │  │  │  │  ├─ alteration-modules.md
-    │  │  │  │  └─ alteration-responsive-page.md
-    │  │  │  ├─ alteration-female-bottom.html
-    │  │  │  ├─ alteration-female-dress.html
-    │  │  │  ├─ alteration-female-jacket.html
-    │  │  │  ├─ alteration-female-top.html
-    │  │  │  ├─ alteration-male-bottom.html
-    │  │  │  ├─ alteration-male-suits.html
-    │  │  │  ├─ alteration-male-top.html
-    │  │  │  ├─ alteration-modules
-    │  │  │  │  ├─ alteration-CartManager.js
-    │  │  │  │  ├─ alteration-DOMRenderer.js
-    │  │  │  │  ├─ alteration-DataMaps.js
-    │  │  │  │  ├─ alteration-EventManager.js
-    │  │  │  │  ├─ alteration-Main.js
-    │  │  │  │  ├─ alteration-PriceCalculator.js
-    │  │  │  │  └─ alteration-StateManager.js
-    │  │  │  └─ alteration-repair.html
-    │  │  ├─ index.html
-    │  │  ├─ login.html
-    │  │  ├─ measurement-pages
-    │  │  │  ├─ measurement-about
-    │  │  │  │  ├─ (debug)floating-window-measurement.md
-    │  │  │  │  ├─ (debug)measurement-split-modules.md
-    │  │  │  │  ├─ (refactor)measurement-modules.md
-    │  │  │  │  ├─ measurement(how-the-program-works).md
-    │  │  │  │  ├─ measurement-functionality-prompt.md
-    │  │  │  │  ├─ measurement-modules.md
-    │  │  │  │  └─ measurements-about.txt
-    │  │  │  ├─ measurement-modules
-    │  │  │  │  ├─ measurement-DataMaps.js
-    │  │  │  │  ├─ measurement-Main.js
-    │  │  │  │  ├─ measurement-Manager.js
-    │  │  │  │  ├─ measurement-Validator.js
-    │  │  │  │  └─ measurement-ViewHandler.js
-    │  │  │  ├─ measurements-female.html
-    │  │  │  ├─ measurements-male.html
-    │  │  │  └─ sample.html
-    │  │  ├─ order-history.html
-    │  │  ├─ services.html
-    │  │  └─ signup.html
-    │  ├─ public
-    │  │  ├─ css
-    │  │  │  ├─ account-menu.css
-    │  │  │  ├─ add-service.css
-    │  │  │  ├─ alteration-female.css
-    │  │  │  ├─ alteration.css
-    │  │  │  ├─ index.css
-    │  │  │  ├─ login.css
-    │  │  │  ├─ measurements.css
-    │  │  │  ├─ order-history.css
-    │  │  │  ├─ services.css
-    │  │  │  └─ signup.css
-    │  │  ├─ images
-    │  │  │  ├─ female-(chart)-tablet-mobile.png
-    │  │  │  ├─ female-back-tablet-mobile.png
-    │  │  │  ├─ female-desktop.png
-    │  │  │  ├─ female-front-tablet-mobile.png
-    │  │  │  ├─ male-(chart)-tablet-mobile.png
-    │  │  │  ├─ male-back-tablet-mobile.png
-    │  │  │  ├─ male-desktop.png
-    │  │  │  └─ male-front-tablet-mobile.png
-    │  │  └─ js
-    │  │     ├─ account.js
-    │  │     ├─ add-service.js
-    │  │     ├─ alteration-female.js
-    │  │     ├─ alteration-price-calculator.js
-    │  │     ├─ index.js
-    │  │     ├─ login.js
-    │  │     ├─ order-history.js
-    │  │     ├─ services.js
-    │  │     └─ signup.js
-    │  └─ test
-    │     ├─ TEST(how to run).md
-    │     ├─ alteration-module-tests
-    │     │  ├─ alteration-TEST(about)
-    │     │  │  ├─ (debug)alteration-test-unit.md
-    │     │  │  ├─ (refactor)alteration-test-unit.md
-    │     │  │  └─ alteration-unit-tests-prompt.md
-    │     │  └─ unit
-    │     │     ├─ alteration-CartManager.test.js
-    │     │     ├─ alteration-DOMRenderer.test.js
-    │     │     ├─ alteration-DataMaps.test.js
-    │     │     ├─ alteration-EventManager.test.js
-    │     │     ├─ alteration-Main.test.js
-    │     │     ├─ alteration-PriceCalculator.test.js
-    │     │     └─ alteration-StateManager.test.js
-    │     └─ measurement-module-tests
-    │        ├─ measurement-TEST(about)
-    │        │  ├─ (debug)measurement-test-unit.md
-    │        │  ├─ (refactor)measurement-test-unit.md
-    │        │  └─ measurement-unit-tests-prompt.md
-    │        └─ unit
-    │           ├─ measurement-DataMaps.test.js
-    │           ├─ measurement-Main.test.js
-    │           ├─ measurement-Manager.test.js
-    │           ├─ measurement-Validator.test.js
-    │           └─ measurement-ViewHandler.test.js
-    ├─ package-lock.json
-    └─ package.json
+  ├─ Package-list.md
+  ├─ backend
+  │  ├─ api.js
+  │  ├─ backend-deepseek-prompt
+  │  │  ├─ create-test-on-route.md
+  │  │  ├─ debugging-backend.md
+  │  │  ├─ features-measurement-routes-migration.md
+  │  │  ├─ measurement-API-Postman-debug.md
+  │  │  ├─ measurement-API-postman-test.md
+  │  │  ├─ measurement-female.md
+  │  │  ├─ measurement-male-routes-migration-test.md
+  │  │  └─ measurement-male-seeding.md
+  │  ├─ config
+  │  ├─ features
+  │  │  └─ measurement
+  │  │     ├─ Instruction(migration script).md
+  │  │     ├─ female
+  │  │     │  ├─ measurement-female-database.sqlite
+  │  │     │  ├─ measurement-female-migration.js
+  │  │     │  ├─ measurement-female-routes.js
+  │  │     │  └─ measurement-female-seeding.js
+  │  │     └─ male
+  │  │        ├─ measurement-male-database.sqlite
+  │  │        ├─ measurement-male-migration.js
+  │  │        ├─ measurement-male-routes.js
+  │  │        └─ measurement-male-seeding.js
+  │  ├─ package-lock.json
+  │  ├─ package.json
+  │  ├─ postman
+  │  │  └─ measurment-API-test
+  │  │     ├─ female-measurements-crud-tests.postman_collection.json
+  │  │     └─ male-measurements-crud-tests.postman_collection.json
+  │  ├─ server.js
+  │  └─ test
+  │     └─ measurement
+  │        ├─ Instruction-measurement-test.md
+  │        ├─ measurement-female.test.js
+  │        └─ measurement-male.test.js
+  ├─ frontend
+  │  ├─ package-lock.json
+  │  ├─ package.json
+  │  ├─ pages
+  │  │  ├─ account-menu.html
+  │  │  ├─ add-service.html
+  │  │  ├─ alteration-pages
+  │  │  │  ├─ alteration-about
+  │  │  │  │  ├─ (debug)alteration-modules.md
+  │  │  │  │  ├─ alteration(how-the-program-works).md
+  │  │  │  │  ├─ alteration-female.txt
+  │  │  │  │  ├─ alteration-functionality-prompt.md
+  │  │  │  │  ├─ alteration-modules.md
+  │  │  │  │  └─ alteration-responsive-page.md
+  │  │  │  ├─ alteration-female-bottom.html
+  │  │  │  ├─ alteration-female-dress.html
+  │  │  │  ├─ alteration-female-jacket.html
+  │  │  │  ├─ alteration-female-top.html
+  │  │  │  ├─ alteration-male-bottom.html
+  │  │  │  ├─ alteration-male-suits.html
+  │  │  │  ├─ alteration-male-top.html
+  │  │  │  ├─ alteration-modules
+  │  │  │  │  ├─ alteration-CartManager.js
+  │  │  │  │  ├─ alteration-DOMRenderer.js
+  │  │  │  │  ├─ alteration-DataMaps.js
+  │  │  │  │  ├─ alteration-EventManager.js
+  │  │  │  │  ├─ alteration-Main.js
+  │  │  │  │  ├─ alteration-PriceCalculator.js
+  │  │  │  │  └─ alteration-StateManager.js
+  │  │  │  └─ alteration-repair.html
+  │  │  ├─ index.html
+  │  │  ├─ login.html
+  │  │  ├─ measurement-pages
+  │  │  │  ├─ measurement-about
+  │  │  │  │  ├─ (debug)floating-window-measurement.md
+  │  │  │  │  ├─ (debug)measurement-split-modules.md
+  │  │  │  │  ├─ (refactor)measurement-modules.md
+  │  │  │  │  ├─ measurement(how-the-program-works).md
+  │  │  │  │  ├─ measurement-functionality-prompt.md
+  │  │  │  │  ├─ measurement-modules.md
+  │  │  │  │  └─ measurements-about.txt
+  │  │  │  ├─ measurement-modules
+  │  │  │  │  ├─ measurement-DataMaps.js
+  │  │  │  │  ├─ measurement-Main.js
+  │  │  │  │  ├─ measurement-Manager.js
+  │  │  │  │  ├─ measurement-Validator.js
+  │  │  │  │  └─ measurement-ViewHandler.js
+  │  │  │  ├─ measurements-female.html
+  │  │  │  ├─ measurements-male.html
+  │  │  │  └─ sample.html
+  │  │  ├─ order-history.html
+  │  │  ├─ services.html
+  │  │  └─ signup.html
+  │  ├─ public
+  │  │  ├─ css
+  │  │  │  ├─ account-menu.css
+  │  │  │  ├─ add-service.css
+  │  │  │  ├─ alteration-female.css
+  │  │  │  ├─ alteration.css
+  │  │  │  ├─ index.css
+  │  │  │  ├─ login.css
+  │  │  │  ├─ measurements.css
+  │  │  │  ├─ order-history.css
+  │  │  │  ├─ services.css
+  │  │  │  └─ signup.css
+  │  │  ├─ images
+  │  │  │  ├─ female-(chart)-tablet-mobile.png
+  │  │  │  ├─ female-back-tablet-mobile.png
+  │  │  │  ├─ female-desktop.png
+  │  │  │  ├─ female-front-tablet-mobile.png
+  │  │  │  ├─ male-(chart)-tablet-mobile.png
+  │  │  │  ├─ male-back-tablet-mobile.png
+  │  │  │  ├─ male-desktop.png
+  │  │  │  └─ male-front-tablet-mobile.png
+  │  │  └─ js
+  │  │     ├─ account.js
+  │  │     ├─ add-service.js
+  │  │     ├─ alteration-female.js
+  │  │     ├─ alteration-price-calculator.js
+  │  │     ├─ index.js
+  │  │     ├─ login.js
+  │  │     ├─ order-history.js
+  │  │     ├─ services.js
+  │  │     └─ signup.js
+  │  └─ test
+  │     ├─ TEST(how to run).md
+  │     ├─ alteration-module-tests
+  │     │  ├─ alteration-TEST(about)
+  │     │  │  ├─ (debug)alteration-test-unit.md
+  │     │  │  ├─ (refactor)alteration-test-unit.md
+  │     │  │  └─ alteration-unit-tests-prompt.md
+  │     │  └─ unit
+  │     │     ├─ alteration-CartManager.test.js
+  │     │     ├─ alteration-DOMRenderer.test.js
+  │     │     ├─ alteration-DataMaps.test.js
+  │     │     ├─ alteration-EventManager.test.js
+  │     │     ├─ alteration-Main.test.js
+  │     │     ├─ alteration-PriceCalculator.test.js
+  │     │     └─ alteration-StateManager.test.js
+  │     └─ measurement-module-tests
+  │        ├─ measurement-TEST(about)
+  │        │  ├─ (debug)measurement-test-unit.md
+  │        │  ├─ (refactor)measurement-test-unit.md
+  │        │  └─ measurement-unit-tests-prompt.md
+  │        └─ unit
+  │           ├─ measurement-DataMaps.test.js
+  │           ├─ measurement-Main.test.js
+  │           ├─ measurement-Manager.test.js
+  │           ├─ measurement-Validator.test.js
+  │           └─ measurement-ViewHandler.test.js
+  ├─ package-lock.json
+  └─ package.json
 
 ] 
 
 **CODE 10 - File: package.json** 
 [
-
+  {
+    "name": "backend",
+    "version": "1.0.0",
+    "description": "",
+    "main": "server.js",
+    "scripts": {
+      "test": "mocha test/**/*.test.js",
+      "test:female": "mocha test/measurement/measurement-female.test.js --timeout 5000",
+      "test:male": "mocha test/measurement/measurement-male.test.js --timeout 5000"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "body-parser": "^2.2.2",
+      "cors": "^2.8.6",
+      "errorhandler": "^1.5.2",
+      "express": "^5.2.1",
+      "morgan": "^1.10.1",
+      "random-flat-colors": "^1.0.4",
+      "react": "^15.6.1",
+      "react-dom": "^15.6.1",
+      "react-router-dom": "^4.2.2",
+      "sqlite3": "^5.1.7",
+      "whatwg-fetch": "^2.0.3"
+    },
+    "devDependencies": {
+      "babel": "^6.23.0",
+      "babel-core": "^6.26.0",
+      "babel-loader": "^7.1.2",
+      "babel-preset-es2015": "^6.24.1",
+      "babel-preset-react": "^6.24.1",
+      "babel-preset-stage-2": "^6.24.1",
+      "chai": "^6.2.2",
+      "chai-http": "^5.1.2",
+      "mocha": "^11.7.5",
+      "supertest": "^7.2.2",
+      "webpack": "^3.5.5"
+    }
+  }
 ]
 
 **CODE 13 - File: female-measurements-crud-tests.postman_collection.json**
@@ -1545,16 +1582,13 @@
 
 **ERROR/ISSUE:**
 [
-    bernard@ubuntu:~/Documents/Izzy-Alteration/backend$ npm run test:measurements
 
-> backend@1.0.0 test:measurements
-> mocha test/measurement/female/measurement-female.test.js test/measurement/male/measurement-male.test.js --timeout 5000
-
-Error: No test files found
 ]
 
 **REQUEST:**
 [
-  
+ 1. move measurement-female.test.js from this directory: Izzy-Alteration/backend/test/measurement/female into this directory: Izzy-Alteration/backend/test/measurement
 
+ 2. move measurement-male.test.js from this directory: Izzy-Alteration/backend/test/measurement/female into this directory:   Izzy-Alteration/backend/test/measurement
+ 3. update **CODE 10 - File: package.json** 
 ]

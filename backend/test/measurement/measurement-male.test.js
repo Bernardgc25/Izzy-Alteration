@@ -103,7 +103,7 @@ describe('Measurement Male (Routes + Migration)', function () {
     process.env.TEST_DATABASE = TEST_DB_FILE;
 
     // 4. Build Express app with the actual API router
-    const apiRouter = require('../../../api');  // mounts measurement-male-routes
+    const apiRouter = require('../../api');  // mounts measurement-male-routes
     const expressApp = express();
     expressApp.use(express.json());
     expressApp.use('/api', apiRouter);
