@@ -3,6 +3,7 @@
 # Step 1: go to backend folder:     
     cd Izzy-Alteration/backend
 # Step 2:  
+    npm run test:measurements
     npm run test:female
     npm run test:male
 
