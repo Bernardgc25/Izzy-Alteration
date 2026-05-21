@@ -2107,10 +2107,290 @@
 
 **ERROR/ISSUE:**
 [
-  
+  what is causing this error?
+  [
+      bernard@ubuntu:~/Documents/Izzy-Alteration/backend$ npm run test:measurements
+
+    > backend@1.0.0 test:measurements
+    > mocha test/measurement/measurement-female.test.js test/measurement/measurement-male.test.js --timeout 5000
+
+
+
+      Measurement Female (Routes + Migration)
+        Database Schema (migration)
+          ✔ should have the FemaleMeasurement table
+          ✔ should have all required columns with expected types
+          ✔ should have indexes on client_name, measurement_date, and size_number
+          ✔ should fire trigger and update updated_at on UPDATE (1520ms)
+        API /api/measurements/female
+          GET /
+            ✔ should return an empty array when no records exist
+            ✔ should return all inserted records
+          GET /:id
+            ✔ should return a single record for a valid ID
+            ✔ should return 404 for a non‑existent ID
+            ✔ should return 404 for an invalid ID format (non‑numeric)
+          POST /
+            ✔ should create a new measurement and return its ID
+            ✔ should fail with 500 when required client_name is missing
+            ✔ should fail with 500 when required measurement_date is missing
+            ✔ should still insert when optional fields are omitted (they become NULL)
+          PUT /:id
+            ✔ should update an existing measurement and return success message
+            ✔ should return 404 when ID does not exist
+            ✔ should fail with 500 if required fields are missing in update
+          DELETE /:id
+            ✔ should delete a measurement and return success message
+            ✔ should return 404 when deleting a non‑existent ID
+
+      Measurement Male (Routes + Migration)
+        Database Schema (migration)
+          ✔ should have the MaleMeasurement table
+          ✔ should have all required columns with expected types
+          ✔ should have indexes on client_name, measurement_date, and size_number
+          ✔ should fire trigger and update updated_at on UPDATE (1519ms)
+        API /api/measurements/male
+          GET /
+            1) should return an empty array when no records exist
+            2) should return all inserted records
+          GET /:id
+            3) should return a single record for a valid ID
+            4) should return 404 for a non‑existent ID
+            5) should return 404 for an invalid ID format (non‑numeric)
+          POST /
+            6) should create a new measurement and return its ID
+            7) should fail with 500 when required client_name is missing
+            8) should fail with 500 when required measurement_date is missing
+            9) should still insert when optional fields are omitted (they become NULL)
+          PUT /:id
+            10) should update an existing measurement and return success message
+            11) should return 404 when ID does not exist
+            12) should fail with 500 if required fields are missing in update
+          DELETE /:id
+            13) should delete a measurement and return success message
+            14) should return 404 when deleting a non‑existent ID
+
+
+      22 passing (3s)
+      14 failing
+
+      1) Measurement Male (Routes + Migration)
+          API /api/measurements/male
+            GET /
+              should return an empty array when no records exist:
+
+          AssertionError: expected 500 to equal 200
+          + expected - actual
+
+          -500
+          +200
+          
+          at Context.<anonymous> (test/measurement/measurement-male.test.js:271:31)
+          at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      2) Measurement Male (Routes + Migration)
+          API /api/measurements/male
+            GET /
+              should return all inserted records:
+        Error: expected 201 "Created", got 500 "Internal Server Error"
+          at insertSample (test/measurement/measurement-male.test.js:260:10)
+          at Context.<anonymous> (test/measurement/measurement-male.test.js:276:15)
+          at process.processImmediate (node:internal/timers:483:21)
+      ----
+          at Test._assertStatus (node_modules/supertest/lib/test.js:309:14)
+          at /home/bernard/Documents/Izzy-Alteration/backend/node_modules/supertest/lib/test.js:365:13
+          at Test._assertFunction (node_modules/supertest/lib/test.js:342:13)
+          at Test.assert (node_modules/supertest/lib/test.js:195:23)
+          at localAssert (node_modules/supertest/lib/test.js:138:14)
+          at Server.<anonymous> (node_modules/supertest/lib/test.js:152:11)
+          at Object.onceWrapper (node:events:638:28)
+          at Server.emit (node:events:524:28)
+          at emitCloseNT (node:net:2344:8)
+          at process.processTicksAndRejections (node:internal/process/task_queues:81:21)
+
+      3) Measurement Male (Routes + Migration)
+          API /api/measurements/male
+            GET /:id
+              should return a single record for a valid ID:
+        Error: expected 201 "Created", got 500 "Internal Server Error"
+          at insertSample (test/measurement/measurement-male.test.js:260:10)
+          at Context.<anonymous> (test/measurement/measurement-male.test.js:291:26)
+          at process.processImmediate (node:internal/timers:483:21)
+      ----
+          at Test._assertStatus (node_modules/supertest/lib/test.js:309:14)
+          at /home/bernard/Documents/Izzy-Alteration/backend/node_modules/supertest/lib/test.js:365:13
+          at Test._assertFunction (node_modules/supertest/lib/test.js:342:13)
+          at Test.assert (node_modules/supertest/lib/test.js:195:23)
+          at localAssert (node_modules/supertest/lib/test.js:138:14)
+          at Server.<anonymous> (node_modules/supertest/lib/test.js:152:11)
+          at Object.onceWrapper (node:events:638:28)
+          at Server.emit (node:events:524:28)
+          at emitCloseNT (node:net:2344:8)
+          at process.processTicksAndRejections (node:internal/process/task_queues:81:21)
+
+      4) Measurement Male (Routes + Migration)
+          API /api/measurements/male
+            GET /:id
+              should return 404 for a non‑existent ID:
+
+          AssertionError: expected 500 to equal 404
+          + expected - actual
+
+          -500
+          +404
+          
+          at Context.<anonymous> (test/measurement/measurement-male.test.js:303:31)
+          at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      5) Measurement Male (Routes + Migration)
+          API /api/measurements/male
+            GET /:id
+              should return 404 for an invalid ID format (non‑numeric):
+
+          AssertionError: expected 500 to equal 404
+          + expected - actual
+
+          -500
+          +404
+          
+          at Context.<anonymous> (test/measurement/measurement-male.test.js:310:31)
+          at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      6) Measurement Male (Routes + Migration)
+          API /api/measurements/male
+            POST /
+              should create a new measurement and return its ID:
+
+          AssertionError: expected 500 to equal 201
+          + expected - actual
+
+          -500
+          +201
+          
+          at Context.<anonymous> (test/measurement/measurement-male.test.js:347:31)
+          at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      7) Measurement Male (Routes + Migration)
+          API /api/measurements/male
+            POST /
+              should fail with 500 when required client_name is missing:
+        AssertionError: expected 'SQLITE_ERROR: no such table: MaleMeas…' to include 'NOT NULL'
+          at Context.<anonymous> (test/measurement/measurement-male.test.js:359:57)
+          at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      8) Measurement Male (Routes + Migration)
+          API /api/measurements/male
+            POST /
+              should fail with 500 when required measurement_date is missing:
+        AssertionError: expected 'SQLITE_ERROR: no such table: MaleMeas…' to include 'NOT NULL'
+          at Context.<anonymous> (test/measurement/measurement-male.test.js:369:57)
+          at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      9) Measurement Male (Routes + Migration)
+          API /api/measurements/male
+            POST /
+              should still insert when optional fields are omitted (they become NULL):
+
+          AssertionError: expected 500 to equal 201
+          + expected - actual
+
+          -500
+          +201
+          
+          at Context.<anonymous> (test/measurement/measurement-male.test.js:379:31)
+          at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      10) Measurement Male (Routes + Migration)
+          API /api/measurements/male
+            PUT /:id
+              should update an existing measurement and return success message:
+        Error: expected 201 "Created", got 500 "Internal Server Error"
+          at insertSample (test/measurement/measurement-male.test.js:260:10)
+          at Context.<anonymous> (test/measurement/measurement-male.test.js:389:26)
+          at process.processImmediate (node:internal/timers:483:21)
+      ----
+          at Test._assertStatus (node_modules/supertest/lib/test.js:309:14)
+          at /home/bernard/Documents/Izzy-Alteration/backend/node_modules/supertest/lib/test.js:365:13
+          at Test._assertFunction (node_modules/supertest/lib/test.js:342:13)
+          at Test.assert (node_modules/supertest/lib/test.js:195:23)
+          at localAssert (node_modules/supertest/lib/test.js:138:14)
+          at Server.<anonymous> (node_modules/supertest/lib/test.js:152:11)
+          at Object.onceWrapper (node:events:638:28)
+          at Server.emit (node:events:524:28)
+          at emitCloseNT (node:net:2344:8)
+          at process.processTicksAndRejections (node:internal/process/task_queues:81:21)
+
+      11) Measurement Male (Routes + Migration)
+          API /api/measurements/male
+            PUT /:id
+              should return 404 when ID does not exist:
+
+          AssertionError: expected 500 to equal 404
+          + expected - actual
+
+          -500
+          +404
+          
+          at Context.<anonymous> (test/measurement/measurement-male.test.js:434:31)
+          at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      12) Measurement Male (Routes + Migration)
+          API /api/measurements/male
+            PUT /:id
+              should fail with 500 if required fields are missing in update:
+        Error: expected 201 "Created", got 500 "Internal Server Error"
+          at insertSample (test/measurement/measurement-male.test.js:260:10)
+          at Context.<anonymous> (test/measurement/measurement-male.test.js:439:26)
+          at process.processImmediate (node:internal/timers:483:21)
+      ----
+          at Test._assertStatus (node_modules/supertest/lib/test.js:309:14)
+          at /home/bernard/Documents/Izzy-Alteration/backend/node_modules/supertest/lib/test.js:365:13
+          at Test._assertFunction (node_modules/supertest/lib/test.js:342:13)
+          at Test.assert (node_modules/supertest/lib/test.js:195:23)
+          at localAssert (node_modules/supertest/lib/test.js:138:14)
+          at Server.<anonymous> (node_modules/supertest/lib/test.js:152:11)
+          at Object.onceWrapper (node:events:638:28)
+          at Server.emit (node:events:524:28)
+          at emitCloseNT (node:net:2344:8)
+          at process.processTicksAndRejections (node:internal/process/task_queues:81:21)
+
+      13) Measurement Male (Routes + Migration)
+          API /api/measurements/male
+            DELETE /:id
+              should delete a measurement and return success message:
+        Error: expected 201 "Created", got 500 "Internal Server Error"
+          at insertSample (test/measurement/measurement-male.test.js:260:10)
+          at Context.<anonymous> (test/measurement/measurement-male.test.js:453:26)
+          at process.processImmediate (node:internal/timers:483:21)
+      ----
+          at Test._assertStatus (node_modules/supertest/lib/test.js:309:14)
+          at /home/bernard/Documents/Izzy-Alteration/backend/node_modules/supertest/lib/test.js:365:13
+          at Test._assertFunction (node_modules/supertest/lib/test.js:342:13)
+          at Test.assert (node_modules/supertest/lib/test.js:195:23)
+          at localAssert (node_modules/supertest/lib/test.js:138:14)
+          at Server.<anonymous> (node_modules/supertest/lib/test.js:152:11)
+          at Object.onceWrapper (node:events:638:28)
+          at Server.emit (node:events:524:28)
+          at emitCloseNT (node:net:2344:8)
+          at process.processTicksAndRejections (node:internal/process/task_queues:81:21)
+
+      14) Measurement Male (Routes + Migration)
+          API /api/measurements/male
+            DELETE /:id
+              should return 404 when deleting a non‑existent ID:
+
+          AssertionError: expected 500 to equal 404
+          + expected - actual
+
+          -500
+          +404
+          
+          at Context.<anonymous> (test/measurement/measurement-male.test.js:465:31)
+          at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+  ]
 ]
 
 **REQUEST:**
 [
-  1. update **CODE 12 - File: package.json** that will both run **CODE 10 - File: measurement-female.test.js**  and **CODE 11 - File: measurement-male.test.js** in a single command
+  fix it
 ]

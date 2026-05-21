@@ -90,8 +90,12 @@ function runMigration(db) {
 describe('Measurement Male (Routes + Migration)', function () {
   let app;
   let testDb; // separate connection for schema validation
+  let originalTestDatabase; // Store original TEST_DATABASE value
 
   before(async function () {
+    // Store original TEST_DATABASE value if it exists
+    originalTestDatabase = process.env.TEST_DATABASE;
+    
     // 1. Create a fresh test database file
     if (fs.existsSync(TEST_DB_FILE)) fs.unlinkSync(TEST_DB_FILE);
 
@@ -102,14 +106,18 @@ describe('Measurement Male (Routes + Migration)', function () {
     // 3. Set environment so that the routes module uses this database
     process.env.TEST_DATABASE = TEST_DB_FILE;
 
-    // 4. Build Express app with the actual API router
+    // 4. Clear the require cache for api and route modules to ensure fresh connections
+    delete require.cache[require.resolve('../../api')];
+    delete require.cache[require.resolve('../../features/measurement/male/measurement-male-routes')];
+
+    // 5. Build Express app with the actual API router
     const apiRouter = require('../../api');  // mounts measurement-male-routes
     const expressApp = express();
     expressApp.use(express.json());
     expressApp.use('/api', apiRouter);
     app = expressApp;
 
-    // 5. Open a separate connection for schema validation
+    // 6. Open a separate connection for schema validation
     testDb = new sqlite3.Database(TEST_DB_FILE);
   });
 
@@ -117,7 +125,13 @@ describe('Measurement Male (Routes + Migration)', function () {
     // Close validation connection and remove test database file
     if (testDb) await new Promise(resolve => testDb.close(resolve));
     if (fs.existsSync(TEST_DB_FILE)) fs.unlinkSync(TEST_DB_FILE);
-    delete process.env.TEST_DATABASE;
+    
+    // Restore original TEST_DATABASE or delete if it didn't exist
+    if (originalTestDatabase !== undefined) {
+      process.env.TEST_DATABASE = originalTestDatabase;
+    } else {
+      delete process.env.TEST_DATABASE;
+    }
   });
 
   // ---------------------------------------------------------------------------
