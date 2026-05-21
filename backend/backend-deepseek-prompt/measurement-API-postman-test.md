@@ -530,8 +530,11 @@
 [
     const express = require('express');
     const sqlite3 = require('sqlite3');
-    const db = new sqlite3.Database(process.env.TEST_DATABASE || './measurement-female-database.sqlite');
 
+    // const db = new sqlite3.Database(process.env.TEST_DATABASE || './measurement-female-database.sqlite');
+    // Use absolute path like the migration script does
+    const path = require('path');
+    const db = new sqlite3.Database(process.env.TEST_DATABASE || path.resolve(__dirname, 'measurement-female-database.sqlite'));
     const measurementFemaleRouter = express.Router();
 
     // GET /api/measurements/female - Get all female measurements
@@ -720,184 +723,6 @@
     });
 
     module.exports = measurementFemaleRouter;
-]
-
-**CODE 6 - File: measurement-female-seeding.js**   
-[
-    // =============================================================================
-    // File: backend/features/measurement/female/measurement-female-seeding.js
-    // HOW TO RUN:
-    //   From the project root, go to the backend directory and execute:
-    //   node features/measurement/female/measurement-female-seeding.js
-    //   OR, if you are already in the "female" folder:
-    //   node measurement-female-seeding.js
-    // =============================================================================
-
-    const sqlite3 = require('sqlite3');
-    const path = require('path');
-
-    // Path to the database file (same database used by the migration script and routes)
-    const dbPath = path.resolve(__dirname, 'measurement-female-database.sqlite');
-    const db = new sqlite3.Database(dbPath);
-
-    // -----------------------------------------------------------------------------
-    // Sample measurement data to seed (4 records, can be extended as needed)
-    // -----------------------------------------------------------------------------
-    const sampleMeasurements = [
-    {
-        neck: 35.5,
-        shoulder_length: 14.0,
-        arm_length: 55.0,
-        chest_circumference: 90.0,
-        under_bust: 80.5,
-        waist: 70.0,
-        hipbone_circumference: 95.0,
-        hip_circumference: 100.0,
-        thigh: 58.0,
-        knee: 36.0,
-        calf: 34.0,
-        ankle: 22.0,
-        bicep: 28.0,
-        elbow: 24.0,
-        wrist: 16.0,
-        inseam_ankle: 72.0,
-        inseam_floor: 74.0,
-        neck_waist: 40.0,
-        neck_floor: 130.0,
-        waist_floor: 100.0,
-        height: 165.0,
-        client_name: 'Alice Smith',
-        size_number: 'M',
-        measurement_date: '2025-06-01'
-    },
-    {
-        neck: 36.0,
-        shoulder_length: 15.0,
-        arm_length: 56.5,
-        chest_circumference: 94.0,
-        under_bust: 84.0,
-        waist: 74.0,
-        hipbone_circumference: 98.0,
-        hip_circumference: 104.0,
-        thigh: 60.0,
-        knee: 37.5,
-        calf: 35.5,
-        ankle: 23.0,
-        bicep: 30.0,
-        elbow: 25.0,
-        wrist: 17.0,
-        inseam_ankle: 74.0,
-        inseam_floor: 76.0,
-        neck_waist: 42.0,
-        neck_floor: 133.0,
-        waist_floor: 102.0,
-        height: 168.0,
-        client_name: 'Becky Johnson',
-        size_number: 'L',
-        measurement_date: '2025-06-05'
-    },
-    {
-        neck: 34.0,
-        shoulder_length: 13.5,
-        arm_length: 53.0,
-        chest_circumference: 86.0,
-        under_bust: 76.0,
-        waist: 66.0,
-        hipbone_circumference: 90.0,
-        hip_circumference: 95.0,
-        thigh: 55.0,
-        knee: 34.0,
-        calf: 32.5,
-        ankle: 20.5,
-        bicep: 26.0,
-        elbow: 22.5,
-        wrist: 15.0,
-        inseam_ankle: 69.0,
-        inseam_floor: 71.0,
-        neck_waist: 38.0,
-        neck_floor: 127.0,
-        waist_floor: 96.0,
-        height: 160.0,
-        client_name: 'Catherine White',
-        size_number: 'S',
-        measurement_date: '2025-06-10'
-    },
-    {
-        neck: 37.0,
-        shoulder_length: 15.5,
-        arm_length: 57.0,
-        chest_circumference: 98.0,
-        under_bust: 88.0,
-        waist: 78.0,
-        hipbone_circumference: 102.0,
-        hip_circumference: 108.0,
-        thigh: 62.0,
-        knee: 38.5,
-        calf: 36.5,
-        ankle: 24.0,
-        bicep: 31.0,
-        elbow: 26.5,
-        wrist: 17.5,
-        inseam_ankle: 75.0,
-        inseam_floor: 77.0,
-        neck_waist: 43.0,
-        neck_floor: 136.0,
-        waist_floor: 105.0,
-        height: 170.0,
-        client_name: 'Diana Prince',
-        size_number: 'XL',
-        measurement_date: '2025-06-15'
-    }
-    ];
-
-    // -----------------------------------------------------------------------------
-    // Insert seed data (no pre‑check – always adds the sample rows)
-    // -----------------------------------------------------------------------------
-    console.log('🌱 Seeding FemaleMeasurement table...');
-
-    db.serialize(() => {
-    // Prepare the insert statement once
-    const insertStmt = db.prepare(`
-        INSERT INTO FemaleMeasurement (
-        neck, shoulder_length, arm_length, chest_circumference, under_bust, waist,
-        hipbone_circumference, hip_circumference,
-        thigh, knee, calf, ankle, bicep, elbow, wrist,
-        inseam_ankle, inseam_floor, neck_waist, neck_floor,
-        waist_floor, height, client_name, size_number, measurement_date
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-
-    let insertedCount = 0;
-    sampleMeasurements.forEach((m, index) => {
-        insertStmt.run(
-        m.neck, m.shoulder_length, m.arm_length, m.chest_circumference,
-        m.under_bust, m.waist, m.hipbone_circumference, m.hip_circumference,
-        m.thigh, m.knee, m.calf, m.ankle, m.bicep, m.elbow, m.wrist,
-        m.inseam_ankle, m.inseam_floor, m.neck_waist, m.neck_floor,
-        m.waist_floor, m.height, m.client_name, m.size_number, m.measurement_date,
-        function (err) {
-            if (err) {
-            console.error(`❌ Error inserting sample ${index + 1} (${m.client_name}):`, err.message);
-            } else {
-            insertedCount++;
-            console.log(`   ✅ Inserted: ${m.client_name} (ID: ${this.lastID})`);
-            }
-        }
-        );
-    });
-
-    // Finalize the statement and close the database when all insert attempts are done
-    insertStmt.finalize(() => {
-        console.log(`🎉 Seeding complete. ${insertedCount} record(s) added.`);
-        db.close((err) => {
-        if (err) {
-            console.error('❌ Error closing database:', err.message);
-        } else {
-            console.log('🔒 Database connection closed.');
-        }
-        });
-    });
-    });
 ]  
 
 **CODE 7 - File: api.js**   
@@ -949,862 +774,821 @@
 **CODE 9 - File: README.md**   
 [
     Izzy-Alteration
-    ├─ Package-list.md
-    ├─ backend
-    │  ├─ api.js
-    │  ├─ backend-deepseek-prompt
-    │  │  ├─ create-test-on-route.md
-    │  │  ├─ debugging-backend.md
-    │  │  ├─ features-measurement-routes-migration.md
-    │  │  ├─ measurement-API-postman-test.md
-    │  │  ├─ measurement-female.md
-    │  │  ├─ measurement-male-routes-migration-test.md
-    │  │  └─ measurement-male-seeding.md
-    │  ├─ features
-    │  │  └─ measurement
-    │  │     ├─ Instruction(migration script).md
-    │  │     ├─ female
-    │  │     │  ├─ measurement-female-database.sqlite
-    │  │     │  ├─ measurement-female-migration.js
-    │  │     │  ├─ measurement-female-routes.js
-    │  │     │  └─ measurement-female-seeding.js
-    │  │     └─ male
-    │  │        ├─ measurement-male-database.sqlite
-    │  │        ├─ measurement-male-migration.js
-    │  │        ├─ measurement-male-routes.js
-    │  │        └─ measurement-male-seeding.js
-    │  ├─ measurement-female-database.sqlite
-    │  ├─ measurement-male-database.sqlite
-    │  ├─ package-lock.json
-    │  ├─ package.json
-    │  ├─ postman
-    │  │  └─ measurment-API-test
-    │  │     ├─ female-measurements-collection.json
-    │  │     └─ male-measurements-collection.json
-    │  ├─ server.js
-    │  └─ test
-    │     └─ measurement
-    │        ├─ Instruction(measurement-male-test).md
-    │        ├─ female
-    │        │  └─ measurement-female.test.js
-    │        └─ male
-    │           ├─ measurement-male-seed.js
-    │           ├─ measurement-male-test.sqlite
-    │           └─ measurement-male.test.js
-    ├─ frontend
-    │  ├─ package-lock.json
-    │  ├─ package.json
-    │  ├─ pages
-    │  │  ├─ account-menu.html
-    │  │  ├─ add-service.html
-    │  │  ├─ alteration-pages
-    │  │  │  ├─ alteration-about
-    │  │  │  │  ├─ (debug)alteration-modules.md
-    │  │  │  │  ├─ alteration(how-the-program-works).md
-    │  │  │  │  ├─ alteration-female.txt
-    │  │  │  │  ├─ alteration-functionality-prompt.md
-    │  │  │  │  ├─ alteration-modules.md
-    │  │  │  │  └─ alteration-responsive-page.md
-    │  │  │  ├─ alteration-female-bottom.html
-    │  │  │  ├─ alteration-female-dress.html
-    │  │  │  ├─ alteration-female-jacket.html
-    │  │  │  ├─ alteration-female-top.html
-    │  │  │  ├─ alteration-male-bottom.html
-    │  │  │  ├─ alteration-male-suits.html
-    │  │  │  ├─ alteration-male-top.html
-    │  │  │  ├─ alteration-modules
-    │  │  │  │  ├─ alteration-CartManager.js
-    │  │  │  │  ├─ alteration-DOMRenderer.js
-    │  │  │  │  ├─ alteration-DataMaps.js
-    │  │  │  │  ├─ alteration-EventManager.js
-    │  │  │  │  ├─ alteration-Main.js
-    │  │  │  │  ├─ alteration-PriceCalculator.js
-    │  │  │  │  └─ alteration-StateManager.js
-    │  │  │  └─ alteration-repair.html
-    │  │  ├─ index.html
-    │  │  ├─ login.html
-    │  │  ├─ measurement-pages
-    │  │  │  ├─ measurement-about
-    │  │  │  │  ├─ (debug)floating-window-measurement.md
-    │  │  │  │  ├─ (debug)measurement-split-modules.md
-    │  │  │  │  ├─ (refactor)measurement-modules.md
-    │  │  │  │  ├─ measurement(how-the-program-works).md
-    │  │  │  │  ├─ measurement-functionality-prompt.md
-    │  │  │  │  ├─ measurement-modules.md
-    │  │  │  │  └─ measurements-about.txt
-    │  │  │  ├─ measurement-modules
-    │  │  │  │  ├─ measurement-DataMaps.js
-    │  │  │  │  ├─ measurement-Main.js
-    │  │  │  │  ├─ measurement-Manager.js
-    │  │  │  │  ├─ measurement-Validator.js
-    │  │  │  │  └─ measurement-ViewHandler.js
-    │  │  │  ├─ measurements-female.html
-    │  │  │  ├─ measurements-male.html
-    │  │  │  └─ sample.html
-    │  │  ├─ order-history.html
-    │  │  ├─ services.html
-    │  │  └─ signup.html
-    │  ├─ public
-    │  │  ├─ css
-    │  │  │  ├─ account-menu.css
-    │  │  │  ├─ add-service.css
-    │  │  │  ├─ alteration-female.css
-    │  │  │  ├─ alteration.css
-    │  │  │  ├─ index.css
-    │  │  │  ├─ login.css
-    │  │  │  ├─ measurements.css
-    │  │  │  ├─ order-history.css
-    │  │  │  ├─ services.css
-    │  │  │  └─ signup.css
-    │  │  ├─ images
-    │  │  │  ├─ female-(chart)-tablet-mobile.png
-    │  │  │  ├─ female-back-tablet-mobile.png
-    │  │  │  ├─ female-desktop.png
-    │  │  │  ├─ female-front-tablet-mobile.png
-    │  │  │  ├─ male-(chart)-tablet-mobile.png
-    │  │  │  ├─ male-back-tablet-mobile.png
-    │  │  │  ├─ male-desktop.png
-    │  │  │  └─ male-front-tablet-mobile.png
-    │  │  └─ js
-    │  │     ├─ account.js
-    │  │     ├─ add-service.js
-    │  │     ├─ alteration-female.js
-    │  │     ├─ alteration-price-calculator.js
-    │  │     ├─ index.js
-    │  │     ├─ login.js
-    │  │     ├─ order-history.js
-    │  │     ├─ services.js
-    │  │     └─ signup.js
-    │  └─ test
-    │     ├─ TEST(how to run).md
-    │     ├─ alteration-module-tests
-    │     │  ├─ alteration-TEST(about)
-    │     │  │  ├─ (debug)alteration-test-unit.md
-    │     │  │  ├─ (refactor)alteration-test-unit.md
-    │     │  │  └─ alteration-unit-tests-prompt.md
-    │     │  └─ unit
-    │     │     ├─ alteration-CartManager.test.js
-    │     │     ├─ alteration-DOMRenderer.test.js
-    │     │     ├─ alteration-DataMaps.test.js
-    │     │     ├─ alteration-EventManager.test.js
-    │     │     ├─ alteration-Main.test.js
-    │     │     ├─ alteration-PriceCalculator.test.js
-    │     │     └─ alteration-StateManager.test.js
-    │     └─ measurement-module-tests
-    │        ├─ measurement-TEST(about)
-    │        │  ├─ (debug)measurement-test-unit.md
-    │        │  ├─ (refactor)measurement-test-unit.md
-    │        │  └─ measurement-unit-tests-prompt.md
-    │        └─ unit
-    │           ├─ measurement-DataMaps.test.js
-    │           ├─ measurement-Main.test.js
-    │           ├─ measurement-Manager.test.js
-    │           ├─ measurement-Validator.test.js
-    │           └─ measurement-ViewHandler.test.js
-    ├─ package-lock.json
-    └─ package.json
+  ├─ Package-list.md
+  ├─ backend
+  │  ├─ api.js
+  │  ├─ backend-deepseek-prompt
+  │  │  ├─ create-test-on-route.md
+  │  │  ├─ debugging-backend.md
+  │  │  ├─ features-measurement-routes-migration.md
+  │  │  ├─ measurement-API-Postman-debug.md
+  │  │  ├─ measurement-API-postman-test.md
+  │  │  ├─ measurement-female.md
+  │  │  ├─ measurement-male-routes-migration-test.md
+  │  │  └─ measurement-male-seeding.md
+  │  ├─ config
+  │  ├─ features
+  │  │  └─ measurement
+  │  │     ├─ Instruction(migration script).md
+  │  │     ├─ female
+  │  │     │  ├─ measurement-female-database.sqlite
+  │  │     │  ├─ measurement-female-migration.js
+  │  │     │  ├─ measurement-female-routes.js
+  │  │     │  └─ measurement-female-seeding.js
+  │  │     └─ male
+  │  │        ├─ measurement-male-database.sqlite
+  │  │        ├─ measurement-male-migration.js
+  │  │        ├─ measurement-male-routes.js
+  │  │        └─ measurement-male-seeding.js
+  │  ├─ package-lock.json
+  │  ├─ package.json
+  │  ├─ postman
+  │  │  └─ measurment-API-test
+  │  │     ├─ female-measurements-crud-tests.postman_collection.json
+  │  │     └─ male-measurements-crud-tests.postman_collection.json
+  │  ├─ server.js
+  │  └─ test
+  │     └─ measurement
+  │        ├─ Instruction-measurement-test.md
+  │        ├─ measurement-female.test.js
+  │        └─ measurement-male.test.js
+  ├─ frontend
+  │  ├─ package-lock.json
+  │  ├─ package.json
+  │  ├─ pages
+  │  │  ├─ account-menu.html
+  │  │  ├─ add-service.html
+  │  │  ├─ alteration-pages
+  │  │  │  ├─ alteration-about
+  │  │  │  │  ├─ (debug)alteration-modules.md
+  │  │  │  │  ├─ alteration(how-the-program-works).md
+  │  │  │  │  ├─ alteration-female.txt
+  │  │  │  │  ├─ alteration-functionality-prompt.md
+  │  │  │  │  ├─ alteration-modules.md
+  │  │  │  │  └─ alteration-responsive-page.md
+  │  │  │  ├─ alteration-female-bottom.html
+  │  │  │  ├─ alteration-female-dress.html
+  │  │  │  ├─ alteration-female-jacket.html
+  │  │  │  ├─ alteration-female-top.html
+  │  │  │  ├─ alteration-male-bottom.html
+  │  │  │  ├─ alteration-male-suits.html
+  │  │  │  ├─ alteration-male-top.html
+  │  │  │  ├─ alteration-modules
+  │  │  │  │  ├─ alteration-CartManager.js
+  │  │  │  │  ├─ alteration-DOMRenderer.js
+  │  │  │  │  ├─ alteration-DataMaps.js
+  │  │  │  │  ├─ alteration-EventManager.js
+  │  │  │  │  ├─ alteration-Main.js
+  │  │  │  │  ├─ alteration-PriceCalculator.js
+  │  │  │  │  └─ alteration-StateManager.js
+  │  │  │  └─ alteration-repair.html
+  │  │  ├─ index.html
+  │  │  ├─ login.html
+  │  │  ├─ measurement-pages
+  │  │  │  ├─ measurement-about
+  │  │  │  │  ├─ (debug)floating-window-measurement.md
+  │  │  │  │  ├─ (debug)measurement-split-modules.md
+  │  │  │  │  ├─ (refactor)measurement-modules.md
+  │  │  │  │  ├─ measurement(how-the-program-works).md
+  │  │  │  │  ├─ measurement-functionality-prompt.md
+  │  │  │  │  ├─ measurement-modules.md
+  │  │  │  │  └─ measurements-about.txt
+  │  │  │  ├─ measurement-modules
+  │  │  │  │  ├─ measurement-DataMaps.js
+  │  │  │  │  ├─ measurement-Main.js
+  │  │  │  │  ├─ measurement-Manager.js
+  │  │  │  │  ├─ measurement-Validator.js
+  │  │  │  │  └─ measurement-ViewHandler.js
+  │  │  │  ├─ measurements-female.html
+  │  │  │  ├─ measurements-male.html
+  │  │  │  └─ sample.html
+  │  │  ├─ order-history.html
+  │  │  ├─ services.html
+  │  │  └─ signup.html
+  │  ├─ public
+  │  │  ├─ css
+  │  │  │  ├─ account-menu.css
+  │  │  │  ├─ add-service.css
+  │  │  │  ├─ alteration-female.css
+  │  │  │  ├─ alteration.css
+  │  │  │  ├─ index.css
+  │  │  │  ├─ login.css
+  │  │  │  ├─ measurements.css
+  │  │  │  ├─ order-history.css
+  │  │  │  ├─ services.css
+  │  │  │  └─ signup.css
+  │  │  ├─ images
+  │  │  │  ├─ female-(chart)-tablet-mobile.png
+  │  │  │  ├─ female-back-tablet-mobile.png
+  │  │  │  ├─ female-desktop.png
+  │  │  │  ├─ female-front-tablet-mobile.png
+  │  │  │  ├─ male-(chart)-tablet-mobile.png
+  │  │  │  ├─ male-back-tablet-mobile.png
+  │  │  │  ├─ male-desktop.png
+  │  │  │  └─ male-front-tablet-mobile.png
+  │  │  └─ js
+  │  │     ├─ account.js
+  │  │     ├─ add-service.js
+  │  │     ├─ alteration-female.js
+  │  │     ├─ alteration-price-calculator.js
+  │  │     ├─ index.js
+  │  │     ├─ login.js
+  │  │     ├─ order-history.js
+  │  │     ├─ services.js
+  │  │     └─ signup.js
+  │  └─ test
+  │     ├─ TEST(how to run).md
+  │     ├─ alteration-module-tests
+  │     │  ├─ alteration-TEST(about)
+  │     │  │  ├─ (debug)alteration-test-unit.md
+  │     │  │  ├─ (refactor)alteration-test-unit.md
+  │     │  │  └─ alteration-unit-tests-prompt.md
+  │     │  └─ unit
+  │     │     ├─ alteration-CartManager.test.js
+  │     │     ├─ alteration-DOMRenderer.test.js
+  │     │     ├─ alteration-DataMaps.test.js
+  │     │     ├─ alteration-EventManager.test.js
+  │     │     ├─ alteration-Main.test.js
+  │     │     ├─ alteration-PriceCalculator.test.js
+  │     │     └─ alteration-StateManager.test.js
+  │     └─ measurement-module-tests
+  │        ├─ measurement-TEST(about)
+  │        │  ├─ (debug)measurement-test-unit.md
+  │        │  ├─ (refactor)measurement-test-unit.md
+  │        │  └─ measurement-unit-tests-prompt.md
+  │        └─ unit
+  │           ├─ measurement-DataMaps.test.js
+  │           ├─ measurement-Main.test.js
+  │           ├─ measurement-Manager.test.js
+  │           ├─ measurement-Validator.test.js
+  │           └─ measurement-ViewHandler.test.js
+  ├─ package-lock.json
+  └─ package.json
 
 ] 
 
 **CODE 10 - File: package.json** 
 [
-    {
+  {
     "name": "backend",
     "version": "1.0.0",
     "description": "",
     "main": "server.js",
     "scripts": {
-        "test": "mocha test/**/*.test.js",
-        "test:female": "mocha test/measurement/female/measurement-female.test.js --timeout 5000",
-        "test:male": "mocha test/measurement/male/measurement-male.test.js --timeout 5000"
+      "test": "mocha test/**/*.test.js",
+      "test:female": "mocha test/measurement/measurement-female.test.js --timeout 5000",
+      "test:male": "mocha test/measurement/measurement-male.test.js --timeout 5000"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "body-parser": "^2.2.2",
-        "cors": "^2.8.6",
-        "errorhandler": "^1.5.2",
-        "express": "^5.2.1",
-        "morgan": "^1.10.1",
-        "random-flat-colors": "^1.0.4",
-        "react": "^15.6.1",
-        "react-dom": "^15.6.1",
-        "react-router-dom": "^4.2.2",
-        "sqlite3": "^5.1.7",
-        "whatwg-fetch": "^2.0.3"
+      "body-parser": "^2.2.2",
+      "cors": "^2.8.6",
+      "errorhandler": "^1.5.2",
+      "express": "^5.2.1",
+      "morgan": "^1.10.1",
+      "random-flat-colors": "^1.0.4",
+      "react": "^15.6.1",
+      "react-dom": "^15.6.1",
+      "react-router-dom": "^4.2.2",
+      "sqlite3": "^5.1.7",
+      "whatwg-fetch": "^2.0.3"
     },
     "devDependencies": {
-        "babel": "^6.23.0",
-        "babel-core": "^6.26.0",
-        "babel-loader": "^7.1.2",
-        "babel-preset-es2015": "^6.24.1",
-        "babel-preset-react": "^6.24.1",
-        "babel-preset-stage-2": "^6.24.1",
-        "chai": "^6.2.2",
-        "chai-http": "^5.1.2",
-        "mocha": "^11.7.5",
-        "supertest": "^7.2.2",
-        "webpack": "^3.5.5"
+      "babel": "^6.23.0",
+      "babel-core": "^6.26.0",
+      "babel-loader": "^7.1.2",
+      "babel-preset-es2015": "^6.24.1",
+      "babel-preset-react": "^6.24.1",
+      "babel-preset-stage-2": "^6.24.1",
+      "chai": "^6.2.2",
+      "chai-http": "^5.1.2",
+      "mocha": "^11.7.5",
+      "supertest": "^7.2.2",
+      "webpack": "^3.5.5"
     }
-    }
-
-
+  }
 ]
 
-**CODE 11 - File: female-measurements-collection.json** 
-[
-        {
-    "info": {
-        "name": "Female Measurements API",
-        "description": "Comprehensive tests for Female Measurement routes (CRUD operations)",
-        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-    },
-    "variable": [
-        {
-        "key": "baseUrl",
-        "value": "http://localhost:3000/api/measurements/female"
-        },
-        {
-        "key": "createdId",
-        "value": ""
-        }
-    ],
-    "item": [
-        {
-        "name": "GET All Female Measurements",
-        "event": [
-            {
-            "listen": "test",
-            "script": {
-                "exec": [
-                "pm.test('Status code is 200', function () {",
-                "    pm.response.to.have.status(200);",
-                "});",
-                "",
-                "pm.test('Response is an array', function () {",
-                "    var jsonData = pm.response.json();",
-                "    pm.expect(jsonData).to.be.an('array');",
-                "});",
-                "",
-                "pm.test('Response time is less than 500ms', function () {",
-                "    pm.expect(pm.response.responseTime).to.be.below(500);",
-                "});",
-                "",
-                "pm.test('Response has correct headers', function () {",
-                "    pm.response.to.have.header('Content-Type', 'application/json; charset=utf-8');",
-                "});"
-                ],
-                "type": "text/javascript"
-            }
-            }
-        ],
-        "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-            "raw": "{{baseUrl}}",
-            "host": ["{{baseUrl}}"]
-            }
-        }
-        },
-        {
-        "name": "POST Create New Female Measurement",
-        "event": [
-            {
-            "listen": "test",
-            "script": {
-                "exec": [
-                "pm.test('Status code is 201 Created', function () {",
-                "    pm.response.to.have.status(201);",
-                "});",
-                "",
-                "pm.test('Response has an id property', function () {",
-                "    var jsonData = pm.response.json();",
-                "    pm.expect(jsonData).to.have.property('id');",
-                "    pm.expect(jsonData.id).to.be.a('number');",
-                "    pm.collectionVariables.set('createdId', jsonData.id);",
-                "});",
-                "",
-                "pm.test('Response time is less than 1000ms', function () {",
-                "    pm.expect(pm.response.responseTime).to.be.below(1000);",
-                "});"
-                ],
-                "type": "text/javascript"
-            }
-            }
-        ],
-        "request": {
-            "method": "POST",
-            "header": [
-            {
-                "key": "Content-Type",
-                "value": "application/json"
-            }
-            ],
-            "body": {
-            "mode": "raw",
-            "raw": "{\n  \"neck\": 35.5,\n  \"shoulder_length\": 14.0,\n  \"arm_length\": 55.0,\n  \"chest_circumference\": 90.0,\n  \"under_bust\": 80.5,\n  \"waist\": 70.0,\n  \"hipbone_circumference\": 95.0,\n  \"hip_circumference\": 100.0,\n  \"thigh\": 58.0,\n  \"knee\": 36.0,\n  \"calf\": 34.0,\n  \"ankle\": 22.0,\n  \"bicep\": 28.0,\n  \"elbow\": 24.0,\n  \"wrist\": 16.0,\n  \"inseam_ankle\": 72.0,\n  \"inseam_floor\": 74.0,\n  \"neck_waist\": 40.0,\n  \"neck_floor\": 130.0,\n  \"waist_floor\": 100.0,\n  \"height\": 165.0,\n  \"client_name\": \"Test User Female\",\n  \"size_number\": \"M\",\n  \"measurement_date\": \"2026-05-12\"\n}"
-            },
-            "url": {
-            "raw": "{{baseUrl}}",
-            "host": ["{{baseUrl}}"]
-            }
-        }
-        },
-        {
-        "name": "GET Female Measurement by ID",
-        "event": [
-            {
-            "listen": "test",
-            "script": {
-                "exec": [
-                "pm.test('Status code is 200', function () {",
-                "    pm.response.to.have.status(200);",
-                "});",
-                "",
-                "pm.test('Response has correct measurement data', function () {",
-                "    var jsonData = pm.response.json();",
-                "    pm.expect(jsonData).to.have.property('client_name', 'Test User Female');",
-                "    pm.expect(jsonData).to.have.property('size_number', 'M');",
-                "    pm.expect(jsonData).to.have.property('neck', 35.5);",
-                "    pm.expect(jsonData).to.have.property('under_bust', 80.5);",
-                "    pm.expect(jsonData).to.have.property('hipbone_circumference', 95.0);",
-                "});",
-                "",
-                "pm.test('Response has all required fields', function () {",
-                "    var jsonData = pm.response.json();",
-                "    const requiredFields = ['id', 'neck', 'client_name', 'measurement_date', 'under_bust', 'hipbone_circumference'];",
-                "    requiredFields.forEach(field => {",
-                "        pm.expect(jsonData).to.have.property(field);",
-                "    });",
-                "});"
-                ],
-                "type": "text/javascript"
-            }
-            }
-        ],
-        "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-            "raw": "{{baseUrl}}/{{createdId}}",
-            "host": ["{{baseUrl}}"],
-            "path": ["{{createdId}}"]
-            }
-        }
-        },
-        {
-        "name": "PUT Update Female Measurement",
-        "event": [
-            {
-            "listen": "test",
-            "script": {
-                "exec": [
-                "pm.test('Status code is 200', function () {",
-                "    pm.response.to.have.status(200);",
-                "});",
-                "",
-                "pm.test('Response has success message', function () {",
-                "    var jsonData = pm.response.json();",
-                "    pm.expect(jsonData).to.have.property('message', 'Measurement updated successfully');",
-                "});",
-                "",
-                "pm.test('Verify update was applied', function () {",
-                "    const getRequest = {",
-                "        url: pm.collectionVariables.get('baseUrl') + '/' + pm.collectionVariables.get('createdId'),",
-                "        method: 'GET'",
-                "    };",
-                "    pm.sendRequest(getRequest, (error, response) => {",
-                "        if (error) {",
-                "            console.log(error);",
-                "        } else {",
-                "            const updatedData = response.json();",
-                "            pm.expect(updatedData.client_name).to.equal('Updated Test User Female');",
-                "            pm.expect(updatedData.size_number).to.equal('L');",
-                "            pm.expect(updatedData.under_bust).to.equal(84.0);",
-                "        }",
-                "    });",
-                "});"
-                ],
-                "type": "text/javascript"
-            }
-            }
-        ],
-        "request": {
-            "method": "PUT",
-            "header": [
-            {
-                "key": "Content-Type",
-                "value": "application/json"
-            }
-            ],
-            "body": {
-            "mode": "raw",
-            "raw": "{\n  \"neck\": 36.0,\n  \"shoulder_length\": 15.0,\n  \"arm_length\": 56.5,\n  \"chest_circumference\": 94.0,\n  \"under_bust\": 84.0,\n  \"waist\": 74.0,\n  \"hipbone_circumference\": 98.0,\n  \"hip_circumference\": 104.0,\n  \"thigh\": 60.0,\n  \"knee\": 37.5,\n  \"calf\": 35.5,\n  \"ankle\": 23.0,\n  \"bicep\": 30.0,\n  \"elbow\": 25.0,\n  \"wrist\": 17.0,\n  \"inseam_ankle\": 74.0,\n  \"inseam_floor\": 76.0,\n  \"neck_waist\": 42.0,\n  \"neck_floor\": 133.0,\n  \"waist_floor\": 102.0,\n  \"height\": 168.0,\n  \"client_name\": \"Updated Test User Female\",\n  \"size_number\": \"L\",\n  \"measurement_date\": \"2026-05-12\"\n}"
-            },
-            "url": {
-            "raw": "{{baseUrl}}/{{createdId}}",
-            "host": ["{{baseUrl}}"],
-            "path": ["{{createdId}}"]
-            }
-        }
-        },
-        {
-        "name": "DELETE Female Measurement",
-        "event": [
-            {
-            "listen": "test",
-            "script": {
-                "exec": [
-                "pm.test('Status code is 200', function () {",
-                "    pm.response.to.have.status(200);",
-                "});",
-                "",
-                "pm.test('Response has success message', function () {",
-                "    var jsonData = pm.response.json();",
-                "    pm.expect(jsonData).to.have.property('message', 'Measurement deleted successfully');",
-                "});",
-                "",
-                "pm.test('Verify the record no longer exists', function () {",
-                "    const getRequest = {",
-                "        url: pm.collectionVariables.get('baseUrl') + '/' + pm.collectionVariables.get('createdId'),",
-                "        method: 'GET'",
-                "    };",
-                "    pm.sendRequest(getRequest, (error, response) => {",
-                "        if (error) {",
-                "            console.log(error);",
-                "        } else {",
-                "            pm.expect(response.status).to.equal(404);",
-                "        }",
-                "    });",
-                "});"
-                ],
-                "type": "text/javascript"
-            }
-            }
-        ],
-        "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-            "raw": "{{baseUrl}}/{{createdId}}",
-            "host": ["{{baseUrl}}"],
-            "path": ["{{createdId}}"]
-            }
-        }
-        },
-        {
-        "name": "GET Non-existent Female Measurement (404 test)",
-        "event": [
-            {
-            "listen": "test",
-            "script": {
-                "exec": [
-                "pm.test('Status code is 404', function () {",
-                "    pm.response.to.have.status(404);",
-                "});",
-                "",
-                "pm.test('Response has error message', function () {",
-                "    var jsonData = pm.response.json();",
-                "    pm.expect(jsonData).to.have.property('error', 'Measurement not found');",
-                "});"
-                ],
-                "type": "text/javascript"
-            }
-            }
-        ],
-        "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-            "raw": "{{baseUrl}}/999999",
-            "host": ["{{baseUrl}}"],
-            "path": ["999999"]
-            }
-        }
-        },
-        {
-        "name": "POST Invalid Female Measurement (Validation Test)",
-        "event": [
-            {
-            "listen": "test",
-            "script": {
-                "exec": [
-                "pm.test('Status code is 500 (invalid data)', function () {",
-                "    pm.response.to.have.status(500);",
-                "});",
-                "",
-                "pm.test('Response has error message', function () {",
-                "    var jsonData = pm.response.json();",
-                "    pm.expect(jsonData).to.have.property('error');",
-                "});"
-                ],
-                "type": "text/javascript"
-            }
-            }
-        ],
-        "request": {
-            "method": "POST",
-            "header": [
-            {
-                "key": "Content-Type",
-                "value": "application/json"
-            }
-            ],
-            "body": {
-            "mode": "raw",
-            "raw": "{\n  \"client_name\": \"Invalid Female User\"\n}"
-            },
-            "url": {
-            "raw": "{{baseUrl}}",
-            "host": ["{{baseUrl}}"]
-            }
-        }
-        }
-    ]
-    }
-]
-
-**CODE 12 - File: male-measurements-collection.json**
+**CODE 13 - File: female-measurements-crud-tests.postman_collection.json**
 [
     {
-    "info": {
-        "name": "Male Measurements API",
-        "description": "Comprehensive tests for Male Measurement routes (CRUD operations)",
-        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  "info": {
+    "name": "Female Measurements API - CRUD Tests",
+    "description": "Complete CRUD operation tests for Female Measurements API endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Environment Setup",
+      "item": [
+        {
+          "name": "Set Base URL and Test Variables",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Set environment variables for testing",
+                  "pm.environment.set('base_url', 'http://localhost:3000/api/measurements/female');",
+                  "",
+                  "// Sample measurement data for testing",
+                  "pm.environment.set('test_measurement', JSON.stringify({",
+                  "    \"neck\": 35.0,",
+                  "    \"shoulder_length\": 14.5,",
+                  "    \"arm_length\": 56.0,",
+                  "    \"chest_circumference\": 92.0,",
+                  "    \"under_bust\": 82.0,",
+                  "    \"waist\": 72.0,",
+                  "    \"hipbone_circumference\": 96.0,",
+                  "    \"hip_circumference\": 102.0,",
+                  "    \"thigh\": 59.0,",
+                  "    \"knee\": 36.5,",
+                  "    \"calf\": 34.5,",
+                  "    \"ankle\": 22.5,",
+                  "    \"bicep\": 29.0,",
+                  "    \"elbow\": 24.5,",
+                  "    \"wrist\": 16.5,",
+                  "    \"inseam_ankle\": 73.0,",
+                  "    \"inseam_floor\": 75.0,",
+                  "    \"neck_waist\": 41.0,",
+                  "    \"neck_floor\": 132.0,",
+                  "    \"waist_floor\": 101.0,",
+                  "    \"height\": 167.0,",
+                  "    \"client_name\": \"Test Female User\",",
+                  "    \"size_number\": \"M\",",
+                  "    \"measurement_date\": \"2026-05-17\"",
+                  "}));",
+                  "",
+                  "// Updated measurement data for PUT request",
+                  "pm.environment.set('updated_measurement', JSON.stringify({",
+                  "    \"neck\": 36.0,",
+                  "    \"shoulder_length\": 15.0,",
+                  "    \"arm_length\": 57.0,",
+                  "    \"chest_circumference\": 94.0,",
+                  "    \"under_bust\": 84.0,",
+                  "    \"waist\": 74.0,",
+                  "    \"hipbone_circumference\": 98.0,",
+                  "    \"hip_circumference\": 104.0,",
+                  "    \"thigh\": 60.0,",
+                  "    \"knee\": 37.0,",
+                  "    \"calf\": 35.0,",
+                  "    \"ankle\": 23.0,",
+                  "    \"bicep\": 30.0,",
+                  "    \"elbow\": 25.0,",
+                  "    \"wrist\": 17.0,",
+                  "    \"inseam_ankle\": 74.0,",
+                  "    \"inseam_floor\": 76.0,",
+                  "    \"neck_waist\": 42.0,",
+                  "    \"neck_floor\": 134.0,",
+                  "    \"waist_floor\": 103.0,",
+                  "    \"height\": 169.0,",
+                  "    \"client_name\": \"Test Female User Updated\",",
+                  "    \"size_number\": \"L\",",
+                  "    \"measurement_date\": \"2026-05-17\"",
+                  "}));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
     },
-    "variable": [
+    {
+      "name": "1. CREATE - POST New Measurement",
+      "event": [
         {
-        "key": "baseUrl",
-        "value": "http://localhost:3000/api/measurements/male"
-        },
-        {
-        "key": "createdId",
-        "value": ""
-        }
-    ],
-    "item": [
-        {
-        "name": "GET All Male Measurements",
-        "event": [
-            {
-            "listen": "test",
-            "script": {
-                "exec": [
-                "pm.test('Status code is 200', function () {",
-                "    pm.response.to.have.status(200);",
-                "});",
-                "",
-                "pm.test('Response is an array', function () {",
-                "    var jsonData = pm.response.json();",
-                "    pm.expect(jsonData).to.be.an('array');",
-                "});",
-                "",
-                "pm.test('Response time is less than 500ms', function () {",
-                "    pm.expect(pm.response.responseTime).to.be.below(500);",
-                "});",
-                "",
-                "pm.test('Response has correct headers', function () {",
-                "    pm.response.to.have.header('Content-Type', 'application/json; charset=utf-8');",
-                "});"
-                ],
-                "type": "text/javascript"
-            }
-            }
-        ],
-        "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-            "raw": "{{baseUrl}}",
-            "host": ["{{baseUrl}}"]
-            }
-        }
-        },
-        {
-        "name": "POST Create New Male Measurement",
-        "event": [
-            {
-            "listen": "test",
-            "script": {
-                "exec": [
-                "pm.test('Status code is 201 Created', function () {",
-                "    pm.response.to.have.status(201);",
-                "});",
-                "",
-                "pm.test('Response has an id property', function () {",
-                "    var jsonData = pm.response.json();",
-                "    pm.expect(jsonData).to.have.property('id');",
-                "    pm.expect(jsonData.id).to.be.a('number');",
-                "    pm.collectionVariables.set('createdId', jsonData.id);",
-                "});",
-                "",
-                "pm.test('Response time is less than 1000ms', function () {",
-                "    pm.expect(pm.response.responseTime).to.be.below(1000);",
-                "});"
-                ],
-                "type": "text/javascript"
-            }
-            }
-        ],
-        "request": {
-            "method": "POST",
-            "header": [
-            {
-                "key": "Content-Type",
-                "value": "application/json"
-            }
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Test POST /api/measurements/female",
+              "pm.test('Status code is 201 Created', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test('Response has id property', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('id');",
+              "    pm.expect(jsonData.id).to.be.a('number');",
+              "    // Save the created ID for subsequent tests",
+              "    pm.environment.set('created_measurement_id', jsonData.id);",
+              "    console.log('Created measurement with ID:', jsonData.id);",
+              "});",
+              "",
+              "pm.test('Response time is less than 500ms', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});"
             ],
-            "body": {
-            "mode": "raw",
-            "raw": "{\n  \"neck\": 38.5,\n  \"shoulder_length\": 16.5,\n  \"arm_length\": 60.0,\n  \"across_front\": 42.0,\n  \"chest_circumference\": 98.0,\n  \"waist\": 84.0,\n  \"hip_circumference\": 102.0,\n  \"total_rise\": 28.0,\n  \"thigh\": 58.0,\n  \"knee\": 37.0,\n  \"calf\": 36.0,\n  \"ankle\": 24.0,\n  \"bicep\": 32.0,\n  \"elbow\": 26.0,\n  \"wrist\": 18.0,\n  \"inseam_ankle\": 76.0,\n  \"inseam_floor\": 78.0,\n  \"neck_waist\": 44.0,\n  \"neck_floor\": 140.0,\n  \"waist_floor\": 108.0,\n  \"height\": 178.0,\n  \"client_name\": \"Test User Male\",\n  \"size_number\": \"M\",\n  \"measurement_date\": \"2026-05-12\"\n}"
-            },
-            "url": {
-            "raw": "{{baseUrl}}",
-            "host": ["{{baseUrl}}"]
-            }
+            "type": "text/javascript"
+          }
         }
-        },
-        {
-        "name": "GET Male Measurement by ID",
-        "event": [
-            {
-            "listen": "test",
-            "script": {
-                "exec": [
-                "pm.test('Status code is 200', function () {",
-                "    pm.response.to.have.status(200);",
-                "});",
-                "",
-                "pm.test('Response has correct measurement data', function () {",
-                "    var jsonData = pm.response.json();",
-                "    pm.expect(jsonData).to.have.property('client_name', 'Test User Male');",
-                "    pm.expect(jsonData).to.have.property('size_number', 'M');",
-                "    pm.expect(jsonData).to.have.property('neck', 38.5);",
-                "});",
-                "",
-                "pm.test('Response has all required fields', function () {",
-                "    var jsonData = pm.response.json();",
-                "    const requiredFields = ['id', 'neck', 'client_name', 'measurement_date'];",
-                "    requiredFields.forEach(field => {",
-                "        pm.expect(jsonData).to.have.property(field);",
-                "    });",
-                "});"
-                ],
-                "type": "text/javascript"
-            }
-            }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
-        "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-            "raw": "{{baseUrl}}/{{createdId}}",
-            "host": ["{{baseUrl}}"],
-            "path": ["{{createdId}}"]
-            }
-        }
+        "body": {
+          "mode": "raw",
+          "raw": "{{test_measurement}}"
         },
+        "url": {
+          "raw": "{{base_url}}",
+          "host": ["{{base_url}}"]
+        },
+        "description": "Creates a new female measurement record with all required fields"
+      }
+    },
+    {
+      "name": "2. READ - Get All Measurements",
+      "event": [
         {
-        "name": "PUT Update Male Measurement",
-        "event": [
-            {
-            "listen": "test",
-            "script": {
-                "exec": [
-                "pm.test('Status code is 200', function () {",
-                "    pm.response.to.have.status(200);",
-                "});",
-                "",
-                "pm.test('Response has success message', function () {",
-                "    var jsonData = pm.response.json();",
-                "    pm.expect(jsonData).to.have.property('message', 'Measurement updated successfully');",
-                "});",
-                "",
-                "pm.test('Verify update was applied', function () {",
-                "    // Send another GET request to verify the update",
-                "    const getRequest = {",
-                "        url: pm.collectionVariables.get('baseUrl') + '/' + pm.collectionVariables.get('createdId'),",
-                "        method: 'GET'",
-                "    };",
-                "    pm.sendRequest(getRequest, (error, response) => {",
-                "        if (error) {",
-                "            console.log(error);",
-                "        } else {",
-                "            const updatedData = response.json();",
-                "            pm.expect(updatedData.client_name).to.equal('Updated Test User Male');",
-                "            pm.expect(updatedData.size_number).to.equal('L');",
-                "        }",
-                "    });",
-                "});"
-                ],
-                "type": "text/javascript"
-            }
-            }
-        ],
-        "request": {
-            "method": "PUT",
-            "header": [
-            {
-                "key": "Content-Type",
-                "value": "application/json"
-            }
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Test GET /api/measurements/female",
+              "pm.test('Status code is 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response is an array', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.be.an('array');",
+              "});",
+              "",
+              "pm.test('Response contains measurements', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.length).to.be.at.least(1);",
+              "});",
+              "",
+              "pm.test('Measurement objects have required fields', function () {",
+              "    var jsonData = pm.response.json();",
+              "    if (jsonData.length > 0) {",
+              "        pm.expect(jsonData[0]).to.have.property('client_name');",
+              "        pm.expect(jsonData[0]).to.have.property('measurement_date');",
+              "        pm.expect(jsonData[0]).to.have.property('height');",
+              "        pm.expect(jsonData[0]).to.have.property('chest_circumference');",
+              "        pm.expect(jsonData[0]).to.have.property('under_bust');",
+              "        pm.expect(jsonData[0]).to.have.property('hipbone_circumference');",
+              "        pm.expect(jsonData[0]).to.have.property('hip_circumference');",
+              "    }",
+              "});",
+              "",
+              "pm.test('Response time is less than 500ms', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});"
             ],
-            "body": {
-            "mode": "raw",
-            "raw": "{\n  \"neck\": 40.0,\n  \"shoulder_length\": 17.0,\n  \"arm_length\": 62.0,\n  \"across_front\": 44.0,\n  \"chest_circumference\": 104.0,\n  \"waist\": 90.0,\n  \"hip_circumference\": 108.0,\n  \"total_rise\": 30.0,\n  \"thigh\": 62.0,\n  \"knee\": 39.0,\n  \"calf\": 38.0,\n  \"ankle\": 25.5,\n  \"bicep\": 34.0,\n  \"elbow\": 28.0,\n  \"wrist\": 19.0,\n  \"inseam_ankle\": 79.0,\n  \"inseam_floor\": 81.0,\n  \"neck_waist\": 46.0,\n  \"neck_floor\": 144.0,\n  \"waist_floor\": 112.0,\n  \"height\": 182.0,\n  \"client_name\": \"Updated Test User Male\",\n  \"size_number\": \"L\",\n  \"measurement_date\": \"2026-05-12\"\n}"
-            },
-            "url": {
-            "raw": "{{baseUrl}}/{{createdId}}",
-            "host": ["{{baseUrl}}"],
-            "path": ["{{createdId}}"]
-            }
+            "type": "text/javascript"
+          }
         }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}",
+          "host": ["{{base_url}}"]
         },
+        "description": "Retrieves all female measurements from the database"
+      }
+    },
+    {
+      "name": "3. READ - Get Specific Measurement by ID",
+      "event": [
         {
-        "name": "DELETE Male Measurement",
-        "event": [
-            {
-            "listen": "test",
-            "script": {
-                "exec": [
-                "pm.test('Status code is 200', function () {",
-                "    pm.response.to.have.status(200);",
-                "});",
-                "",
-                "pm.test('Response has success message', function () {",
-                "    var jsonData = pm.response.json();",
-                "    pm.expect(jsonData).to.have.property('message', 'Measurement deleted successfully');",
-                "});",
-                "",
-                "pm.test('Verify the record no longer exists', function () {",
-                "    const getRequest = {",
-                "        url: pm.collectionVariables.get('baseUrl') + '/' + pm.collectionVariables.get('createdId'),",
-                "        method: 'GET'",
-                "    };",
-                "    pm.sendRequest(getRequest, (error, response) => {",
-                "        if (error) {",
-                "            console.log(error);",
-                "        } else {",
-                "            pm.expect(response.status).to.equal(404);",
-                "        }",
-                "    });",
-                "});"
-                ],
-                "type": "text/javascript"
-            }
-            }
-        ],
-        "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-            "raw": "{{baseUrl}}/{{createdId}}",
-            "host": ["{{baseUrl}}"],
-            "path": ["{{createdId}}"]
-            }
-        }
-        },
-        {
-        "name": "GET Non-existent Male Measurement (404 test)",
-        "event": [
-            {
-            "listen": "test",
-            "script": {
-                "exec": [
-                "pm.test('Status code is 404', function () {",
-                "    pm.response.to.have.status(404);",
-                "});",
-                "",
-                "pm.test('Response has error message', function () {",
-                "    var jsonData = pm.response.json();",
-                "    pm.expect(jsonData).to.have.property('error', 'Measurement not found');",
-                "});"
-                ],
-                "type": "text/javascript"
-            }
-            }
-        ],
-        "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-            "raw": "{{baseUrl}}/999999",
-            "host": ["{{baseUrl}}"],
-            "path": ["999999"]
-            }
-        }
-        },
-        {
-        "name": "POST Invalid Male Measurement (Validation Test)",
-        "event": [
-            {
-            "listen": "test",
-            "script": {
-                "exec": [
-                "pm.test('Status code is 500 (invalid data)', function () {",
-                "    pm.response.to.have.status(500);",
-                "});",
-                "",
-                "pm.test('Response has error message', function () {",
-                "    var jsonData = pm.response.json();",
-                "    pm.expect(jsonData).to.have.property('error');",
-                "});"
-                ],
-                "type": "text/javascript"
-            }
-            }
-        ],
-        "request": {
-            "method": "POST",
-            "header": [
-            {
-                "key": "Content-Type",
-                "value": "application/json"
-            }
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Test GET /api/measurements/female/:id",
+              "pm.test('Status code is 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response contains correct measurement data', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('id');",
+              "    pm.expect(jsonData.id).to.equal(pm.environment.get('created_measurement_id'));",
+              "    pm.expect(jsonData).to.have.property('client_name');",
+              "    pm.expect(jsonData).to.have.property('neck');",
+              "    pm.expect(jsonData).to.have.property('chest_circumference');",
+              "    pm.expect(jsonData).to.have.property('under_bust');",
+              "    pm.expect(jsonData).to.have.property('hip_circumference');",
+              "    pm.expect(jsonData).to.have.property('height');",
+              "});",
+              "",
+              "pm.test('Response time is less than 500ms', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});"
             ],
-            "body": {
-            "mode": "raw",
-            "raw": "{\n  \"client_name\": \"Invalid User\"\n}"
-            },
-            "url": {
-            "raw": "{{baseUrl}}",
-            "host": ["{{baseUrl}}"]
-            }
+            "type": "text/javascript"
+          }
         }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/{{created_measurement_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["{{created_measurement_id}}"]
+        },
+        "description": "Retrieves a specific female measurement by its ID"
+      }
+    },
+    {
+      "name": "4. READ - Get Non-existent Measurement (404 Test)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Test GET /api/measurements/female/:id with invalid ID",
+              "pm.test('Status code is 404 Not Found', function () {",
+              "    pm.response.to.have.status(404);",
+              "});",
+              "",
+              "pm.test('Response contains error message', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('error');",
+              "    pm.expect(jsonData.error).to.equal('Measurement not found');",
+              "});",
+              "",
+              "pm.test('Response time is less than 500ms', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
         }
-    ]
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/9999",
+          "host": ["{{base_url}}"],
+          "path": ["9999"]
+        },
+        "description": "Tests API response when requesting a non-existent measurement ID"
+      }
+    },
+    {
+      "name": "5. UPDATE - PUT Update Existing Measurement",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Test PUT /api/measurements/female/:id",
+              "pm.test('Status code is 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response confirms update', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('message');",
+              "    pm.expect(jsonData.message).to.equal('Measurement updated successfully');",
+              "});",
+              "",
+              "pm.test('Response time is less than 500ms', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{updated_measurement}}"
+        },
+        "url": {
+          "raw": "{{base_url}}/{{created_measurement_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["{{created_measurement_id}}"]
+        },
+        "description": "Updates an existing measurement with new values"
+      }
+    },
+    {
+      "name": "6. VERIFY UPDATE - Get Updated Measurement",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Verify the update was applied correctly",
+              "pm.test('Status code is 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Updated values are correct', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.client_name).to.equal('Test Female User Updated');",
+              "    pm.expect(jsonData.size_number).to.equal('L');",
+              "    pm.expect(jsonData.height).to.equal(169.0);",
+              "    pm.expect(jsonData.chest_circumference).to.equal(94.0);",
+              "    pm.expect(jsonData.under_bust).to.equal(84.0);",
+              "    pm.expect(jsonData.waist).to.equal(74.0);",
+              "    pm.expect(jsonData.hip_circumference).to.equal(104.0);",
+              "});",
+              "",
+              "pm.test('Response time is less than 500ms', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/{{created_measurement_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["{{created_measurement_id}}"]
+        },
+        "description": "Retrieves the updated measurement to verify changes were applied"
+      }
+    },
+    {
+      "name": "7. UPDATE - PUT Non-existent Measurement (404 Test)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Test PUT with invalid ID",
+              "pm.test('Status code is 404 Not Found', function () {",
+              "    pm.response.to.have.status(404);",
+              "});",
+              "",
+              "pm.test('Response contains error message', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('error');",
+              "    pm.expect(jsonData.error).to.equal('Measurement not found');",
+              "});",
+              "",
+              "pm.test('Response time is less than 500ms', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{updated_measurement}}"
+        },
+        "url": {
+          "raw": "{{base_url}}/9999",
+          "host": ["{{base_url}}"],
+          "path": ["9999"]
+        },
+        "description": "Tests API response when trying to update a non-existent measurement"
+      }
+    },
+    {
+      "name": "8. DELETE - Remove Measurement",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Test DELETE /api/measurements/female/:id",
+              "pm.test('Status code is 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response confirms deletion', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('message');",
+              "    pm.expect(jsonData.message).to.equal('Measurement deleted successfully');",
+              "});",
+              "",
+              "pm.test('Response time is less than 500ms', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/{{created_measurement_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["{{created_measurement_id}}"]
+        },
+        "description": "Deletes a measurement by its ID"
+      }
+    },
+    {
+      "name": "9. VERIFY DELETE - Try to Get Deleted Measurement",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Verify the measurement was actually deleted",
+              "pm.test('Status code is 404 Not Found', function () {",
+              "    pm.response.to.have.status(404);",
+              "});",
+              "",
+              "pm.test('Response confirms measurement not found', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('error');",
+              "    pm.expect(jsonData.error).to.equal('Measurement not found');",
+              "});",
+              "",
+              "pm.test('Response time is less than 500ms', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/{{created_measurement_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["{{created_measurement_id}}"]
+        },
+        "description": "Verifies the measurement was actually deleted by attempting to retrieve it"
+      }
+    },
+    {
+      "name": "10. DELETE - Delete Non-existent Measurement (404 Test)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Test DELETE with invalid ID",
+              "pm.test('Status code is 404 Not Found', function () {",
+              "    pm.response.to.have.status(404);",
+              "});",
+              "",
+              "pm.test('Response contains error message', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('error');",
+              "    pm.expect(jsonData.error).to.equal('Measurement not found');",
+              "});",
+              "",
+              "pm.test('Response time is less than 500ms', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/9999",
+          "host": ["{{base_url}}"],
+          "path": ["9999"]
+        },
+        "description": "Tests API response when trying to delete a non-existent measurement"
+      }
+    },
+    {
+      "name": "11. VALIDATION - POST with Missing Required Fields",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Test POST with missing required fields",
+              "pm.test('Status code is 500 or 400', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([400, 500]);",
+              "});",
+              "",
+              "pm.test('Response contains error message', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('error');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"client_name\": \"Incomplete Female User\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}",
+          "host": ["{{base_url}}"]
+        },
+        "description": "Tests API response when required fields are missing from the request body"
+      }
+    },
+    {
+      "name": "12. READ - Verify Female-Specific Fields",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Test GET /api/measurements/female to verify female-specific measurement fields",
+              "pm.test('Status code is 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Female-specific measurement fields exist', function () {",
+              "    var jsonData = pm.response.json();",
+              "    if (jsonData.length > 0) {",
+              "        // Verify female-specific fields that differ from male measurements",
+              "        pm.expect(jsonData[0]).to.have.property('under_bust');",
+              "        pm.expect(jsonData[0]).to.have.property('hipbone_circumference');",
+              "        pm.expect(jsonData[0]).to.have.property('hip_circumference');",
+              "        ",
+              "        // Verify these are numeric values",
+              "        pm.expect(jsonData[0].under_bust).to.be.a('number');",
+              "        pm.expect(jsonData[0].hipbone_circumference).to.be.a('number');",
+              "        pm.expect(jsonData[0].hip_circumference).to.be.a('number');",
+              "    }",
+              "});",
+              "",
+              "pm.test('Female measurements do not have male-specific fields', function () {",
+              "    var jsonData = pm.response.json();",
+              "    if (jsonData.length > 0) {",
+              "        // Verify male-specific fields don't exist",
+              "        pm.expect(jsonData[0]).to.not.have.property('across_front');",
+              "        pm.expect(jsonData[0]).to.not.have.property('total_rise');",
+              "    }",
+              "});",
+              "",
+              "pm.test('Response time is less than 500ms', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}",
+          "host": ["{{base_url}}"]
+        },
+        "description": "Verifies that female-specific measurement fields (under_bust, hipbone_circumference, hip_circumference) exist and are numeric"
+      }
     }
-]
-
-**CODE 13 - File: measurement-male-database.sqlite**
-[
-    14	38	16.5	60	42	98	84	102	28	58	37	36	24	32	26	18	76	78	44	140	108	178	John Doe	M	2025-07-01	2026-05-07 05:20:40	2026-05-07 05:20:40
-    15	40	17	62	44	104	90	108	30	62	39	38	25.5	34	28	19	79	81	46	144	112	182	Michael Smith	L	2025-07-05	2026-05-07 05:20:40	2026-05-07 05:20:40
-    16	37	16	58	40	92	78	96	26	54	35	34	22.5	30	24.5	17	73	75	42	136	104	175	Robert Johnson	S	2025-07-10	2026-05-07 05:20:40	2026-05-07 05:20:40
-    17	42	18	64	46	110	96	114	32	66	41	40	27	36	30	20	82	84	48	148	116	185	David Williams	XL	2025-07-15	2026-05-07 05:20:40	2026-05-07 05:20:40
-    18	38	16.5	60	42	98	84	102	28	58	37	36	24	32	26	18	76	78	44	140	108	178	John Doe	M	2025-07-01	2026-05-07 05:21:39	2026-05-07 05:21:39
-
-]
+  ]
+}
+] 
 
 **ERROR/ISSUE:**
 [
-  none
+
 ]
 
 **REQUEST:**
 [
-    1. create a comprehensive postman API test that will tests all routes in CODE 2 - File: measurement-male-routes.js 
-    2. create a comprehensive postman API test that will tests all routes in CODE 5 - File: measurement-female-routes.js
-    3. save the files in: backend/postman/measurment-API-test
-    4. in  CODE 7 - File: package.json, retain the following:  
-        [  "scripts": {
-        "test": "mocha test/**/*.test.js",
-        "test:female": "mocha test/measurement/female/measurement-female.test.js --timeout 5000",
-        "test:male": "mocha test/measurement/male/measurement-male.test.js --timeout 5000"
-         },
-        ]
-        
-    5. provide instruction on how to use it
+ 1. move measurement-female.test.js from this directory: Izzy-Alteration/backend/test/measurement/female into this directory: Izzy-Alteration/backend/test/measurement
+
+ 2. move measurement-male.test.js from this directory: Izzy-Alteration/backend/test/measurement/female into this directory:   Izzy-Alteration/backend/test/measurement
+ 3. update **CODE 10 - File: package.json** 
 ]
