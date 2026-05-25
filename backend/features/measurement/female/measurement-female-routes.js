@@ -1,7 +1,10 @@
 const express = require('express');
 const sqlite3 = require('sqlite3');
-const db = new sqlite3.Database(process.env.TEST_DATABASE || './measurement-female-database.sqlite');
 
+// const db = new sqlite3.Database(process.env.TEST_DATABASE || './measurement-female-database.sqlite');
+// Use absolute path like the migration script does
+const path = require('path');
+const db = new sqlite3.Database(process.env.TEST_DATABASE || path.resolve(__dirname, 'measurement-female-database.sqlite'));
 const measurementFemaleRouter = express.Router();
 
 // GET /api/measurements/female - Get all female measurements
