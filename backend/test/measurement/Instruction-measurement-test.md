@@ -8,7 +8,7 @@
     npm run test:male
 
 
-# test routes via HTTP url 
+# test routes via HTTP url (works similarly for female)
 # Step 1: create a table:   
     node features/measurement/male/measurement-male-migration.js
 # Step 2: seed a database:  
@@ -146,11 +146,13 @@
                     }'
                 ]
 
-# test routes via HTTP url (postman) 
-# Step 1: open POSTMAN app and import .json file:
+# test routes via HTTP url (postman) (works similarly for female)
+# Step 1: open a terminal and start the server:     
+    node server.js
+# Step 2: open POSTMAN app and import .json file:
     male-measurements-crud-tests.postman_collection
-# Step 2: run each endpoint, example: New -> HTTP -> GET
-# Step 3: paste in the url window
+# Step 3: run each endpoint, example: New -> HTTP -> GET
+# Step 4: paste in the url window
 (male)    
     # GET:      http://localhost:3000/api/measurements/male
     # GET/ID:   http://localhost:3000/api/measurements/male/{id-number}
@@ -325,9 +327,11 @@
                     "measurement_date": "2026-05-17"
                 }
 
-# How to test if data populates a database(measurement-male-test.sqlite)
+# How to test if data populates a database(measurement-male-test.sqlite) (works similarly for female)
 # Step 1: from root, go to backend folder: 
     cd Izzy-Alteration/backend
 # Step 2:  run test/measurement-male-seed.js: 
     node test/measurement/male/measurement-male-seed.js
 # Step 3: go to DB browser for SQlite and open the file: measurement-male-test.sqlite the database should be filled out with data 
+
+
