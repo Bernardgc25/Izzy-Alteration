@@ -4,9 +4,13 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "start": "node server.js",
+    "migrate:alteration": "node features/alteration/alteration-migration.js",
+    "seed:alteration": "node features/alteration/alteration-seeding.js",
     "test:measurements": "mocha test/measurement/measurement-female.test.js test/measurement/measurement-male.test.js --timeout 5000",
     "test:female": "mocha test/measurement/measurement-female.test.js --timeout 5000",
-    "test:male": "mocha test/measurement/measurement-male.test.js --timeout 5000"
+    "test:male": "mocha test/measurement/measurement-male.test.js --timeout 5000",
+    "test:alteration": "mocha test/alteration/alteration.test.js --timeout 5000"
   },
   "keywords": [],
   "author": "",
@@ -31,8 +35,8 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
-    "chai": "^6.2.2",
-    "chai-http": "^5.1.2",
+    "chai": "^4.4.1",
+    "chai-http": "^4.4.0",
     "mocha": "^11.7.5",
     "supertest": "^7.2.2",
     "webpack": "^3.5.5"

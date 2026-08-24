@@ -5,16 +5,22 @@ Izzy-Alteration
 ├─ backend
 │  ├─ api.js
 │  ├─ backend-deepseek-prompt
-│  │  ├─ create-test-on-route.md
-│  │  ├─ debugging-backend.md
 │  │  ├─ features-measurement-routes-migration.md
-│  │  ├─ measurement-API-Postman-debug.md
 │  │  ├─ measurement-API-postman-test.md
-│  │  ├─ measurement-female.md
 │  │  ├─ measurement-male-routes-migration-test.md
-│  │  └─ measurement-male-seeding.md
-│  ├─ config
+│  │  └─ measurement-unit-test.md
 │  ├─ features
+│  │  ├─ alteration
+│  │  │  ├─ alteration-database.sqlite
+│  │  │  ├─ alteration-migration.js
+│  │  │  ├─ alteration-routes.js
+│  │  │  ├─ alteration-seeding.js
+│  │  │  ├─ deepseek(alteration)-prompt
+│  │  │  │  ├─ alteration-CRUD.md
+│  │  │  │  ├─ alteration-debug.md
+│  │  │  │  └─ alteration-postman-instruction.md
+│  │  │  └─ instruction
+│  │  │     └─ alteration-test-instruction.md
 │  │  └─ measurement
 │  │     ├─ Instruction(migration script).md
 │  │     ├─ female
@@ -30,15 +36,20 @@ Izzy-Alteration
 │  ├─ package-lock.json
 │  ├─ package.json
 │  ├─ postman
+│  │  ├─ alteration-API-test
+│  │  │  └─ alteration-crud-tests.postman_collection.json
 │  │  └─ measurment-API-test
 │  │     ├─ female-measurements-crud-tests.postman_collection.json
 │  │     └─ male-measurements-crud-tests.postman_collection.json
 │  ├─ server.js
 │  └─ test
+│     ├─ alteration
+│     │  └─ alteration.test.js
 │     └─ measurement
 │        ├─ Instruction-measurement-test.md
 │        ├─ measurement-female.test.js
 │        └─ measurement-male.test.js
+├─ deepseek-template-prompt(utilize this)
 ├─ frontend
 │  ├─ package-lock.json
 │  ├─ package.json

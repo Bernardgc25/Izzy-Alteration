@@ -14,15 +14,16 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use('/api', apiRouter);
 
-// Basic error logging (optional)
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(err.status || 500).send(err.message);
 });
 app.use(errorhandler());
 
-app.listen(PORT, () => {
-    console.log(`Server is listening on port http://localhost:${PORT}`);
-});
-
 module.exports = app;
+
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server is listening on port http://localhost:${PORT}`);
+  });
+}
